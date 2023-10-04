@@ -11,7 +11,10 @@ public class UserContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         base.OnModelCreating(modelBuilder);
 
-        // modelBuilder.Entity<User>().HasIndex(m => m.FullName).IsUnique();
+        modelBuilder.Entity<User>().HasIndex(m => m.Pseudo).IsUnique();
+        modelBuilder.Entity<User>().HasIndex(m => m.Email).IsUnique();
+        modelBuilder.Entity<User>().HasIndex(m => new { m.FirstName, m.LastName }).IsUnique();
+
         modelBuilder.Entity<User>().HasData(
             new User { Id = 1, Pseudo = "ben", Password = "ben",Email ="ben@epfc.eu", LastName ="Penelle",FirstName = "Benoît" },
             new User { Id = 2, Pseudo = "bruno", Password = "bruno",Email ="bruno@epfc.eu", LastName = "Lacroix", FirstName = "Bruno" },

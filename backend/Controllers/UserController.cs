@@ -49,27 +49,27 @@ public async Task<ActionResult<UserDTO>> GetOne(int id) {
         return _mapper.Map<UserDTO>(user);
 }
 [HttpPost]
-public async Task<ActionResult<UserDTO>> PostMember(UserWithPasswordDTO user) {
-        // Utilise le mapper pour convertir le DTO qu'on a reçu en une instance de Member
-        var newMember = _mapper.Map<User>(user);
+public async Task<ActionResult<UserDTO>> PostUser(UserWithPasswordDTO user) {
+        // Utilise le mapper pour convertir le DTO qu'on a reçu en une instance de User
+        var newUser = _mapper.Map<User>(user);
         // Valide les données
-        var result = await new UserValidator(_context).ValidateOnCreate(newMember);
+        var result = await new UserValidator(_context).ValidateAsync(newUser);
         if (!result.IsValid)
             return BadRequest(result);
         // Ajoute ce nouveau user au contexte EF
-        _context.Users.Add(newMember);
+        _context.Users.Add(newUser);
         // Sauve les changements
         await _context.SaveChangesAsync();
 
         // Renvoie une réponse ayant dans son body les données du nouveau user (3ème paramètre)
         // et ayant dans ses headers une entrée 'Location' qui contient l'url associé à GetOne avec la bonne valeur 
         // pour le paramètre 'pseudo' de cet url.
-    return CreatedAtAction(nameof(GetOne), new { pseudo = user.Pseudo }, _mapper.Map<UserDTO>(newMember));
+    return CreatedAtAction(nameof(GetOne), new { id = user.Id }, _mapper.Map<UserDTO>(newUser));
 }
 [HttpPut]
 public async Task<IActionResult> PutUser(UserDTO dto) {
         // Récupère en BD le user à mettre à jour
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Pseudo == dto.Pseudo);
+        var user = await _context.Users.FindAsync(dto.Id);
     // Si aucun user n'a été trouvé, renvoyer une erreur 404 Not Found
     if (user == null)
         return NotFound();
@@ -101,7 +101,7 @@ public async Task<IActionResult> DeleteUser(int id) {
 
 [HttpGet("byPseudo/{pseudo}")]
 public async Task<ActionResult<UserDTO>> GetByPseudo(string pseudo) {
-    var user = await _context.Users.FirstOrDefaultAsync(u => u.Pseudo == pseudo);
+    var user = await _context.Users.SingleOrDefaultAsync(u => u.Pseudo == pseudo);
     if (user == null)
         return NotFound();
     return _mapper.Map<UserDTO>(user);
@@ -109,7 +109,7 @@ public async Task<ActionResult<UserDTO>> GetByPseudo(string pseudo) {
 
 [HttpGet("byEmail/{email}")]
 public async Task<ActionResult<UserDTO>> GetByEmail(string email) {
-    var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+    var user = await _context.Users.SingleOrDefaultAsync(u => u.Email == email);
     if (user == null)
         return NotFound();
     return _mapper.Map<UserDTO>(user);

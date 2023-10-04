@@ -2,8 +2,9 @@ namespace prid_2324.Models;
 
 public class UserDTO{
 
-    public string Pseudo {get; set;}="";
-    public string Email {get; set;}="";
+    public int Id {get; set;}
+    public string Pseudo {get; set;}= null!;
+    public string Email {get; set;}= null!;
     public string? FirstName {get; set;}
     public string? LastName {get; set;}
     public DateTimeOffset? BirthDate {get; set;}
@@ -12,5 +13,5 @@ public class UserDTO{
 
 public class UserWithPasswordDTO : UserDTO
 {
-    public string Password {get; set;} = "";
+    public string Password {get; set;} = null!;
 }
