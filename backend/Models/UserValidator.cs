@@ -2,14 +2,15 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using prid_2324.Helpers;
 
 namespace prid_2324.Models;
 
 public class UserValidator : AbstractValidator<User>
 {
-    private readonly UserContext _context;
+    private readonly PridContext _context;
 
-    public UserValidator(UserContext context) {
+    public UserValidator(PridContext context) {
         _context = context;
 
     
@@ -65,6 +66,12 @@ public class UserValidator : AbstractValidator<User>
                     .LessThanOrEqualTo(125);
             });
 
+        RuleFor(u => u.Role)
+            .IsInEnum();
+        RuleSet("authenticate",()=>{
+            RuleFor(u=>u.Token).NotNull().OverridePropertyName("Password").WithMessage("Incorrect Password");
+            });
+
     }
 
     private async Task<bool> isPseudoUnique(int id,string pseudo, CancellationToken token){
@@ -80,4 +87,11 @@ public class UserValidator : AbstractValidator<User>
             return true;
         return !await _context.Users.AnyAsync(u => u.Id != id && u.FirstName == firstName && u.LastName == lastName, cancellationToken: token);
     }
+
+   public async Task<FluentValidation.Results.ValidationResult> ValidateForAuthenticate(User? user) {
+        if (user == null)
+            return ValidatorHelper.CustomError("Member not found.", "Email");
+        return await this.ValidateAsync(user!, u => u.IncludeRuleSets("authenticate"));
+    }
+
 }

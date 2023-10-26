@@ -210,3 +210,7 @@
 /Users/senolkacar/Desktop/PRID2324/prid-2324-f07/backend/obj/Debug/net7.0/backend.pdb
 /Users/senolkacar/Desktop/PRID2324/prid-2324-f07/backend/obj/Debug/net7.0/backend.genruntimeconfig.cache
 /Users/senolkacar/Desktop/PRID2324/prid-2324-f07/backend/obj/Debug/net7.0/ref/backend.dll
+/Users/senolkacar/Desktop/PRID2324/prid-2324-f07/backend/bin/Debug/net7.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+/Users/senolkacar/Desktop/PRID2324/prid-2324-f07/backend/bin/Debug/net7.0/Microsoft.AspNetCore.SpaServices.Extensions.dll
+/Users/senolkacar/Desktop/PRID2324/prid-2324-f07/backend/bin/Debug/net7.0/MySqlConnector.dll
+/Users/senolkacar/Desktop/PRID2324/prid-2324-f07/backend/bin/Debug/net7.0/Pomelo.EntityFrameworkCore.MySql.dll

@@ -4,14 +4,20 @@ using prid_2324.Models;
 using AutoMapper;
 using System.Runtime.CompilerServices;
 using Microsoft.EntityFrameworkCore.Query.Internal;
+using Microsoft.AspNetCore.Authorization;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
+using prid_2324.Helpers;
 
-namespace prid_tuto.Controllers;
-
+namespace prid_2324.Controllers;
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class UsersController : ControllerBase
 {
-    private readonly UserContext _context;
+    private readonly PridContext _context;
     private readonly IMapper _mapper;
 
     /*
@@ -19,7 +25,7 @@ public class UsersController : ControllerBase
     Les deux paramètres du constructeur recoivent automatiquement, par injection de dépendance, 
     une instance du context EF (MsnContext) et une instance de l'auto-mapper (IMapper).
     */
-    public UsersController(UserContext context, IMapper mapper) {
+    public UsersController(PridContext context, IMapper mapper) {
         _context = context;
         _mapper = mapper;
     }
@@ -115,4 +121,43 @@ public async Task<ActionResult<UserDTO>> GetByEmail(string email) {
     return _mapper.Map<UserDTO>(user);
 
 }
+
+[AllowAnonymous]
+    [HttpPost("authenticate")]
+    public async Task<ActionResult<UserDTO>> Authenticate(LoginDTO dto) {
+        var user = await Authenticate(dto.Email, dto.Password);
+
+        var result = await new UserValidator(_context).ValidateForAuthenticate(user);
+        if (!result.IsValid)
+            return BadRequest(result);
+
+        return Ok(_mapper.Map<UserDTO>(user));
+    }
+
+    private async Task<User?> Authenticate(string email, string password) {
+        var user = await _context.Users.SingleOrDefaultAsync(u => u.Email == email);
+
+        // return null if user not found
+        if (user == null)
+            return null;
+
+        if (user.Password == password) {
+            // authentication successful so generate jwt token
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes("my-super-secret-key");
+            var tokenDescriptor = new SecurityTokenDescriptor {
+                Subject = new ClaimsIdentity(new Claim[] {
+                    new Claim(ClaimTypes.Name, user.Pseudo),
+                    new Claim(ClaimTypes.Role, user.Role.ToString())
+                }),
+                IssuedAt = DateTime.UtcNow,
+                Expires = DateTime.UtcNow.AddMinutes(10),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            user.Token = tokenHandler.WriteToken(token);
+        }
+
+        return user;
+    }
 }
