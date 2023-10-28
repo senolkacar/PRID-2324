@@ -18,8 +18,8 @@ export class AuthenticationService {
         this.currentUser = plainToClass(User, data);
     }
 
-    login(pseudo: string, password: string) {
-        return this.http.post<any>(`${this.baseUrl}api/members/authenticate`, { pseudo, password })
+    login(email: string, password: string) {
+        return this.http.post<any>(`${this.baseUrl}api/users/authenticate`, { email, password })
             .pipe(map(user => {
                 user = plainToClass(User, user);
                 // login successful if there's a jwt token in the response

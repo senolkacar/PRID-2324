@@ -13,6 +13,7 @@ import { RestrictedComponent } from '../components/restricted/restricted.compone
 import { UnknownComponent } from '../components/unknown/unknown.component';
 import { JwtInterceptor } from '../interceptors/jwt.interceptor';
 import { LoginComponent } from '../components/login/login.component';
+import { SignupComponent } from '../components/signup/signup.component';
 
 @NgModule({
     declarations: [
@@ -23,6 +24,7 @@ import { LoginComponent } from '../components/login/login.component';
         FetchDataComponent,
         UserListComponent,
         LoginComponent,
+        SignupComponent,
         UnknownComponent,
         RestrictedComponent
     ],

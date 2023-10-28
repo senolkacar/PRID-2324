@@ -30,6 +30,7 @@ public class UsersController : ControllerBase
         _mapper = mapper;
     }
     // GET: api/Users
+[Authorized(Role.Student, Role.Teacher)]
 [HttpGet]
 public async Task<ActionResult<IEnumerable<UserDTO>>> GetAll() {
         /*
@@ -72,6 +73,7 @@ public async Task<ActionResult<UserDTO>> PostUser(UserWithPasswordDTO user) {
         // pour le paramètre 'pseudo' de cet url.
     return CreatedAtAction(nameof(GetOne), new { id = user.Id }, _mapper.Map<UserDTO>(newUser));
 }
+[Authorized(Role.Student, Role.Teacher)]
 [HttpPut]
 public async Task<IActionResult> PutUser(UserDTO dto) {
         // Récupère en BD le user à mettre à jour
@@ -90,6 +92,7 @@ public async Task<IActionResult> PutUser(UserDTO dto) {
     // Retourne un statut 204 avec une réponse vide
     return NoContent();
 }
+[Authorized(Role.Student, Role.Teacher)]
 [HttpDelete("{id}")]
 public async Task<IActionResult> DeleteUser(int id) {
     // Récupère en BD le user à supprimer
@@ -123,8 +126,9 @@ public async Task<ActionResult<UserDTO>> GetByEmail(string email) {
 }
 
 [AllowAnonymous]
-    [HttpPost("authenticate")]
-    public async Task<ActionResult<UserDTO>> Authenticate(LoginDTO dto) {
+[HttpPost("authenticate")]
+    public async Task<ActionResult<UserDTO>> Authenticate(LoginDTO dto)
+    {
         var user = await Authenticate(dto.Email, dto.Password);
 
         var result = await new UserValidator(_context).ValidateForAuthenticate(user);
@@ -134,18 +138,21 @@ public async Task<ActionResult<UserDTO>> GetByEmail(string email) {
         return Ok(_mapper.Map<UserDTO>(user));
     }
 
-    private async Task<User?> Authenticate(string email, string password) {
+    private async Task<User?> Authenticate(string email, string password)
+    {
         var user = await _context.Users.SingleOrDefaultAsync(u => u.Email == email);
 
         // return null if user not found
         if (user == null)
             return null;
 
-        if (user.Password == password) {
+        if (user.Password == password)
+        {
             // authentication successful so generate jwt token
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes("my-super-secret-key");
-            var tokenDescriptor = new SecurityTokenDescriptor {
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
                 Subject = new ClaimsIdentity(new Claim[] {
                     new Claim(ClaimTypes.Name, user.Pseudo),
                     new Claim(ClaimTypes.Role, user.Role.ToString())

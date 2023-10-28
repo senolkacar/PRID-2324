@@ -11,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.AddDbContext<PridContext>(opt => opt.UseSqlite(builder.Configuration.GetConnectionString("prid_2324")));
+builder.Services.AddDbContext<PridContext>(opt => opt.UseSqlite(builder.Configuration.GetConnectionString("prid-2324")));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
