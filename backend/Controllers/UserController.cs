@@ -129,7 +129,7 @@ public async Task<ActionResult<UserDTO>> GetByEmail(string email) {
 [HttpPost("authenticate")]
     public async Task<ActionResult<UserDTO>> Authenticate(LoginDTO dto)
     {
-        var user = await Authenticate(dto.Email, dto.Password);
+        var user = await Authenticate(dto.Pseudo, dto.Password);
 
         var result = await new UserValidator(_context).ValidateForAuthenticate(user);
         if (!result.IsValid)
@@ -138,9 +138,9 @@ public async Task<ActionResult<UserDTO>> GetByEmail(string email) {
         return Ok(_mapper.Map<UserDTO>(user));
     }
 
-    private async Task<User?> Authenticate(string email, string password)
+    private async Task<User?> Authenticate(string pseudo, string password)
     {
-        var user = await _context.Users.SingleOrDefaultAsync(u => u.Email == email);
+        var user = await _context.Users.SingleOrDefaultAsync(u => u.Pseudo == pseudo);
 
         // return null if user not found
         if (user == null)

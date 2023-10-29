@@ -14,6 +14,7 @@ import { UnknownComponent } from '../components/unknown/unknown.component';
 import { JwtInterceptor } from '../interceptors/jwt.interceptor';
 import { LoginComponent } from '../components/login/login.component';
 import { SignupComponent } from '../components/signup/signup.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
     declarations: [
@@ -33,7 +34,8 @@ import { SignupComponent } from '../components/signup/signup.component';
         HttpClientModule,
         FormsModule,
         ReactiveFormsModule,
-        AppRoutes
+        AppRoutes,
+        BrowserAnimationsModule
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }

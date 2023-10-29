@@ -90,7 +90,7 @@ public class UserValidator : AbstractValidator<User>
 
    public async Task<FluentValidation.Results.ValidationResult> ValidateForAuthenticate(User? user) {
         if (user == null)
-            return ValidatorHelper.CustomError("Member not found.", "Email");
+            return ValidatorHelper.CustomError("User not found.", "Pseudo");
         return await this.ValidateAsync(user!, u => u.IncludeRuleSets("authenticate"));
     }
 

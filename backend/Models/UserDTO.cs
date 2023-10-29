@@ -20,6 +20,6 @@ public class UserWithPasswordDTO : UserDTO
 }
 
 public class LoginDTO{
-    public string Email {get; set;} = null!;
+    public string Pseudo {get; set;} = null!;
     public string Password {get; set;} = null!;
 }
