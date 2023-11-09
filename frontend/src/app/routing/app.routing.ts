@@ -11,10 +11,14 @@ import { Role } from '../models/user';
 
 
 const appRoutes: Routes = [
-  { path: '', component: HomeComponent, pathMatch: 'full' },
+  { path: '', component: QuizListComponent, pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
-  {path: 'quizzes', component: QuizListComponent},
+  {
+    path: 'quizzes', component: QuizListComponent,
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Student,Role.Teacher] } 
+  },
   {path: 'restricted', component: RestrictedComponent},
   { path: '**', component: UnknownComponent }
 ];

@@ -66,8 +66,8 @@ public class UserValidator : AbstractValidator<User>
                     .LessThanOrEqualTo(125);
             });
 
-        RuleFor(u => u.Role)
-            .IsInEnum();
+        // RuleFor(u => u.Role)
+        //     .IsInEnum();
         RuleSet("authenticate",()=>{
             RuleFor(u=>u.Token).NotNull().OverridePropertyName("Password").WithMessage("Incorrect Password");
             });

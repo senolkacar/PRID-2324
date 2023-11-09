@@ -17,7 +17,7 @@ public class PridContext : DbContext
         modelBuilder.Entity<User>().HasIndex(m => new { m.FirstName, m.LastName }).IsUnique();
 
         modelBuilder.Entity<User>().HasData(
-            new User { Id = 1, Pseudo = "ben", Password = "ben",Email ="ben@epfc.eu", LastName ="Penelle",FirstName = "Benoît", BirthDate = new DateTimeOffset(new DateTime(1970, 1, 2)), Role = Role.Teacher },
+            new User { Id = 1, Pseudo = "ben", Password = "ben",Email ="ben@epfc.eu", LastName ="Penelle",FirstName = "Benoît", BirthDate = new DateTimeOffset(new DateTime(1970, 1, 2))},
             new User { Id = 2, Pseudo = "bruno", Password = "bruno",Email ="bruno@epfc.eu", LastName = "Lacroix", FirstName = "Bruno", BirthDate = new DateTimeOffset(new DateTime(1970, 3, 2)) },
             new User { Id = 3, Pseudo = "alain", Password = "alain",Email="alain@epfc.eu", LastName = "Silovy", FirstName = "Alain" },
             new User { Id = 4, Pseudo = "xavier", Password = "xavier",Email="xavier@epfc.eu", LastName = "Pigeolet",FirstName = "Xavier" },

@@ -3,10 +3,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace prid_2324.Models;
 
-public enum Role
-{
-   Student = 0,Teacher = 1
-}
 
 public class User
 {
@@ -19,7 +15,7 @@ public class User
     public string? FirstName {get; set;} 
     public DateTimeOffset? BirthDate { get; set; }
 
-    public Role Role { get; set; } = Role.Student;
+    //public Role Role { get; set; } = Role.Student;
 
     [NotMapped]
     public string? Token { get; set; }

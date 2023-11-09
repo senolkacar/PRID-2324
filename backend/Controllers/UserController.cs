@@ -30,7 +30,7 @@ public class UsersController : ControllerBase
         _mapper = mapper;
     }
     // GET: api/Users
-[Authorized(Role.Student, Role.Teacher)]
+[Authorize]
 [HttpGet]
 public async Task<ActionResult<IEnumerable<UserDTO>>> GetAll() {
         /*
@@ -73,7 +73,7 @@ public async Task<ActionResult<UserDTO>> PostUser(UserWithPasswordDTO user) {
         // pour le paramètre 'pseudo' de cet url.
     return CreatedAtAction(nameof(GetOne), new { id = user.Id }, _mapper.Map<UserDTO>(newUser));
 }
-[Authorized(Role.Student, Role.Teacher)]
+[Authorize]
 [HttpPut]
 public async Task<IActionResult> PutUser(UserDTO dto) {
         // Récupère en BD le user à mettre à jour
@@ -92,7 +92,7 @@ public async Task<IActionResult> PutUser(UserDTO dto) {
     // Retourne un statut 204 avec une réponse vide
     return NoContent();
 }
-[Authorized(Role.Student, Role.Teacher)]
+[Authorize]
 [HttpDelete("{id}")]
 public async Task<IActionResult> DeleteUser(int id) {
     // Récupère en BD le user à supprimer
@@ -154,8 +154,7 @@ public async Task<ActionResult<UserDTO>> GetByEmail(string email) {
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[] {
-                    new Claim(ClaimTypes.Name, user.Pseudo),
-                    new Claim(ClaimTypes.Role, user.Role.ToString())
+                    new Claim(ClaimTypes.Name, user.Pseudo)
                 }),
                 IssuedAt = DateTime.UtcNow,
                 Expires = DateTime.UtcNow.AddMinutes(10),
