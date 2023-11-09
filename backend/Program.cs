@@ -8,10 +8,19 @@ using prid_2324.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddControllers();
+
 // Add services to the container.
 
-builder.Services.AddControllers();
-builder.Services.AddDbContext<PridContext>(opt => opt.UseSqlite(builder.Configuration.GetConnectionString("prid-2324")));
+// builder.Services.AddControllers();
+// builder.Services.AddDbContext<PridContext>(opt => opt.UseSqlite(builder.Configuration.GetConnectionString("prid-2324")));
+// builder.Services.AddDbContext<PridContext>(opt => opt.UseSqlServer(
+//      builder.Configuration.GetConnectionString("prid2324-mssql")
+// ));
+builder.Services.AddDbContext<PridContext>(opt => opt.UseMySql(
+    builder.Configuration.GetConnectionString("prid2324-mysql"),
+    ServerVersion.Parse("10.4.28-mariadb")
+));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -95,7 +104,7 @@ if (context?.Database.IsSqlite() == true)
           PRAGMA writable_schema = 0;
           VACUUM;");
 else
-    context?.Database.EnsureDeleted();
+context?.Database.EnsureDeleted();
 context?.Database.EnsureCreated();
 
 app.UseAuthentication();

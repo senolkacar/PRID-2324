@@ -9,4 +9,6 @@ public class Answer{
     public string Sql { get; set; } = null!;
     public DateTimeOffset? Timestamp { get; set; }
     public bool IsCorrect { get; set; } = false;
+    public virtual Attempt Attempt { get; set; } = null!;
+    public virtual Question Question { get; set; } = null!;
 }

@@ -8,4 +8,7 @@ public class Attempt{
     public int Id { get; set; }
     public DateTimeOffset? Start { get; set; }
     public DateTimeOffset? Finish { get; set; }
+    public virtual ICollection<Answer> Answers { get; set; } = new HashSet<Answer>();
+    public virtual Quiz Quiz { get; set; } = null!;
+    public virtual Student Student { get; set; } = null!;
 }

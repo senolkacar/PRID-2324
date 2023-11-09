@@ -13,4 +13,9 @@ public class Quiz {
     public bool IsTest { get; set; } = false;
     public DateTimeOffset? Start { get; set; }
     public DateTimeOffset? Finish { get; set; }
+
+    public virtual Database Database { get; set; } = null!;
+    public virtual ICollection<Question> Questions { get; set; } = new HashSet<Question>();
+    public virtual ICollection<Attempt> Attempts { get; set; } = new HashSet<Attempt>();
+
 }
