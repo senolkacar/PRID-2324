@@ -9,7 +9,7 @@ public class Question{
     public int Order { get; set; }
     public string Body { get; set; } = null!;
 
-    public virtual Quiz Quiz { get; set; } = null!;
-    public virtual ICollection<Solution> Solutions { get; set; } = new HashSet<Solution>();
-    public virtual ICollection<Answer> Answers { get; set; } = new HashSet<Answer>();
+    public Quiz Quiz { get; set; } = null!;
+    public ICollection<Solution> Solutions { get; set; } = new HashSet<Solution>();
+    public ICollection<Answer> Answers { get; set; } = new HashSet<Answer>();
 }
