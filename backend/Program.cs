@@ -10,6 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
+builder.Services.AddSpaStaticFiles(cfg => cfg.RootPath = "wwwroot/frontend");
+
 // Add services to the container.
 
 // builder.Services.AddControllers();
@@ -107,9 +109,15 @@ else
 context?.Database.EnsureDeleted();
 context?.Database.EnsureCreated();
 
+app.UseDefaultFiles();
+app.UseStaticFiles();
+app.UseSpaStaticFiles();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseSpa(spa => {});
 
 app.Run();

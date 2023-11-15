@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --output-path ../publish/wwwroot/frontend",
     "build:ssr": "ng run prid-2324:server:dev",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"

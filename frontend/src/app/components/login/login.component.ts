@@ -25,7 +25,7 @@ export class LoginComponent implements OnInit {
     ) {
         // redirect to home if already logged in
         if (this.authenticationService.currentUser) {
-            this.router.navigate(['/quizzes']);
+            this.router.navigate(['/']);
         }
     }
 
@@ -68,6 +68,7 @@ export class LoginComponent implements OnInit {
             .subscribe({
                 // si login est ok, on navigue vers la page demandée
                 next: data => {
+                    //console.log(this.authenticationService.currentUser?.pseudo);
                     this.router.navigate([this.returnUrl]);
                 },
                 // en cas d'erreurs, on reste sur la page et on les affiche

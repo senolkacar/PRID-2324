@@ -20,15 +20,4 @@ import { plainToClass } from 'class-transformer';
     styleUrls: ['./quizlist.component.css']
 })
 export class QuizListComponent {
-    displayedColumns: string[] = ['Nom','Base de données','Statut','Actions'];
-    dataSource: MatTableDataSource<Quiz> = new MatTableDataSource();
-    filter: string = '';
-
-    @ViewChild(MatPaginator) paginator!: MatPaginator;
-    @ViewChild(MatSort) sort!: MatSort;
-    constructor(
-        public dialog: MatDialog,
-        public snackBar: MatSnackBar,
-        ) {
-    }
 }

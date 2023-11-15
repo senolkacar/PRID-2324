@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { User } from '../models/user';
 import { plainToClass } from 'class-transformer';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
@@ -18,7 +19,7 @@ export class AuthenticationService {
         this.currentUser = plainToClass(User, data);
     }
 
-    login(pseudo: string, password: string) {
+    login(pseudo: string, password: string) : Observable<User> {
         return this.http.post<any>(`${this.baseUrl}api/users/authenticate`, { pseudo, password })
             .pipe(map(user => {
                 user = plainToClass(User, user);

@@ -11,7 +11,7 @@ import { Role } from '../models/user';
 
 
 const appRoutes: Routes = [
-  { path: '', component: QuizListComponent, pathMatch: 'full' },
+  { path: '', component: HomeComponent, pathMatch: 'full'},
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
   {
