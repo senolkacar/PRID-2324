@@ -33,6 +33,8 @@ bld/
 [Ll]ogs/
 backend/[Bb]in/
 backend/[Oo]bj/
+*/[Bb]in/
+*/[Oo]bj/
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
