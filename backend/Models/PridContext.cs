@@ -8,6 +8,14 @@ public class PridContext : DbContext
     public DbSet<User> Users {get; set;}
     public DbSet<Student> Students {get; set;}
     public DbSet<Teacher> Teachers {get; set;}
+
+    public DbSet<Quiz> Quizzes {get; set;}
+    public DbSet<Answer> Answers {get; set;}
+    public DbSet<Database> Databases {get; set;}
+    public DbSet<Attempt> Attempts {get; set;}
+    public DbSet<Question> Questions {get; set;}
+    public DbSet<Solution> Solutions {get; set;}
+
     public PridContext(DbContextOptions<PridContext> options)
         : base(options) {
     }
@@ -52,6 +60,20 @@ public class PridContext : DbContext
         new Teacher{Id = 4, Pseudo = "ben", Password = "ben", Email = "ben@epfc.eu", LastName = "Penelle", FirstName = "Benoît", BirthDate = new DateTimeOffset(new DateTime(1983, 7, 8))},
         new Teacher{Id = 5, Pseudo = "boris", Password = "boris", Email = "boris@epfc.eu", LastName = "Verhaegen", FirstName = "Boris", BirthDate = new DateTimeOffset(new DateTime(1980, 3, 2))}
      );
+    modelBuilder.Entity<Database>()
+    .HasData(
+        new Database{Id = 1, Name="fournisseurs",Description=""}, 
+        new Database{Id = 2, Name="facebook",Description=""}
+    );
+    modelBuilder.Entity<Quiz>()
+    .HasData(
+        new Quiz{Id=1, Name = "TP1", Description = "", IsPublished = true, IsClosed = false, IsTest = false, Start = new DateTimeOffset(new DateTime(2023, 11, 15)),Finish = new DateTimeOffset(new DateTime(2023, 11, 16)), DatabaseID = 1},
+        new Quiz{Id=2, Name = "TP2", Description = "", IsPublished = true, IsClosed = false, IsTest = false, Start = new DateTimeOffset(new DateTime(2023, 11, 15)),Finish = new DateTimeOffset(new DateTime(2023, 11, 16)), DatabaseID = 1},
+        new Quiz{Id=3, Name = "TP4", Description = "", IsPublished = true, IsClosed = false, IsTest = false, Start = new DateTimeOffset(new DateTime(2023, 11, 15)),Finish = new DateTimeOffset(new DateTime(2023, 11, 16)), DatabaseID = 2},
+        new Quiz{Id=4, Name = "TEST1", Description = "", IsPublished = true, IsClosed = true, IsTest = true, Start = new DateTimeOffset(new DateTime(2023, 11, 15)),Finish = new DateTimeOffset(new DateTime(2023, 11, 16)), DatabaseID = 1},
+        new Quiz{Id=5, Name = "TEST2", Description = "", IsPublished = true, IsClosed = false, IsTest = true, Start = new DateTimeOffset(new DateTime(2023, 11, 15)),Finish = new DateTimeOffset(new DateTime(2023, 11, 16)), DatabaseID = 1},
+        new Quiz{Id=6, Name = "TEST3", Description = "", IsPublished = true, IsClosed = false, IsTest = true, Start = new DateTimeOffset(new DateTime(2023, 11, 15)),Finish = new DateTimeOffset(new DateTime(2023, 11, 16)), DatabaseID = 2}
+    );
     }
 
 }
