@@ -3,12 +3,42 @@
         <h1>Quiz</h1>
     </div>
 </div>
-<p>Quiz d'entrainement</p>
-<div class="row">
-</div>
 
-<div class="row mt-3">
-    <div class="col-12">
-        <button mat-raised-button>New Member</button>
+<div class="row">
+    <div class="col-sm-12">
+        <mat-form-field>
+            <mat-label>Filter</mat-label>
+            <input matInput (keyup)="filterChanged($event)" [value]="filter" appSetFocus>
+        </mat-form-field>
+
+        <div class="mat-elevation-z2">
+            <table mat-table [dataSource]="dataSource" matSort matSortDisableClear>
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Nom </th>
+                    <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+                </ng-container>
+                <ng-container matColumnDef="database">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Base de données </th>
+                    <td mat-cell *matCellDef="let row"> </td>
+                </ng-container>
+                <ng-container matColumnDef="statut">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Statut </th>
+                    <td mat-cell *matCellDef="let row"> </td>
+                </ng-container>
+                <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef> Actions </th>
+                    <td mat-cell *matCellDef="let row">
+                        <button mat-icon-button tabindex="-1" (click)="edit(row)">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                </tr>
+            </table>
+            <mat-paginator [pageSize]="5" [pageSizeOptions]="[3, 5, 10, 25, 100]"></mat-paginator>
+        </div>
     </div>
 </div>

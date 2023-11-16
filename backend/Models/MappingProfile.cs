@@ -12,5 +12,7 @@ public class MappingProfile : Profile
         CreateMap<UserDTO, User>();
         CreateMap<User, UserWithPasswordDTO>();
         CreateMap<UserWithPasswordDTO, User>();
+        CreateMap<Quiz, QuizDTO>();
+        CreateMap<QuizDTO, Quiz>();
     }
 }
