@@ -19,7 +19,7 @@ import { plainToClass } from 'class-transformer';
     styleUrls: ['./quizlist.component.css']
 })
 export class QuizListComponent {
-    displayedColumns: string[] = ['name', 'database', 'statut', 'actions'];
+    displayedColumns: string[] = ['name', 'databaseName', 'statut', 'actions'];
     dataSource: MatTableDataSource<Quiz> = new MatTableDataSource();
     filter: string = '';
     state: MatTableState;
@@ -54,9 +54,9 @@ export class QuizListComponent {
     }
 
     refresh() {
-        this.quizService.getAll().subscribe(quizzes => {
+        this.quizService.getAll().subscribe(data => {
             // assigne les données récupérées au datasource
-            this.dataSource.data = quizzes;
+            this.dataSource.data = data;
             // restaure l'état du datasource (tri et pagination) à partir du state
             this.state.restoreState(this.dataSource);
             // restaure l'état du filtre à partir du state

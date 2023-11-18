@@ -36,6 +36,11 @@ public class QuizWithAttemptsDTO : QuizDTO {
     public ICollection<AttemptDTO> Attempts { get; set; } = null!;
 }
 
+public class QuizWithAttemptsAndDBDTO : QuizDTO {
+    public DatabaseDTO Database { get; set; } = null!;
+    public ICollection<AttemptDTO> Attempts { get; set; } = new HashSet<AttemptDTO>();
+}
+
 //Quiz with attempts and answers
 public class QuizWithAttemptsAndAnswersDTO : QuizWithAttemptsDTO {
     public ICollection<AnswerDTO> Answers { get; set; } = null!;

@@ -27,8 +27,17 @@ public class QuizzesController : ControllerBase{
 
     [Authorize]
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<QuizDTO>>> GetAll() {
-        return _mapper.Map<List<QuizDTO>>(await _context.Quizzes.ToListAsync());
-    }
+public async Task<ActionResult<IEnumerable<QuizWithAttemptsAndDBDTO>>> GetAll()
+{
+    var databasesWithQuizzes = await _context.Quizzes
+        .Include(d => d.Database)
+        .Include(d => d.Attempts)
+        .ToListAsync();
+
+    var databasesWithQuizzesDTO = _mapper.Map<List<QuizWithAttemptsAndDBDTO>>(databasesWithQuizzes);
+
+    return databasesWithQuizzesDTO;
+}
+
 
 }

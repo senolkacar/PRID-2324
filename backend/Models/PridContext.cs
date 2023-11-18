@@ -74,6 +74,14 @@ public class PridContext : DbContext
         new Quiz{Id=5, Name = "TEST2", Description = "", IsPublished = true, IsClosed = false, IsTest = true, Start = new DateTimeOffset(new DateTime(2023, 11, 15)),Finish = new DateTimeOffset(new DateTime(2023, 11, 16)), DatabaseID = 1},
         new Quiz{Id=6, Name = "TEST3", Description = "", IsPublished = true, IsClosed = false, IsTest = true, Start = new DateTimeOffset(new DateTime(2023, 11, 15)),Finish = new DateTimeOffset(new DateTime(2023, 11, 16)), DatabaseID = 2}
     );
+    modelBuilder.Entity<Attempt>()
+    .HasData(
+        new Attempt{Id=1, Start = new DateTimeOffset(new DateTime(2023, 11, 15)), Finish = null, QuizID = 1, StudentID = 1},
+        new Attempt{Id=2, Start = new DateTimeOffset(new DateTime(2023, 11, 15)), Finish = new DateTimeOffset(new DateTime(2023, 11, 15)), QuizID = 2, StudentID = 1},
+        new Attempt{Id=3, Start = null, Finish = null , QuizID = 3, StudentID = 1},
+        new Attempt{Id=4, Start = new DateTimeOffset(new DateTime(2023, 11, 15)), Finish = new DateTimeOffset(new DateTime(2023, 11, 15)), QuizID = 5, StudentID = 1},
+        new Attempt{Id=5, Start = null , Finish = null, QuizID = 6, StudentID = 1}
+    );
     }
 
 }

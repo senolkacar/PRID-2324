@@ -5,7 +5,3 @@ public class DatabaseDTO {
     public string Name { get; set; } = null!;
     public string? Description { get; set; }
 }
-
-public class DatabaseWithQuiz : DatabaseDTO {
-    public ICollection<QuizDTO> Quizzes { get; set; } = null!;
-}
