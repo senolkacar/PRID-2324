@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DefaultValueAccessor, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppRoutes } from '../routing/app.routing';
 import { AppComponent } from '../components/app/app.component';
@@ -57,4 +57,12 @@ import { fr } from 'date-fns/locale';
     ],
     bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule { 
+  constructor() {
+    DefaultValueAccessor.prototype.registerOnChange = function (fn: (_: string | null) => void): void {
+      this.onChange = (value: string | null) => {
+          fn(value === '' ? null : value);
+      };
+    };
+  }
+}

@@ -11,10 +11,10 @@ public class Quiz {
     public bool IsPublished { get; set; } = false;
     public bool IsClosed { get; set; } = false;
     public bool IsTest { get; set; } = false;
-    public DateTimeOffset? Start { get; set; }
-    public DateTimeOffset? Finish { get; set; }
+    public DateTimeOffset? StartDate { get; set; }
+    public DateTimeOffset? EndDate { get; set; }
 
-    public int DatabaseID {get; set;}
+    public int DatabaseId {get; set;}
     public Database Database { get; set; } = null!;
     public ICollection<Question> Questions { get; set; } = new HashSet<Question>();
     public ICollection<Attempt> Attempts { get; set; } = new HashSet<Attempt>();
