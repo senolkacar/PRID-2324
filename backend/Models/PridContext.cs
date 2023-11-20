@@ -106,6 +106,7 @@ public class PridContext : DbContext
                 Name = "TEST1",
                 IsPublished = true,
                 DatabaseId = 1,
+                IsClosed = true,
                 IsTest = true,
                 StartDate = DateTimeOffset.Now.AddDays(-2),
                 EndDate = DateTimeOffset.Now.AddDays(-1)

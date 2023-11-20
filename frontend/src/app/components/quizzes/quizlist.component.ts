@@ -19,7 +19,7 @@ import { plainToClass } from 'class-transformer';
     styleUrls: ['./quizlist.component.css']
 })
 export class QuizListComponent {
-    displayedColumns: string[] = ['name', 'databaseName', 'statut', 'actions'];
+    displayedColumns: string[] = ['name', 'databaseName','statut', 'actions'];
     dataSource: MatTableDataSource<Quiz> = new MatTableDataSource();
     filter: string = '';
     state: MatTableState;
@@ -83,6 +83,14 @@ export class QuizListComponent {
 
     delete(quiz: Quiz) {
     
+    }
+    
+    read(quiz: Quiz){
+
+    }
+
+    add(quiz: Quiz){
+
     }
 
     create() {
