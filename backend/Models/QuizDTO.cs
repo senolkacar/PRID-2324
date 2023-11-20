@@ -8,8 +8,8 @@ public class QuizDTO{
     public bool IsPublished { get; set; } = false;
     public bool IsClosed { get; set; } = false;
     public bool IsTest { get; set; } = false;
-    public DateTimeOffset? Start { get; set; }
-    public DateTimeOffset? Finish { get; set; }  
+    public DateTimeOffset? StartDate { get; set; }
+    public DateTimeOffset? EndDate { get; set; }  
 
 
 

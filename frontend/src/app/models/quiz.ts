@@ -9,11 +9,13 @@ export class Quiz{
     isClosed?: boolean;
     isTest?: boolean;
     @Type(() => Date)
-    start?: Date;
+    startdate?: Date;
     @Type(() => Date)
-    finish?: Date;
+    enddate?: Date;
     @Type(() => Attempt)
     attempts?: Attempt[];
+    @Type(()=> Database)
+    database?: Database;
 
     get statut(): string {
       //if it is not closed should check if there is an attempt should check if the attempt has a finish date, if not it is in progress
@@ -35,3 +37,8 @@ export class Attempt{
     @Type(() => Date)
     finish?: Date;
    }
+
+export class Database{
+    id? : number;
+    name? : string;
+}
