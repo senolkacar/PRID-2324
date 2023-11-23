@@ -19,7 +19,7 @@ public abstract class User
     public string? FirstName {get; set;} 
     public DateTimeOffset? BirthDate { get; set; }
 
-    public Role Role { get; set; } = Role.Student;
+    public Role Role { get; set; }
 
     [NotMapped]
     public string? Token { get; set; }
