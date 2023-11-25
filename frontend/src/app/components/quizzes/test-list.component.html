@@ -1,15 +1,6 @@
-<div class="row">
-    <div class="col-sm-12">
-        <h1>Liste de quiz :</h1>
-    </div>
-</div>
 
 <div class="row">
     <div class="col-sm-12">
-        <mat-form-field>
-            <mat-label>Filter</mat-label>
-            <input matInput (keyup)="filterChanged($event)" [value]="filter" appSetFocus>
-        </mat-form-field>
 
         <div class="mat-elevation-z2">
             <table mat-table [dataSource]="dataSource" matSort matSortDisableClear>
@@ -21,30 +12,40 @@
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Base de données </th>
                     <td mat-cell *matCellDef="let row">{{ row.database?.name }}</td>
                 </ng-container>
-                <ng-container matColumnDef="type">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Type de quiz </th>
-                    <td mat-cell *matCellDef="let row" > {{ row.type }} </td>
+                <ng-container matColumnDef="start">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Date de début </th>
+                    <td mat-cell *matCellDef="let row">{{ row.testStart }} </td>
+                </ng-container>
+                <ng-container matColumnDef="end">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Date de fin </th>
+                    <td mat-cell *matCellDef="let row">{{ row.testEnd }} </td>
                 </ng-container>
                 <ng-container matColumnDef="statut">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Statut </th>
-                    <td mat-cell *matCellDef="let row">{{ row.statutForTeacher }} </td>
+                    <td mat-cell *matCellDef="let row">{{ row.statut }} </td>
+                </ng-container>
+                <ng-container matColumnDef="evaluation">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Evaluation </th>
+                    <td mat-cell *matCellDef="let row"></td>
                 </ng-container>        
-                <ng-container matColumnDef="start">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Date début </th>
-                    <td mat-cell *matCellDef="let row" > {{ row.testStart }} </td>
-                </ng-container>             
-                <ng-container matColumnDef="finish">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Date fin </th>
-                    <td mat-cell *matCellDef="let row"> {{ row.testEnd }} </td>
-                </ng-container>                
                 <ng-container matColumnDef="actions">
                     <th mat-header-cell *matHeaderCellDef> Actions </th>
                     <td mat-cell *matCellDef="let row">
-                        <ng-container>
+                        <ng-container *ngIf="row.statut === 'EN_COURS'">
                             <button mat-icon-button tabindex="-1" matTooltip="éditer" (click)="edit(row)">
                                 <mat-icon>edit</mat-icon>
                             </button>
                         </ng-container>        
+                        <ng-container *ngIf="row.statut === 'FINI'">
+                            <button mat-icon-button (click)="read(row)">
+                                <mat-icon>book</mat-icon>
+                            </button>
+                        </ng-container>
+                        <ng-container *ngIf="row.statut === 'PAS_COMMENCE' || (row.statut=== 'FINI' && !row.isTest)"> 
+                            <button mat-icon-button (click)="add(row)">
+                                <mat-icon>add_box</mat-icon>
+                            </button>
+                    </ng-container>
                     </td>
                 </ng-container>
 

@@ -11,9 +11,7 @@ export class TeacherComponent{
 
     onFilterChanged(value: string) {
         this.filter = value;
-        if (this.child) {
-          this.child.filterChanged(value);
-        }
+        this.child.filterChanged(value);
     }
 
     

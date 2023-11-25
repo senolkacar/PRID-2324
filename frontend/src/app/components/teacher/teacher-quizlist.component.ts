@@ -61,6 +61,9 @@ refresh() {
 }
 
   filterChanged(filterValue: string) {
+    if(filterValue == null){
+      filterValue = '';
+    }
     //const filterValue = (e.target as HTMLInputElement).value;
     // applique le filtre au datasource (et provoque l'utilisation du filterPredicate)
     this.dataSource.filter = filterValue.trim().toLowerCase();

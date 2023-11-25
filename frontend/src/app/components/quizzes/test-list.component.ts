@@ -14,12 +14,12 @@ import { format, formatISO } from 'date-fns';
 import { plainToClass } from 'class-transformer';
 
 @Component({
-    selector: 'app-quizlist',
-    templateUrl: './quizlist.component.html',
-    styleUrls: ['./quizlist.component.css']
+    selector: 'app-test-list',
+    templateUrl: './test-list.component.html',
+    styleUrls: ['./test-list.component.css']
 })
-export class QuizListComponent {
-    displayedColumns: string[] = ['name', 'databaseName','type','statut','start','finish', 'actions'];
+export class TestListComponent {
+    displayedColumns: string[] = ['name', 'databaseName','start','end','statut','evaluation','actions'];
     dataSource: MatTableDataSource<Quiz> = new MatTableDataSource();
     filter: string = '';
     state: MatTableState;
@@ -43,7 +43,7 @@ export class QuizListComponent {
         this.dataSource.sort = this.sort;
         // définit le predicat qui doit être utilisé pour filtrer les quizzes
         this.dataSource.filterPredicate = (data: Quiz, filter: string) => {
-            const str = data.name + ' ' + data.statutForTeacher + ' ' + data.database?.name + ' ' + data.type
+            const str = data.name + ' ' + data.statut + ' ' + data.database?.name 
             return str.toLowerCase().includes(filter);
         };
         // établit les liens entre le data source et l'état de telle sorte que chaque fois que 
@@ -54,7 +54,7 @@ export class QuizListComponent {
     }
 
     refresh() {
-        this.quizService.getAll().subscribe(data => {
+        this.quizService.getTests().subscribe(data => {
             // assigne les données récupérées au datasource
             this.dataSource.data = data;
             // restaure l'état du datasource (tri et pagination) à partir du state
@@ -65,8 +65,11 @@ export class QuizListComponent {
     }
 
     // appelée chaque fois que le filtre est modifié par l'utilisateur
-    filterChanged(e: KeyboardEvent) {
-        const filterValue = (e.target as HTMLInputElement).value;
+    filterChanged(filterValue : string) {
+        if(filterValue == null){
+            filterValue = '';
+        }
+        //const filterValue = (e.target as HTMLInputElement).value;
         // applique le filtre au datasource (et provoque l'utilisation du filterPredicate)
         this.dataSource.filter = filterValue.trim().toLowerCase();
         // sauve le nouveau filtre dans le state

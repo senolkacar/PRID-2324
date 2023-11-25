@@ -26,7 +26,7 @@ public class QuizzesController : ControllerBase{
     }
 
     [Authorize]
-    [HttpGet]
+    [HttpGet("all")]
 public async Task<ActionResult<IEnumerable<QuizWithAttemptsAndDBDTO>>> GetAll()
 {
     var databasesWithQuizzes = await _context.Quizzes
@@ -34,10 +34,39 @@ public async Task<ActionResult<IEnumerable<QuizWithAttemptsAndDBDTO>>> GetAll()
         .Include(d => d.Attempts)
         .ToListAsync();
 
-    var databasesWithQuizzesDTO = _mapper.Map<List<QuizWithAttemptsAndDBDTO>>(databasesWithQuizzes);
+    var quizzes = _mapper.Map<List<QuizWithAttemptsAndDBDTO>>(databasesWithQuizzes);
 
-    return databasesWithQuizzesDTO;
+    return quizzes;
 }
 
+[Authorize]
+[HttpGet("tests")]
+public async Task<ActionResult<IEnumerable<QuizWithAttemptsAndDBDTO>>> GetTests()
+{
+    var databasesWithQuizzes = await _context.Quizzes
+        .Include(d => d.Database)
+        .Include(d => d.Attempts)
+        .Where(q => q.IsTest)
+        .ToListAsync();
+
+    var tests = _mapper.Map<List<QuizWithAttemptsAndDBDTO>>(databasesWithQuizzes);
+
+    return tests;
+}
+
+[Authorize]
+[HttpGet("trainings")]
+public async Task<ActionResult<IEnumerable<QuizWithAttemptsAndDBDTO>>> GetTrainings()
+{
+    var databasesWithQuizzes = await _context.Quizzes
+        .Include(d => d.Database)
+        .Include(d => d.Attempts)
+        .Where(q => !q.IsTest)
+        .ToListAsync();
+
+    var trainings = _mapper.Map<List<QuizWithAttemptsAndDBDTO>>(databasesWithQuizzes);
+
+    return trainings;
+}
 
 }
