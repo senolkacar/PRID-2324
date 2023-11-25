@@ -19,7 +19,7 @@ import { plainToClass } from 'class-transformer';
     styleUrls: ['./quizlist.component.css']
 })
 export class QuizListComponent {
-    displayedColumns: string[] = ['name', 'databaseName','start','finish','statut', 'actions'];
+    displayedColumns: string[] = ['name', 'databaseName','type','statut','start','finish', 'actions'];
     dataSource: MatTableDataSource<Quiz> = new MatTableDataSource();
     filter: string = '';
     state: MatTableState;
@@ -43,7 +43,7 @@ export class QuizListComponent {
         this.dataSource.sort = this.sort;
         // définit le predicat qui doit être utilisé pour filtrer les quizzes
         this.dataSource.filterPredicate = (data: Quiz, filter: string) => {
-            const str = data.name + ' ' + data.statut + ' ' + data.database?.name
+            const str = data.name + ' ' + data.statutForTeacher + ' ' + data.database?.name + ' ' + data.type
             return str.toLowerCase().includes(filter);
         };
         // établit les liens entre le data source et l'état de telle sorte que chaque fois que 

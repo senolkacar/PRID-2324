@@ -68,7 +68,11 @@ export class LoginComponent implements OnInit {
             .subscribe({
                 // si login est ok, on navigue vers la page demandée
                 next: data => {
-                    //console.log(this.authenticationService.currentUser?.pseudo);
+                    console.log(this.authenticationService.currentUser?.roleAsString);
+                    if(this.authenticationService.currentUser?.roleAsString =='Teacher')
+                    {
+                        this.returnUrl = '/teacher'
+                    }
                     this.router.navigate([this.returnUrl]);
                 },
                 // en cas d'erreurs, on reste sur la page et on les affiche

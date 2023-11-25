@@ -8,6 +8,7 @@ import { RestrictedComponent } from '../components/restricted/restricted.compone
 import { UnknownComponent } from '../components/unknown/unknown.component';
 import { AuthGuard } from '../services/auth.guard';
 import { Role } from '../models/user';
+import { TeacherComponent } from '../components/teacher/teacher.component';
 
 
 const appRoutes: Routes = [
@@ -19,6 +20,10 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard],
     data: { roles: [Role.Student,Role.Teacher] } 
   },
+  {path:'teacher',component: TeacherComponent,
+    canActivate:[AuthGuard],
+    data: {roles: [Role.Teacher]}
+    },
   {path: 'restricted', component: RestrictedComponent},
   { path: '**', component: UnknownComponent }
 ];

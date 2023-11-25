@@ -11,7 +11,10 @@ import { RestrictedComponent } from '../components/restricted/restricted.compone
 import { UnknownComponent } from '../components/unknown/unknown.component';
 import { JwtInterceptor } from '../interceptors/jwt.interceptor';
 import { LoginComponent } from '../components/login/login.component';
+import { TeacherQuizListComponent } from '../components/teacher/teacher-quizlist.component';
 import { SignupComponent } from '../components/signup/signup.component';
+import { FilterComponent } from '../components/teacher/filter.component';
+import { TeacherComponent } from '../components/teacher/teacher.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SharedModule } from './shared.module';
 import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -23,6 +26,9 @@ import { fr } from 'date-fns/locale';
         NavMenuComponent,
         HomeComponent,
         QuizListComponent,
+        FilterComponent,
+        TeacherQuizListComponent,
+        TeacherComponent,
         LoginComponent,
         SignupComponent,
         UnknownComponent,

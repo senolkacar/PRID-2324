@@ -9,9 +9,9 @@ export class Quiz{
     isClosed?: boolean;
     isTest?: boolean;
     @Type(() => Date)
-    startdate?: Date;
+    startDate?: Date;
     @Type(() => Date)
-    enddate?: Date;
+    endDate?: Date;
     @Type(() => Attempt)
     attempts?: Attempt[];
     @Type(()=> Database)
@@ -28,6 +28,26 @@ export class Quiz{
                 return this.attempts[0]?.finish !== null ? 'FINI' : 'EN_COURS';
             }
         }
+    }
+
+    get statutForTeacher(): string{
+        if(this.isClosed){
+            return 'CLOTURE';
+        }else{
+            return this.isPublished ? 'PUBLIE' : 'PAS_PUBLIE';
+        }
+    }
+
+    get type(): string{
+        return this.isTest ? 'Test' : 'Training';
+    }
+
+    get testStart(): string{
+        return this.startDate !== null && this.startDate? this.startDate?.toLocaleDateString('fr-BE') : 'N/A';
+    }
+
+    get testEnd(): string{
+        return this.endDate !== null && this.endDate? this.endDate?.toLocaleDateString('fr-BE') : 'N/A';
     }
 }
 export class Attempt{
