@@ -30,19 +30,14 @@
                 </ng-container>        
                 <ng-container matColumnDef="actions">
                     <th mat-header-cell *matHeaderCellDef> Actions </th>
-                    <td mat-cell *matCellDef="let row">
-                        <ng-container *ngIf="row.statut === 'EN_COURS'">
-                            <button mat-icon-button tabindex="-1" matTooltip="éditer" (click)="edit(row)">
-                                <mat-icon>edit</mat-icon>
-                            </button>
-                        </ng-container>        
+                    <td mat-cell *matCellDef="let row">       
                         <ng-container *ngIf="row.statut === 'FINI'">
-                            <button mat-icon-button (click)="read(row)">
+                            <button mat-icon-button matTooltip="revoir" (click)="read(row)">
                                 <mat-icon>book</mat-icon>
                             </button>
                         </ng-container>
-                        <ng-container *ngIf="row.statut === 'PAS_COMMENCE' || (row.statut=== 'FINI' && !row.isTest)"> 
-                            <button mat-icon-button (click)="add(row)">
+                        <ng-container *ngIf="row.statut === 'PAS_COMMENCE'"> 
+                            <button mat-icon-button matTooltip="commencer" (click)="add(row)">
                                 <mat-icon>add_box</mat-icon>
                             </button>
                     </ng-container>
