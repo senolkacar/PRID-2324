@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, AfterViewInit, ElementRef, OnDestroy } fr
 import * as _ from 'lodash-es';
 import { Quiz } from '../../models/quiz';
 import { QuizService } from '../../services/quiz.service';
-import { StateService } from '../../helpers/state.service';
+import { StateService } from '../../services/state.service';
 import { MatTableState } from '../../helpers/mattable.state';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';

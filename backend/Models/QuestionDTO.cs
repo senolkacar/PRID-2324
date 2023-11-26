@@ -6,3 +6,10 @@ public class QuestionDTO{
     public string Body { get; set; } = null!;
 }
 
+public class QuestionWithSolutionAnswerDTO: QuestionDTO{
+    public BasicQuizDTO Quiz { get; set; } = null!;
+    public ICollection<AnswerDTO> Answers { get; set; } = new HashSet<AnswerDTO>();
+    public ICollection<SolutionDTO> Solutions { get; set; } = new HashSet<SolutionDTO>();
+
+}
+

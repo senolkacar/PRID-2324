@@ -21,6 +21,8 @@ import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { fr } from 'date-fns/locale';
 import { TestListComponent } from '../components/quizzes/test-list.component';
 import { MainQuizListComponent } from '../components/quizzes/main-quizlist.component';
+import { QuestionComponent } from '../components/question/question.component';
+import { CodeEditorComponent } from '../components/code-editor/code-editor.component';
 
 @NgModule({
     declarations: [
@@ -30,6 +32,8 @@ import { MainQuizListComponent } from '../components/quizzes/main-quizlist.compo
         TrainingListComponent,
         TestListComponent,
         MainQuizListComponent,
+        QuestionComponent,
+        CodeEditorComponent,
         FilterComponent,
         TeacherQuizListComponent,
         TeacherComponent,
