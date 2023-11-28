@@ -1,6 +1,6 @@
 <h1>Quiz</h1>
 <app-filter (filterChangedEvent)="onFilterChanged($event)"></app-filter>
 <p>Quiz d'entrainement: </p>
-<app-training-list></app-training-list>
+<app-quiz-list [quizType]="'training'"></app-quiz-list>
 <p>Quiz de test: </p>
-<app-test-list></app-test-list>
+<app-quiz-list [quizType]="'test'"></app-quiz-list>

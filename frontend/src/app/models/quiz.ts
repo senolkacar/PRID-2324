@@ -18,7 +18,6 @@ export class Quiz{
     database?: Database;
 
     get statut(): string {
-      //if it is not closed should check if there is an attempt should check if the attempt has a finish date, if not it is in progress
       if(this.isClosed){
             return 'CLOTURE';
         }else{

@@ -1,21 +1,18 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
-import { TestListComponent } from './test-list.component';
-import { TrainingListComponent } from './training-list.component';
+import { QuizListComponent } from './quiz-list.component';
 
 @Component({
     selector: 'app-main-quizlist',
     templateUrl: './main-quizlist.component.html',
 })
 export class MainQuizListComponent{
-    @ViewChild(TestListComponent) firstChild!: TestListComponent
-    @ViewChild(TrainingListComponent) secondChild!: TrainingListComponent
+    @ViewChild(QuizListComponent) child!: QuizListComponent
     filter: string = '';
 
     onFilterChanged(value: string) {
         this.filter = value;
-        this.firstChild.filterChanged(value);
-        this.secondChild.filterChanged(value);
-      }
+        this.child.filterChanged(value);
+    }
 
     
 

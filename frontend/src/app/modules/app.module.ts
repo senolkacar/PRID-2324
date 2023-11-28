@@ -6,7 +6,6 @@ import { AppRoutes } from '../routing/app.routing';
 import { AppComponent } from '../components/app/app.component';
 import { NavMenuComponent } from '../components/nav-menu/nav-menu.component';
 import { HomeComponent } from '../components/home/home.component';
-import { TrainingListComponent } from '../components/quizzes/training-list.component';
 import { RestrictedComponent } from '../components/restricted/restricted.component';
 import { UnknownComponent } from '../components/unknown/unknown.component';
 import { JwtInterceptor } from '../interceptors/jwt.interceptor';
@@ -19,18 +18,17 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SharedModule } from './shared.module';
 import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { fr } from 'date-fns/locale';
-import { TestListComponent } from '../components/quizzes/test-list.component';
 import { MainQuizListComponent } from '../components/quizzes/main-quizlist.component';
 import { QuestionComponent } from '../components/question/question.component';
 import { CodeEditorComponent } from '../components/code-editor/code-editor.component';
+import { QuizListComponent } from '../components/quizzes/quiz-list.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         NavMenuComponent,
         HomeComponent,
-        TrainingListComponent,
-        TestListComponent,
+        QuizListComponent,
         MainQuizListComponent,
         QuestionComponent,
         CodeEditorComponent,
