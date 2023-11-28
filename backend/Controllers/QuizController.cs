@@ -69,4 +69,14 @@ public async Task<ActionResult<IEnumerable<QuizWithAttemptsAndDBDTO>>> GetTraini
     return trainings;
 }
 
+ //return the first question id of quiz
+ [HttpGet("getFirstQuestionId/{id}")]
+ public async Task<ActionResult<int>> GetFirstQuestionId(int id) {
+    var query = await _context.Questions
+        .Where(q => q.QuizId == id)
+        .FirstOrDefaultAsync();
+
+    return query.Id;
+ }
+
 }

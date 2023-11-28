@@ -10,6 +10,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from "@angular/material/sort";
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthenticationService } from '../../services/authentication.service';
 import { format, formatISO } from 'date-fns';
@@ -36,6 +37,7 @@ export class QuizListComponent {
     private quizService: QuizService,
     private stateService: StateService,
     private authService: AuthenticationService,
+    private router: Router,
     public dialog: MatDialog,
     public snackBar: MatSnackBar
   ) {
@@ -88,8 +90,11 @@ export class QuizListComponent {
     }
   }
 
-  edit(quiz: Quiz) {
-    // Implement edit logic
+  editQuiz(quizId: number): void {
+    // Navigate to the first question of the selected quiz
+    this.quizService.getFirstQuestionId(quizId).subscribe(questionId => {
+      this.router.navigate(['/question', questionId]);
+    });
   }
 
   delete(quiz: Quiz) {

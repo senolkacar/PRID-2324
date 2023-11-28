@@ -1,5 +1,27 @@
-<h1>Test Code Editor</h1>
+<div class="d-flex justify-content-between">
+<div>
+<ng-container><button mat-icon-button (click)="navigateToPreviousQuestion()" [disabled]="isAtMinQuestion()">
+    <mat-icon>&#9664;</mat-icon>
+    </button>
+</ng-container>
+<ng-container><button mat-icon-button (click)="navigateToNextQuestion()" [disabled]="isAtMaxQuestion()">
+    <mat-icon>&#9658;</mat-icon>
+    </button>
+</ng-container>
+</div>
+<h2>{{ question.quiz?.name }} - Exercice {{question.order}}</h2>
+<ng-container><button mat-icon-button>
+    <mat-icon>close</mat-icon>
+    </button>
+</ng-container>
+</div>
 
+<div>
+    <ng-container><p class="text-info h5">{{ question.body }}</p></ng-container>
+</div>
+<div>
+    <ng-container><p>Votre requête: </p></ng-container>
+</div>
 <p>Ce composant permet d'illustrer la manière d'utiliser le composant <code>code-editor</code> pour éditer 
 du code SQL, et plus particulièrement comment on peut faire un binding bidirectionnel de sa valeur avec 
 un attribut (ici <code>query</code>) du composant parent. Pour cela, on a ajouté un <code>textarea</code> 
@@ -7,8 +29,41 @@ qui fait également un binding bidirectionnel vers le même attribut.</p>
 
 <p>Il illustre aussi à travers la checkbox "Read Only" la manière dont on peut contrôler le fait qu'il soit
 modifiable ou en lecture seule.</p>
-
 <code-editor #editor [(ngModel)]="query" [readOnly]="true"></code-editor>
+
+<div class="d-flex">
+    <div class="pe-2">
+    <ng-container>
+        <button mat-raised-button>Envoyer</button>
+    </ng-container>
+    </div>
+    <div class="pe-2">
+    <ng-container>
+        <button mat-raised-button>Effacer</button>
+    </ng-container>
+    </div>
+    <div>
+    <ng-container>
+        <button mat-raised-button>Voir Solutions</button>
+    </ng-container>
+    </div>
+</div>
+
+<div>
+    HERE IF REPONSE INCORRECT OR SYNTAX ERROR, IF CORRECT
+    IF INCORRECT error message with sql result;
+    if syntax error, display syntax error retrieved
+    if correct information message, sql result and solutions
+</div>
+
+
+<div>
+    HERE COMES SOLUTIONS ONLY POSSIBLE TO VIEW FOR TRAININGS AFTER VIEW SOLUTIONS OR CORRECT RESPONSE
+    If multiple solutions, display as solution1 , solution2
+</div>
+
+
+
 
 <div>
     <label for="readonly">Read Only</label>&nbsp;

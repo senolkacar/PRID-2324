@@ -27,4 +27,8 @@ export class QuizService {
             map(res => plainToInstance(Quiz, res))
         );
     }
+
+    getFirstQuestionId(id : number): Observable<number>{
+        return this.http.get<number>(`${this.baseUrl}api/quizzes/getFirstQuestionId/${id}`);
+    }
 }

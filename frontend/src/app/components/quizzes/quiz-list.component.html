@@ -30,7 +30,7 @@
                     <th mat-header-cell *matHeaderCellDef> Actions </th>
                     <td mat-cell *matCellDef="let row">
                         <ng-container *ngIf="row.statut === 'EN_COURS' && quizType === 'training'">
-                            <button mat-icon-button tabindex="-1" matTooltip="poursuivre" (click)="edit(row)">
+                            <button mat-icon-button tabindex="-1" matTooltip="poursuivre" (click)="editQuiz(row.id)">
                                 <mat-icon>edit</mat-icon>
                             </button>
                         </ng-container>
@@ -40,7 +40,7 @@
                             </button>
                         </ng-container>
                         <ng-container *ngIf="row.statut === 'PAS_COMMENCE'">
-                            <button mat-icon-button matTooltip="commencer" (click)="add(row)">
+                            <button mat-icon-button matTooltip="commencer" (click)="editQuiz(row.id)">
                                 <mat-icon>add_box</mat-icon>
                             </button>
                         </ng-container>

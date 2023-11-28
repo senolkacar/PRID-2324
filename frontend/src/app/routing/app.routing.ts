@@ -25,7 +25,7 @@ const appRoutes: Routes = [
     canActivate:[AuthGuard],
     data: {roles: [Role.Teacher]}
     },
-  {path:'question',component: QuestionComponent},
+  {path:'question/:questionId',component: QuestionComponent},
   {path: 'restricted', component: RestrictedComponent},
   { path: '**', component: UnknownComponent }
 ];
