@@ -8,6 +8,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from "@angular/material/sort";
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-teacher-quizlist',
@@ -27,7 +28,8 @@ export class TeacherQuizListComponent implements AfterViewInit {
     private quizService: QuizService,
     private stateService: StateService,
     public dialog: MatDialog,
-    public snackBar: MatSnackBar
+    public snackBar: MatSnackBar,
+    private router: Router
   ) {
     this.state = this.stateService.quizListState;
   }
@@ -75,23 +77,7 @@ refresh() {
         this.dataSource.paginator.firstPage();
 }
 
-  edit(quiz: Quiz) {
-    // Your edit logic
-  }
-
-  delete(quiz: Quiz) {
-    // Your delete logic
-  }
-
-  read(quiz: Quiz) {
-    // Your read logic
-  }
-
-  add(quiz: Quiz) {
-    // Your add logic
-  }
-
-  create() {
-    // Your create logic
+  editQuiz(quizId: number): void {
+    this.router.navigate(['/quizedition', quizId]);
   }
 }

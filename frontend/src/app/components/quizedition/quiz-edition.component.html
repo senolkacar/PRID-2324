@@ -1,0 +1,58 @@
+<div class="d-flex justify-content-between">
+<div>
+<p>Nom</p>
+<mat-form-field>
+    <input matInput type="text" value="{{quiz.name}}" required>
+</mat-form-field>
+<p>Description</p>
+<mat-form-field>
+    <input matInput type="text" value="{{quiz.description}}" required>
+</mat-form-field>
+<p>Type de quiz</p>
+<ng-container>
+    <mat-radio-group>
+        <mat-radio-button value="1">Training</mat-radio-button>
+      <mat-radio-button value="2">Test</mat-radio-button>
+    </mat-radio-group>
+</ng-container>
+
+</div>
+
+<div>
+  <mat-label>Base de données</mat-label>
+  <mat-select required>
+    <mat-option value="1">Fournisseur</mat-option>
+    <mat-option value="2">Facebook</mat-option>
+  </mat-select>
+</div>
+
+<div>
+    <mat-slide-toggle>Publié</mat-slide-toggle>
+    
+</div>
+</div>
+<div class="col-sm-12 d-flex justify-content-end">
+<ng-container>
+    <button mat-button>
+        <mat-icon>save</mat-icon>
+    </button>
+</ng-container>
+<ng-container>
+    <button mat-button>
+        <mat-icon>delete</mat-icon>
+    </button>
+</ng-container>
+</div>
+<div>
+    <p>Questions</p>
+    <div>
+    HERE COMES THE QUESTIONS
+        <div class="col-sm-12 d-flex justify-content-end">
+        <ng-container>
+        <button mat-button>
+            <mat-icon>add</mat-icon>
+        </button>
+        </ng-container>
+        </div>
+    </div>
+</div>

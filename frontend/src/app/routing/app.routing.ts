@@ -10,6 +10,7 @@ import { Role } from '../models/user';
 import { TeacherComponent } from '../components/teacher/teacher.component';
 import { MainQuizListComponent } from '../components/quizzes/main-quizlist.component';
 import { QuestionComponent } from '../components/question/question.component';
+import { QuizEditionComponent } from '../components/quizedition/quiz-edition.component';
 
 
 const appRoutes: Routes = [
@@ -25,6 +26,7 @@ const appRoutes: Routes = [
     canActivate:[AuthGuard],
     data: {roles: [Role.Teacher]}
     },
+  {path:'quizedition/:quizId',component: QuizEditionComponent},
   {path:'question/:questionId',component: QuestionComponent},
   {path: 'restricted', component: RestrictedComponent},
   { path: '**', component: UnknownComponent }

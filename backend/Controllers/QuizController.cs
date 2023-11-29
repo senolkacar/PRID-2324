@@ -79,4 +79,17 @@ public async Task<ActionResult<IEnumerable<QuizWithAttemptsAndDBDTO>>> GetTraini
     return query.Id;
  }
 
+ [HttpGet("getQuizById/{id}")]
+ public async Task<ActionResult<QuizWithAttemptsAndDBDTO>> GetQuizById(int id) {
+    var query = await _context.Quizzes
+        .Include(q => q.Database)
+        .Include(q => q.Attempts)
+        .Where(q => q.Id == id)
+        .FirstOrDefaultAsync();
+
+    var quiz = _mapper.Map<QuizWithAttemptsAndDBDTO>(query);
+
+    return quiz;
+ }
+
 }

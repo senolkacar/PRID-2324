@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { DefaultValueAccessor, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { MatRadioModule } from '@angular/material/radio';
 import { AppRoutes } from '../routing/app.routing';
 import { AppComponent } from '../components/app/app.component';
 import { NavMenuComponent } from '../components/nav-menu/nav-menu.component';
@@ -22,6 +23,7 @@ import { MainQuizListComponent } from '../components/quizzes/main-quizlist.compo
 import { QuestionComponent } from '../components/question/question.component';
 import { CodeEditorComponent } from '../components/code-editor/code-editor.component';
 import { QuizListComponent } from '../components/quizzes/quiz-list.component';
+import { QuizEditionComponent } from '../components/quizedition/quiz-edition.component';
 
 @NgModule({
     declarations: [
@@ -32,6 +34,7 @@ import { QuizListComponent } from '../components/quizzes/quiz-list.component';
         MainQuizListComponent,
         QuestionComponent,
         CodeEditorComponent,
+        QuizEditionComponent,
         FilterComponent,
         TeacherQuizListComponent,
         TeacherComponent,
@@ -45,6 +48,7 @@ import { QuizListComponent } from '../components/quizzes/quiz-list.component';
         HttpClientModule,
         FormsModule,
         ReactiveFormsModule,
+        MatRadioModule,
         AppRoutes,
         BrowserAnimationsModule,
         SharedModule
