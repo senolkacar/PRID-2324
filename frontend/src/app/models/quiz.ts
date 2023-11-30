@@ -16,18 +16,7 @@ export class Quiz{
     attempts?: Attempt[];
     @Type(()=> Database)
     database?: Database;
-
-    get statut(): string {
-      if(this.isClosed){
-            return 'CLOTURE';
-        }else{
-            if (this.attempts?.length == 0||this.attempts==null){
-                return 'PAS_COMMENCE';
-            }else{
-                return this.attempts[0]?.finish !== null ? 'FINI' : 'EN_COURS';
-            }
-        }
-    }
+    statut?: string;
 
     get statutForTeacher(): string{
         if(this.isClosed){

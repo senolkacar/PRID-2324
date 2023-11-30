@@ -11,7 +11,6 @@ export class MainQuizListComponent{
 
     onFilterChanged(value: string) {
         this.filter = value;
-        this.child.filterChanged(value);
     }
 
     

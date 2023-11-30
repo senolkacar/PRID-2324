@@ -39,7 +39,7 @@
                                 <mat-icon>book</mat-icon>
                             </button>
                         </ng-container>
-                        <ng-container *ngIf="row.statut === 'PAS_COMMENCE'">
+                        <ng-container *ngIf="row.statut === 'PAS_COMMENCE' || (quizType === 'training' && row.statut == 'FINI') ">
                             <button mat-icon-button matTooltip="commencer" (click)="editQuiz(row.id)">
                                 <mat-icon>add_box</mat-icon>
                             </button>

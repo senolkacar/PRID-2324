@@ -22,12 +22,20 @@ import { plainToClass } from 'class-transformer';
   styleUrls: ['./quiz-list.component.css']
 })
 export class QuizListComponent {
+    private _filter: string = '';
+    get filter(): string {
+        return this._filter;
+    }
+    @Input() set filter(value: string) {
+        this._filter = value;
+        this.filterChanged(value);
+    }
+
     @Input() quizType: 'test' | 'training' = 'test';
     displayedColumns: string[] = [];
 
 
   dataSource: MatTableDataSource<Quiz> = new MatTableDataSource();
-  filter: string = '';
   state: MatTableState;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;

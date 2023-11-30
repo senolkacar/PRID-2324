@@ -43,12 +43,21 @@ public async Task<ActionResult<IEnumerable<QuizWithAttemptsAndDBDTO>>> GetAll()
 [HttpGet("tests")]
 public async Task<ActionResult<IEnumerable<QuizWithAttemptsAndDBDTO>>> GetTests()
 {
+    var pseudo = User.Identity!.Name;
+    var user = await _context.Users.SingleOrDefaultAsync(u => u.Pseudo == pseudo);
+    if(user==null){
+        return BadRequest();
+    }
+
     var databasesWithQuizzes = await _context.Quizzes
         .Include(d => d.Database)
         .Include(d => d.Attempts)
         .Where(q => q.IsTest)
         .ToListAsync();
 
+    foreach(var q in databasesWithQuizzes){
+        q.Statut = q.GetStatus(user);
+    }
     var tests = _mapper.Map<List<QuizWithAttemptsAndDBDTO>>(databasesWithQuizzes);
 
     return tests;
@@ -58,12 +67,19 @@ public async Task<ActionResult<IEnumerable<QuizWithAttemptsAndDBDTO>>> GetTests(
 [HttpGet("trainings")]
 public async Task<ActionResult<IEnumerable<QuizWithAttemptsAndDBDTO>>> GetTrainings()
 {
+   var pseudo = User.Identity!.Name;
+    var user = await _context.Users.SingleOrDefaultAsync(u => u.Pseudo == pseudo);
+    if(user==null){
+        return BadRequest();
+    }
     var databasesWithQuizzes = await _context.Quizzes
         .Include(d => d.Database)
         .Include(d => d.Attempts)
         .Where(q => !q.IsTest)
         .ToListAsync();
-
+    foreach(var q in databasesWithQuizzes){
+        q.Statut = q.GetStatus(user);
+    }
     var trainings = _mapper.Map<List<QuizWithAttemptsAndDBDTO>>(databasesWithQuizzes);
 
     return trainings;

@@ -11,7 +11,7 @@ public class QuizDTO{
     public DateTimeOffset? StartDate { get; set; }
     public DateTimeOffset? EndDate { get; set; }  
 
-
+    public string Statut { get; set; } = "";
 
 }
 

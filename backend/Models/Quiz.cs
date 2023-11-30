@@ -18,5 +18,23 @@ public class Quiz {
     public Database Database { get; set; } = null!;
     public ICollection<Question> Questions { get; set; } = new HashSet<Question>();
     public ICollection<Attempt> Attempts { get; set; } = new HashSet<Attempt>();
+    
+    [NotMapped]
+    public string Statut { get; set; } = "";
+
+    public string GetStatus(User user) {
+      string res="";
+      if(this.IsClosed){
+        res = "CLOTURE";
+    }else{
+            if(Attempts.Any(q => q.StudentId == user.Id)){
+            Attempt attempt = Attempts.First(q => q.StudentId == user.Id);
+            return attempt.Finish == null ? "EN_COURS" : "FINI";
+            }else{
+                res = "PAS_COMMENCE";
+            }
+        }
+        return res;
+    }
 
 }
