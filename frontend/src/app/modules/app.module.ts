@@ -12,7 +12,6 @@ import { UnknownComponent } from '../components/unknown/unknown.component';
 import { JwtInterceptor } from '../interceptors/jwt.interceptor';
 import { LoginComponent } from '../components/login/login.component';
 import { SignupComponent } from '../components/signup/signup.component';
-import { FilterComponent } from '../components/teacher/filter.component';
 import { TeacherComponent } from '../components/teacher/teacher.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SharedModule } from './shared.module';
@@ -23,6 +22,7 @@ import { QuestionComponent } from '../components/question/question.component';
 import { CodeEditorComponent } from '../components/code-editor/code-editor.component';
 import { QuizListComponent } from '../components/quizzes/quiz-list.component';
 import { QuizEditionComponent } from '../components/quizedition/quiz-edition.component';
+import { FilterComponent } from '../components/quizzes/filter.component';
 
 @NgModule({
     declarations: [
