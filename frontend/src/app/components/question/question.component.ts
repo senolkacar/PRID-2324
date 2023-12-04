@@ -14,8 +14,6 @@ export class QuestionComponent implements OnInit {
     query = "SELECT *\nFROM P\nWHERE COLOR='Red'";
 
     questionId!: number;
-    firstQuestionId!: number;
-    lastQuestionId!: number;
     question!: Question;
 
 
@@ -33,22 +31,22 @@ export class QuestionComponent implements OnInit {
     }
 
     isAtMinQuestion(): boolean {
-      return this.questionId <= this.firstQuestionId;
+      return this.question?.previousQuestionId == null;
     }
   
     isAtMaxQuestion(): boolean {
-      return this.questionId >= this.lastQuestionId;
+      return this.question?.nextQuestionId == null;
     }
 
     navigateToPreviousQuestion() {
-        if (this.questionId > this.firstQuestionId) {
-          this.navigateToQuestion(this.questionId - 1);
+        if (this.question?.previousQuestionId !== null && this.question?.previousQuestionId !== undefined) {
+          this.navigateToQuestion(this.question.previousQuestionId);
         }
       }
-    
+
     navigateToNextQuestion() {
-        if (this.questionId < this.lastQuestionId) {
-          this.navigateToQuestion(this.questionId + 1);
+        if (this.question?.nextQuestionId !== null && this.question?.nextQuestionId !== undefined) {
+          this.navigateToQuestion(this.question.nextQuestionId);
         }
       }
     
@@ -63,13 +61,7 @@ export class QuestionComponent implements OnInit {
             // Fetch the specific question based on the question ID
             this.questionService.getQuestion(this.questionId).subscribe(question => {
                 this.question = question;
-                this.questionService.getFirstQuestionId(this.question.quiz?.id!).subscribe(id => {
-                    this.firstQuestionId = id;
-                });
-                this.questionService.getLastQuestionId(this.question.quiz?.id!).subscribe(id => {
-                    this.lastQuestionId = id;
-                });
-
+                
             });
         });
     }

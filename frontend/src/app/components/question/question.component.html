@@ -9,14 +9,16 @@
     </button>
 </ng-container>
 </div>
-<h2>{{ question.quiz?.name }} - Exercice {{question.order}}</h2>
+<div *ngIf="question">
+<h2>{{ question.quiz?.name }} - Exercice {{ question.order }}</h2>
+</div>
 <ng-container><button mat-icon-button>
     <mat-icon>close</mat-icon>
     </button>
 </ng-container>
 </div>
 
-<div>
+<div *ngIf="question">
     <ng-container><p class="text-info h5">{{ question.body }}</p></ng-container>
 </div>
 <div>

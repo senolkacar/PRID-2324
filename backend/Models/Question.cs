@@ -13,4 +13,12 @@ public class Question{
     public Quiz Quiz { get; set; } = null!;
     public ICollection<Solution> Solutions { get; set; } = new HashSet<Solution>();
     public ICollection<Answer> Answers { get; set; } = new HashSet<Answer>();
+
+    [NotMapped]
+    public int? PreviousQuestionId { get; set; }
+    [NotMapped]
+    public int? NextQuestionId { get; set; }
+
+    
+
 }

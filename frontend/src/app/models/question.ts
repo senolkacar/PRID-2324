@@ -10,7 +10,8 @@ export class Question{
     quiz?: Quiz;
     @Type(() => Answer)
     answers?: Answer[];
-
+    previousQuestionId?: number | null;
+    nextQuestionId?: number | null;
 
    
 }

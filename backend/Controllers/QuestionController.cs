@@ -27,15 +27,31 @@ public class QuestionController : ControllerBase{
 
     [HttpGet("{id}")]
     public async Task<ActionResult<QuestionWithSolutionAnswerDTO>> GetQuestion(int id) {
-    var query = await _context.Questions
-        .Include(q => q.Quiz)
-        .Include(a => a.Answers)
-        .Include(s => s.Solutions)
-        .Where(q => q.Id == id)
-        .FirstOrDefaultAsync();
+        var query = await _context.Questions
+            .Include(q => q.Quiz)
+            .Include(a => a.Answers)
+            .Include(s => s.Solutions)
+            .Where(q => q.Id == id)
+            .OrderBy(q => q.Order)
+            .FirstOrDefaultAsync();
 
-    var question = _mapper.Map<QuestionWithSolutionAnswerDTO>(query);
-    return question;
+        var question = _mapper.Map<QuestionWithSolutionAnswerDTO>(query);
+
+        var previousQuestion = await _context.Questions
+            .Where(q => q.QuizId == question.Quiz.Id && q.Order < question.Order)
+            .OrderByDescending(q => q.Order)
+            .Select(q => q.Id)
+            .FirstOrDefaultAsync();
+        question.PreviousQuestionId = previousQuestion != 0 ? previousQuestion : null;
+
+        var nextQuestion = await _context.Questions
+            .Where(q => q.QuizId == question.Quiz.Id && q.Order > question.Order)
+            .OrderBy(q => q.Order)
+            .Select(q => q.Id)
+            .FirstOrDefaultAsync();
+        question.NextQuestionId = nextQuestion != 0 ? nextQuestion : null;
+
+        return question;
     }
 
     [HttpGet("getQuestionsByQuizId/{id}")]
@@ -50,27 +66,5 @@ public class QuestionController : ControllerBase{
     var questions = _mapper.Map<List<QuestionWithSolutionAnswerDTO>>(query);
     return questions;
     }
-
-    [HttpGet("getFirstQuestionByQuizId/{id}")]
-    public async Task<ActionResult<int>> GetFirstQuestionByQuizId(int id) {
-    var query = await _context.Questions
-        .Where(q => q.QuizId == id)
-        .OrderBy(q => q.Order)
-        .FirstOrDefaultAsync();
-    
-        return query.Id;
-    }
-
-    [HttpGet("getLastQuestionByQuizId/{id}")]
-
-    public async Task<ActionResult<int>> GetLastQuestionByQuizId(int id) {
-    var query = await _context.Questions
-        .Where(q => q.QuizId == id)
-        .OrderByDescending(q => q.Order)
-        .FirstOrDefaultAsync();
-    
-        return query.Id;
-    }
-   
 
 }

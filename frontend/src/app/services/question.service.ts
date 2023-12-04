@@ -16,18 +16,4 @@ export class QuestionService {
         );
     }
 
-    getQuestionsByQuizId(id: number): Observable<Question[]>{
-        return this.http.get<any[]>(`${this.baseUrl}api/question/getQuestionsByQuizId/${id}`).pipe(
-            map(res => plainToInstance(Question, res))
-        );
-    }
-
-    getFirstQuestionId(id : number): Observable<number>{
-        return this.http.get<number>(`${this.baseUrl}api/question/getFirstQuestionByQuizId/${id}`);
-    }
-
-    getLastQuestionId(id : number): Observable<number>{
-        return this.http.get<number>(`${this.baseUrl}api/question/getLastQuestionByQuizId/${id}`);
-    }
-
 }
