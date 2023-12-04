@@ -17,6 +17,7 @@ export class Quiz{
     @Type(()=> Database)
     database?: Database;
     statut?: string;
+    evaluation?: string;
 
     get statutForTeacher(): string{
         if(this.isClosed){

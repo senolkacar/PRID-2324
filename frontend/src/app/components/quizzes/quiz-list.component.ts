@@ -83,7 +83,6 @@ export class QuizListComponent {
     });
   }
 
-  //TODO: Fix the Filter only filter the first placed component in the parent
 
   filterChanged(filterValue: string) {
     if (filterValue == null) {

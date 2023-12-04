@@ -12,6 +12,7 @@ public class QuizDTO{
     public DateTimeOffset? EndDate { get; set; }  
 
     public string Statut { get; set; } = "";
+    public string Evaluation { get; set; } = "";
 
 }
 
@@ -44,6 +45,7 @@ public class QuizWithAttemptsDTO : QuizDTO {
 public class QuizWithAttemptsAndDBDTO : QuizDTO {
     public DatabaseDTO Database { get; set; } = null!;
     public ICollection<AttemptDTO> Attempts { get; set; } = new HashSet<AttemptDTO>();
+    public ICollection<QuestionDTO> Questions { get; set; } = new HashSet<QuestionDTO>();
 }
 
 //Quiz with attempts and answers

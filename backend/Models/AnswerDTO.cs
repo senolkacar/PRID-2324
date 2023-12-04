@@ -5,4 +5,6 @@ public class AnswerDTO{
     public string Sql { get; set; } = null!;
     public DateTimeOffset? Timestamp { get; set; }
     public bool IsCorrect { get; set; } = false;
+    public int AttemptId { get; set; }
+    public int QuestionId { get; set; }
 }

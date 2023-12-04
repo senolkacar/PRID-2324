@@ -19,6 +19,7 @@ public class MappingProfile : Profile
         CreateMap<Quiz, QuizWithAttemptsAndDBDTO>();
         CreateMap<Database, DatabaseDTO>();
         CreateMap<Attempt, AttemptDTO>();
+        CreateMap<AttemptDTO, Attempt>();
         CreateMap<Answer,AnswerDTO>();
         CreateMap<AnswerDTO,Answer>();
         CreateMap<Solution,SolutionDTO>();

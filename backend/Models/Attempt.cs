@@ -13,4 +13,14 @@ public class Attempt{
     public Quiz Quiz { get; set; } = null!;
     public int StudentId { get; set; }
     public Student Student { get; set; } = null!;
+
+    public int GetScore(){
+        int score = 0;
+        foreach (var answer in Answers){
+            if (answer.IsCorrect){
+                score++;
+            }
+        }
+        return score;
+    }
 }

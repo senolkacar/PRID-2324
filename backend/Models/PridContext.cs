@@ -276,7 +276,7 @@ WHERE l.ID_P = p.ID_P
 
     public void CreateAttempt2() {
         modelBuilder.Entity<Attempt>().HasData(
-            new Attempt { Id = 2, Start = DateTimeOffset.Now, Finish = DateTimeOffset.Now, QuizId = 3, StudentId = 4 }
+            new Attempt { Id = 2, Start = DateTimeOffset.Now, Finish = DateTimeOffset.Now, QuizId = 4, StudentId = 4 }
         );
         modelBuilder.Entity<Answer>().HasData(
             new Answer { Id = 2, QuestionId = 30, AttemptId = 2, Sql = "SELECT * FROM S", IsCorrect = true }

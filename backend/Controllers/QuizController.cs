@@ -51,13 +51,17 @@ public async Task<ActionResult<IEnumerable<QuizWithAttemptsAndDBDTO>>> GetTests(
 
     var databasesWithQuizzes = await _context.Quizzes
         .Include(d => d.Database)
+        .Include(d => d.Questions)
         .Include(d => d.Attempts)
+        .ThenInclude(a => a.Answers)
         .Where(q => q.IsTest)
         .ToListAsync();
 
     foreach(var q in databasesWithQuizzes){
         q.Statut = q.GetStatus(user);
+        q.Evaluation = q.GetEvaluation(user);
     }
+    
     var tests = _mapper.Map<List<QuizWithAttemptsAndDBDTO>>(databasesWithQuizzes);
 
     return tests;
@@ -80,6 +84,7 @@ public async Task<ActionResult<IEnumerable<QuizWithAttemptsAndDBDTO>>> GetTraini
     foreach(var q in databasesWithQuizzes){
         q.Statut = q.GetStatus(user);
     }
+
     var trainings = _mapper.Map<List<QuizWithAttemptsAndDBDTO>>(databasesWithQuizzes);
 
     return trainings;

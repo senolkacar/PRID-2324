@@ -21,17 +21,37 @@ public class Quiz {
     
     [NotMapped]
     public string Statut { get; set; } = "";
+    [NotMapped]
+    public string Evaluation { get; set; } = "";
 
-    public string GetStatus(User user) {
-      string res="";
-      if(this.IsClosed){
-        res = "CLOTURE";
-    }else{
+    public string GetStatus(User user)
+    {
+        string res = "";
+        if (this.IsClosed || this.EndDate < DateTimeOffset.Now)
+        {
+            res = "CLOTURE";
+        }
+        else
+        {
+            if (Attempts.Any(q => q.StudentId == user.Id))
+            {
+                Attempt attempt = Attempts.LastOrDefault(q => q.StudentId == user.Id);
+                return attempt.Finish == null ? "EN_COURS" : "FINI";
+            }
+            res = "PAS_COMMENCE";
+        }
+        return res;
+    }
+
+    public string GetEvaluation(User user) {
+        string res="N/A";
+        if(this.GetStatus(user) == "FINI" || this.GetStatus(user) == "CLOTURE"){
+            double score = 0;
             if(Attempts.Any(q => q.StudentId == user.Id)){
-            Attempt attempt = Attempts.First(q => q.StudentId == user.Id);
-            return attempt.Finish == null ? "EN_COURS" : "FINI";
-            }else{
-                res = "PAS_COMMENCE";
+                Attempt attempt = Attempts.FirstOrDefault(q => q.StudentId == user.Id);
+                score = attempt.GetScore();
+                double percentage = (score / this.Questions.Count()) * 100;
+                res = (percentage / 10) + "/10";
             }
         }
         return res;
