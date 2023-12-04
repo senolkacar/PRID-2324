@@ -11,7 +11,6 @@ import { RestrictedComponent } from '../components/restricted/restricted.compone
 import { UnknownComponent } from '../components/unknown/unknown.component';
 import { JwtInterceptor } from '../interceptors/jwt.interceptor';
 import { LoginComponent } from '../components/login/login.component';
-import { TeacherQuizListComponent } from '../components/teacher/teacher-quizlist.component';
 import { SignupComponent } from '../components/signup/signup.component';
 import { FilterComponent } from '../components/teacher/filter.component';
 import { TeacherComponent } from '../components/teacher/teacher.component';
@@ -36,7 +35,6 @@ import { QuizEditionComponent } from '../components/quizedition/quiz-edition.com
         CodeEditorComponent,
         QuizEditionComponent,
         FilterComponent,
-        TeacherQuizListComponent,
         TeacherComponent,
         LoginComponent,
         SignupComponent,

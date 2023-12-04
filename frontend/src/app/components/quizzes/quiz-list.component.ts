@@ -31,7 +31,7 @@ export class QuizListComponent {
         this.filterChanged(value);
     }
 
-    @Input() quizType: 'test' | 'training' = 'test';
+    @Input() quizType: 'test' | 'training' | 'teacher' = 'test';
     displayedColumns: string[] = [];
 
 
@@ -53,9 +53,13 @@ export class QuizListComponent {
   }
 
   ngOnInit():void{
-    this.displayedColumns = this.quizType === 'test'
-    ? ['name', 'databaseName', 'start', 'end', 'statut', 'evaluation', 'actions']
-    : ['name', 'databaseName', 'statut', 'actions'];
+    if(this.quizType === 'teacher'){
+      this.displayedColumns = ['name', 'databaseName','type', 'statutForTeacher', 'start', 'end', 'actions'];
+    }else if(this.quizType === 'training'){
+      this.displayedColumns = ['name', 'databaseName', 'statut', 'actions'];
+    }else{
+      this.displayedColumns = ['name', 'databaseName', 'start', 'end', 'statut', 'evaluation', 'actions'];
+    }
   }
 
   ngAfterViewInit(): void {
@@ -63,7 +67,7 @@ export class QuizListComponent {
     this.dataSource.sort = this.sort;
 
     this.dataSource.filterPredicate = (data: Quiz, filter: string) => {
-      const str = data.name + ' ' + data.statut + ' ' + data.database?.name;
+      const str = data.name + ' ' + data.statut + ' ' + data.database?.name + ' ' + data.type + ' ' + data.statutForTeacher;
       return str.toLowerCase().includes(filter);
     };
 
@@ -72,9 +76,14 @@ export class QuizListComponent {
   }
 
   refresh() {
-    const quizObservable = this.quizType === 'test'
-      ? this.quizService.getTests()
-      : this.quizService.getTrainings();
+    let quizObservable;
+    if(this.quizType === 'teacher'){
+      quizObservable = this.quizService.getAll();
+    }else if(this.quizType === 'training'){
+      quizObservable = this.quizService.getTrainings();
+    }else{
+      quizObservable = this.quizService.getTests();
+    }
     
     quizObservable.subscribe(data => {
         this.dataSource.data = data;

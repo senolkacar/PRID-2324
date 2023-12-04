@@ -10,6 +10,14 @@
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Base de données </th>
                     <td mat-cell *matCellDef="let row">{{ row.database?.name }}</td>
                 </ng-container>
+                <ng-container matColumnDef="type">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Type de quiz </th>
+                    <td mat-cell *matCellDef="let row" > {{ row.type }} </td>
+                </ng-container>
+                <ng-container matColumnDef="statutForTeacher">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Statut </th>
+                    <td mat-cell *matCellDef="let row">{{ row.statutForTeacher }} </td>
+                </ng-container>
                 <ng-container matColumnDef="start">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Date de début </th>
                     <td mat-cell *matCellDef="let row">{{ row.testStart }} </td>
@@ -29,7 +37,7 @@
                 <ng-container matColumnDef="actions">
                     <th mat-header-cell *matHeaderCellDef> Actions </th>
                     <td mat-cell *matCellDef="let row">
-                        <ng-container *ngIf="row.statut === 'EN_COURS' && quizType === 'training'">
+                        <ng-container *ngIf="(row.statut === 'EN_COURS' && quizType === 'training')|| quizType==='teacher'">
                             <button mat-icon-button tabindex="-1" matTooltip="poursuivre" (click)="editQuiz(row.id)">
                                 <mat-icon>edit</mat-icon>
                             </button>
