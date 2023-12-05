@@ -11,10 +11,9 @@ import { QuestionService } from 'src/app/services/question.service';
 export class QuestionComponent implements OnInit {
     @ViewChild('editor') editor!: CodeEditorComponent;
 
-    query = "SELECT *\nFROM P\nWHERE COLOR='Red'";
-
     questionId!: number;
     question!: Question;
+    query = '';
 
 
 
@@ -51,19 +50,19 @@ export class QuestionComponent implements OnInit {
       }
     
     navigateToQuestion(questionId: number) {
-        this.router.navigate(['/question', questionId]);
-      }
+      this.router.navigate(['/question', questionId]);
+    }
 
     ngOnInit(): void {
-         // Read the question ID from the route parameters
-         this.route.params.subscribe(params => {
-            this.questionId = +params['questionId']; // convert to number
-            // Fetch the specific question based on the question ID
-            this.questionService.getQuestion(this.questionId).subscribe(question => {
-                this.question = question;
-                
-            });
+      // Read the question ID from the route parameters
+      this.route.params.subscribe(params => {
+        this.questionId = +params['questionId']; // convert to number
+        // Fetch the specific question based on the question ID
+        this.questionService.getQuestion(this.questionId).subscribe(question => {
+          this.question = question;
+          this.query = question.answers && question.answers[0]?.sql || '';
         });
+      });
     }
 
 }
