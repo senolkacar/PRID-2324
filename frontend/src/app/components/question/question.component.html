@@ -22,7 +22,7 @@
     <ng-container><p class="text-info h5">{{ question.body }}</p></ng-container>
 </div>
 <div>
-    <ng-container><p>Votre requête: </p></ng-container>
+    <p>Votre requête:<ng-container *ngIf="!query">(pas encore répondu)</ng-container> </p>
 </div>
 
 <p>Il illustre aussi à travers la checkbox "Read Only" la manière dont on peut contrôler le fait qu'il soit
@@ -58,6 +58,12 @@ modifiable ou en lecture seule.</p>
 <div>
     HERE COMES SOLUTIONS ONLY POSSIBLE TO VIEW FOR TRAININGS AFTER VIEW SOLUTIONS OR CORRECT RESPONSE
     If multiple solutions, display as solution1 , solution2
+    <ng-container *ngFor="let s of question.solutions; index as i">
+        <p class="fw-bold">Solution {{ i + 1 }}</p>
+        <div class="text-success">
+        <p>{{ s.sql }}</p>
+        </div>
+    </ng-container>
 </div>
 
 

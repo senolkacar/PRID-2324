@@ -106,12 +106,17 @@ export class QuizListComponent {
     }
   }
 
-  editQuiz(quizId: number): void {
+  startOrContinueQuiz(quizId: number): void {
     // Navigate to the first question of the selected quiz
     this.quizService.getFirstQuestionId(quizId).subscribe(questionId => {
       this.router.navigate(['/question', questionId]);
     });
   }
+
+  editQuiz(quizId: number): void {
+    this.router.navigate(['/quizedition', quizId]);
+  }
+
 
   delete(quiz: Quiz) {
     // Implement delete logic

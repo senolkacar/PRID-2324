@@ -10,6 +10,7 @@ export class Question{
     quiz?: Quiz;
     @Type(() => Answer)
     answers?: Answer[];
+    solutions?: Solution[];
     previousQuestionId?: number | null;
     nextQuestionId?: number | null;
 
@@ -22,4 +23,10 @@ export class Answer{
     timestamp?:Date;
     isCorrect?:boolean;
     quizId?:number;
+}
+
+export class Solution{
+    id?:number;
+    order?:number;
+    sql?:string;
 }
