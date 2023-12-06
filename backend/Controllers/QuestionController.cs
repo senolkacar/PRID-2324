@@ -12,6 +12,7 @@ using System.Security.Claims;
 using prid_2324.Helpers;
 
 namespace prid_2324.Controllers;
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 

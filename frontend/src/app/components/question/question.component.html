@@ -58,10 +58,10 @@ modifiable ou en lecture seule.</p>
 <div>
     HERE COMES SOLUTIONS ONLY POSSIBLE TO VIEW FOR TRAININGS AFTER VIEW SOLUTIONS OR CORRECT RESPONSE
     If multiple solutions, display as solution1 , solution2
-    <ng-container *ngFor="let s of question.solutions; index as i">
+    <ng-container *ngFor="let s of question?.solutions; index as i">
         <p class="fw-bold">Solution {{ i + 1 }}</p>
         <div class="text-success">
-        <p>{{ s.sql }}</p>
+        <div style="white-space: pre-line;">{{ s.sql }}</div>
         </div>
     </ng-container>
 </div>

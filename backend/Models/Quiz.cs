@@ -35,21 +35,24 @@ public class Quiz {
         {
             if (Attempts.Any(q => q.StudentId == user.Id))
             {
-                Attempt attempt = Attempts.LastOrDefault(q => q.StudentId == user.Id);
-                return attempt.Finish == null ? "EN_COURS" : "FINI";
+                Attempt? attempt = Attempts.LastOrDefault(q => q.StudentId == user.Id);
+                return attempt?.Finish == null ? "EN_COURS" : "FINI";
             }
             res = "PAS_COMMENCE";
         }
         return res;
     }
 
-    public string GetEvaluation(User user) {
-        string res="N/A";
-        if(this.GetStatus(user) == "FINI" || this.GetStatus(user) == "CLOTURE"){
+    public string GetEvaluation(User user)
+    {
+        string res = "N/A";
+        if (this.GetStatus(user) == "FINI" || this.GetStatus(user) == "CLOTURE")
+        {
             double score = 0;
-            if(Attempts.Any(q => q.StudentId == user.Id)){
-                Attempt attempt = Attempts.FirstOrDefault(q => q.StudentId == user.Id);
-                score = attempt.GetScore();
+            if (Attempts.Any(q => q.StudentId == user.Id))
+            {
+                Attempt? attempt = Attempts.FirstOrDefault(q => q.StudentId == user.Id);
+                score = attempt?.GetScore() ?? 0;
                 double percentage = (score / this.Questions.Count()) * 100;
                 res = (percentage / 10) + "/10";
             }
