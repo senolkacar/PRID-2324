@@ -46,6 +46,7 @@ public class QuestionController : ControllerBase{
             .FirstOrDefaultAsync();
         
         query.HasAnswer = query.UserHasAnswered(user);
+        query.Answer = query.GetAnswer(user);
 
         var question = _mapper.Map<QuestionWithSolutionAnswerDTO>(query);
 

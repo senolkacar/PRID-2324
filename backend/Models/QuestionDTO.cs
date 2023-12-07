@@ -10,6 +10,7 @@ public class QuestionDTO{
     public int? NextQuestionId { get; set; }
 
     public bool HasAnswer { get; set; } = false;
+    public string Answer{get;set;} = "";
 }
 
 public class QuestionWithSolutionAnswerDTO: QuestionDTO{

@@ -10,10 +10,12 @@ export class Question{
     quiz?: Quiz;
     @Type(() => Answer)
     answers?: Answer[];
+    @Type(() => Solution)
     solutions?: Solution[];
     previousQuestionId?: number | null;
     nextQuestionId?: number | null;
     hasAnswer?:boolean;
+    answer?:string;
 
    
 }

@@ -13,7 +13,7 @@ export class QuestionComponent implements OnInit {
 
     questionId!: number;
     question!: Question;
-    query = '';
+    query = "";
 
 
 
@@ -60,7 +60,7 @@ export class QuestionComponent implements OnInit {
         // Fetch the specific question based on the question ID
         this.questionService.getQuestion(this.questionId).subscribe(question => {
           this.question = question;
-          this.query = question.answers && question.answers[0]?.sql || '';
+          this.query = question?.answer ?? '';
         });
       });
     }

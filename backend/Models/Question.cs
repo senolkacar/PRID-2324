@@ -21,6 +21,19 @@ public class Question{
     [NotMapped]
     public bool HasAnswer { get; set; } = false;
 
+    public string Answer{get;set;} = "";
+
+    public string GetAnswer(User user)
+    {
+        if(this.Quiz.Attempts.Any(a => a.StudentId == user.Id))
+        {
+            var attempt = this.Quiz.Attempts.LastOrDefault(a => a.StudentId == user.Id);
+            var answer = attempt?.Answers.FirstOrDefault(a => a.QuestionId == this.Id);
+            return answer?.Sql ?? "";
+        }
+        return "";
+    }
+
     public bool UserHasAnswered(User user)
     {
         if(this.Quiz.Attempts.Any(a => a.StudentId == user.Id))
