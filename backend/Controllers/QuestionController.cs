@@ -28,13 +28,24 @@ public class QuestionController : ControllerBase{
 
     [HttpGet("{id}")]
     public async Task<ActionResult<QuestionWithSolutionAnswerDTO>> GetQuestion(int id) {
+        var pseudo = User.Identity!.Name;
+        var user = await _context.Users.SingleOrDefaultAsync(u => u.Pseudo == pseudo);
+        if (user == null)
+        {
+            return BadRequest();
+        }
         var query = await _context.Questions
             .Include(q => q.Quiz)
+            .ThenInclude(q => q.Attempts)
+            .Include(q => q.Quiz)
+            .ThenInclude(q => q.Database)
             .Include(a => a.Answers)
             .Include(s => s.Solutions)
             .Where(q => q.Id == id)
             .OrderBy(q => q.Order)
             .FirstOrDefaultAsync();
+        
+        query.HasAnswer = query.UserHasAnswered(user);
 
         var question = _mapper.Map<QuestionWithSolutionAnswerDTO>(query);
 
@@ -51,6 +62,7 @@ public class QuestionController : ControllerBase{
             .Select(q => q.Id)
             .FirstOrDefaultAsync();
         question.NextQuestionId = nextQuestion != 0 ? nextQuestion : null;
+
 
         return question;
     }

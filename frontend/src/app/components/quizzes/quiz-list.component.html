@@ -48,7 +48,7 @@
                             </button>
                         </ng-container>
                         <ng-container *ngIf="row.statut === 'FINI'">
-                            <button mat-icon-button (click)="read(row)">
+                            <button mat-icon-button (click)="startOrContinueQuiz(row.id)">
                                 <mat-icon>book</mat-icon>
                             </button>
                         </ng-container>

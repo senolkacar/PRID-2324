@@ -18,6 +18,19 @@ public class Question{
     public int? PreviousQuestionId { get; set; }
     [NotMapped]
     public int? NextQuestionId { get; set; }
+    [NotMapped]
+    public bool HasAnswer { get; set; } = false;
+
+    public bool UserHasAnswered(User user)
+    {
+        if(this.Quiz.Attempts.Any(a => a.StudentId == user.Id))
+        {
+            var attempt = this.Quiz.Attempts.LastOrDefault(a => a.StudentId == user.Id);
+            return attempt?.Answers.Any(a => a.QuestionId == this.Id) ?? false;
+        }
+        return false;
+    }   
+
 
     
 

@@ -8,33 +8,34 @@
 <mat-form-field>
     <input matInput type="text" value="{{quiz.description}}" required>
 </mat-form-field>
-<p>Type de quiz</p>
+    <mat-slide-toggle>Publié</mat-slide-toggle>
+</div>
+</div>
+<div class="d-flex justify-content-between">
 <ng-container>
+    <p>Type de quiz</p>
     <mat-radio-group>
         <mat-radio-button value="1">Training</mat-radio-button>
       <mat-radio-button value="2">Test</mat-radio-button>
     </mat-radio-group>
 </ng-container>
 
-</div>
-
-<div>
 <mat-form-field>
-  <mat-label>Base de données</mat-label>
-  <mat-select required>
-    
-    <mat-option value="1">Fournisseur</mat-option>
-    <mat-option value="2">Facebook</mat-option>
-  </mat-select>
+    <mat-label>Date début</mat-label>
+    <input matInput [matDatepicker]="dateDebut">
+    <mat-hint>DD/MM/YYYY</mat-hint>
+    <mat-datepicker-toggle matIconSuffix [for]="dateDebut"></mat-datepicker-toggle>
+    <mat-datepicker #dateDebut></mat-datepicker>
 </mat-form-field>
-</div>
 
-<div>
-    <mat-slide-toggle>Publié</mat-slide-toggle>
-    
-</div>
-</div>
-<div class="col-sm-12 d-flex justify-content-end">
+<mat-form-field>
+    <mat-label>Date fin</mat-label>
+    <input matInput [matDatepicker]="dateFin">
+    <mat-hint>DD/MM/YYYY</mat-hint>
+    <mat-datepicker-toggle matIconSuffix [for]="dateFin"></mat-datepicker-toggle>
+    <mat-datepicker #dateFin></mat-datepicker>
+</mat-form-field>
+
 <ng-container>
     <button mat-button>
         <mat-icon>save</mat-icon>
@@ -45,6 +46,18 @@
         <mat-icon>delete</mat-icon>
     </button>
 </ng-container>
+</div>
+
+
+<div>
+<mat-form-field>
+  <mat-label>Base de données</mat-label>
+  <mat-select required>
+    
+    <mat-option value="1">Fournisseur</mat-option>
+    <mat-option value="2">Facebook</mat-option>
+  </mat-select>
+</mat-form-field>
 </div>
 <div>
     <p>Questions</p>

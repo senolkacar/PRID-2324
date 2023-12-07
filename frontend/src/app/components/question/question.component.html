@@ -22,7 +22,7 @@
     <ng-container><p class="text-info h5">{{ question.body }}</p></ng-container>
 </div>
 <div>
-    <p>Votre requête:<ng-container *ngIf="!query">(pas encore répondu)</ng-container> </p>
+    <p>Votre requête:<ng-container *ngIf="!question?.hasAnswer">(pas encore répondu)</ng-container> </p>
 </div>
 
 <p>Il illustre aussi à travers la checkbox "Read Only" la manière dont on peut contrôler le fait qu'il soit

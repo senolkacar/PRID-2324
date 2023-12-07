@@ -13,6 +13,7 @@ public class MappingProfile : Profile
         CreateMap<User, UserWithPasswordDTO>();
         CreateMap<UserWithPasswordDTO, User>();
         CreateMap<Quiz, QuizDTO>();
+        CreateMap<QuizDTO, Quiz>();
         CreateMap<Quiz, BasicQuizDTO>();
         CreateMap<BasicQuizDTO, Quiz>();
         CreateMap<Quiz, QuizWithAttemptsDTO>();

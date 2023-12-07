@@ -8,10 +8,12 @@ public class QuestionDTO{
     public int? PreviousQuestionId { get; set; }
 
     public int? NextQuestionId { get; set; }
+
+    public bool HasAnswer { get; set; } = false;
 }
 
 public class QuestionWithSolutionAnswerDTO: QuestionDTO{
-    public BasicQuizDTO Quiz { get; set; } = null!;
+    public QuizWithAttemptsAndDBDTO Quiz { get; set; } = null!;
     public ICollection<AnswerDTO> Answers { get; set; } = new HashSet<AnswerDTO>();
     public ICollection<SolutionDTO> Solutions { get; set; } = new HashSet<SolutionDTO>();
 

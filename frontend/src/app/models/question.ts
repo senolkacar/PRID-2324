@@ -13,6 +13,7 @@ export class Question{
     solutions?: Solution[];
     previousQuestionId?: number | null;
     nextQuestionId?: number | null;
+    hasAnswer?:boolean;
 
    
 }
