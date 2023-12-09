@@ -27,17 +27,17 @@
 
 <p>Il illustre aussi à travers la checkbox "Read Only" la manière dont on peut contrôler le fait qu'il soit
 modifiable ou en lecture seule.</p>
-<code-editor #editor [(ngModel)]="query" [readOnly]="true"></code-editor>
+<code-editor #editor [(ngModel)]="query"></code-editor>
 
 <div class="d-flex">
     <div class="pe-2">
     <ng-container>
-        <button mat-raised-button>Envoyer</button>
+        <button mat-raised-button (click)="evaluate()">Envoyer</button>
     </ng-container>
     </div>
     <div class="pe-2">
     <ng-container>
-        <button mat-raised-button>Effacer</button>
+        <button mat-raised-button (click)="reset()">Effacer</button>
     </ng-container>
     </div>
     <div>
@@ -48,10 +48,21 @@ modifiable ou en lecture seule.</p>
 </div>
 
 <div>
-    HERE IF REPONSE INCORRECT OR SYNTAX ERROR, IF CORRECT
-    IF INCORRECT error message with sql result;
-    if syntax error, display syntax error retrieved
-    if correct information message, sql result and solutions
+    <ng-container>
+        <p class="text-danger">{{queryResponse?.errors}}</p>
+    </ng-container>
+    <ng-container *ngIf="queryResponse">
+        <table mat-table [dataSource]="dataSource">
+      
+          <ng-container *ngFor="let column of queryResponse?.columns; index as i" [matColumnDef]="column">
+            <th mat-header-cell *matHeaderCellDef>{{ column }}</th>
+            <td mat-cell *matCellDef="let element">{{element[i]}}</td>
+          </ng-container>
+      
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </ng-container>
 </div>
 
 
@@ -65,14 +76,3 @@ modifiable ou en lecture seule.</p>
         </div>
     </ng-container>
 </div>
-
-
-
-
-<div>
-    <label for="readonly">Read Only</label>&nbsp;
-    <input id="readonly" type="checkbox" [(ngModel)]="editor.readOnly">
-</div>
-
-<br>
-<textarea [(ngModel)]="query" cols="80" rows="5" style="width: 100%"></textarea>

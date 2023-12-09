@@ -1,6 +1,7 @@
 import { Type } from 'class-transformer';
 import 'reflect-metadata';
 import { Quiz } from './quiz';
+import { Query } from './query';
 
 export class Question{
     id?:number;
@@ -16,6 +17,8 @@ export class Question{
     nextQuestionId?: number | null;
     hasAnswer?:boolean;
     answer?:string;
+    @Type(() => Query)
+    query?: Query;
 
    
 }

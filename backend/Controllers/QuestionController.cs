@@ -25,7 +25,7 @@ public class QuestionController : ControllerBase{
         _mapper = mapper;
     }
 
-
+    [Authorize]
     [HttpGet("{id}")]
     public async Task<ActionResult<QuestionWithSolutionAnswerDTO>> GetQuestion(int id) {
         var pseudo = User.Identity!.Name;
@@ -68,17 +68,23 @@ public class QuestionController : ControllerBase{
         return question;
     }
 
-    [HttpGet("getQuestionsByQuizId/{id}")]
-    public async Task<ActionResult<List<QuestionWithSolutionAnswerDTO>>> GetQuestionsByQuizId(int id) {
-    var query = await _context.Questions
-        .Include(q => q.Quiz)
-        .Include(a => a.Answers)
-        .Include(s => s.Solutions)
-        .Where(q => q.QuizId == id)
-        .ToListAsync();
+    [Authorize]
+    [HttpPost("eval/{questionId}/{query}")]
+    public async Task<ActionResult<Query>> Eval(int questionId, string query)
+    {
+        if (string.IsNullOrEmpty(query))
+        {
+            return BadRequest("The query field is required.");
+        }
 
-    var questions = _mapper.Map<List<QuestionWithSolutionAnswerDTO>>(query);
-    return questions;
+        var question = await _context.Questions
+            .Include(q => q.Quiz)
+            .ThenInclude(q => q.Database)
+            .Where(q => q.Id == questionId)
+            .FirstOrDefaultAsync();
+
+        var queryResult = question.eval(query);
+        return queryResult;
     }
 
 }

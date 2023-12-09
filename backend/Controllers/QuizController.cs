@@ -90,7 +90,7 @@ public async Task<ActionResult<IEnumerable<QuizWithAttemptsAndDBDTO>>> GetTraini
     return trainings;
 }
 
- //return the first question id of quiz
+[Authorize]
 [HttpGet("getFirstQuestionId/{id}")]
 public async Task<ActionResult<int>> GetFirstQuestionId(int id)
 {
@@ -103,7 +103,7 @@ public async Task<ActionResult<int>> GetFirstQuestionId(int id)
     }
     return query.Id;
 }
-
+[Authorize]
  [HttpGet("getQuizById/{id}")]
  public async Task<ActionResult<QuizWithAttemptsAndDBDTO>> GetQuizById(int id) {
     var query = await _context.Quizzes

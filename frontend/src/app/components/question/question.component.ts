@@ -1,8 +1,11 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { CodeEditorComponent } from '../code-editor/code-editor.component';
 import { ActivatedRoute,Router } from '@angular/router';
-import { Question } from 'src/app/models/question';
+import { Answer, Question } from 'src/app/models/question';
+import { Query } from 'src/app/models/query';
 import { QuestionService } from 'src/app/services/question.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatTableState } from 'src/app/helpers/mattable.state';
 
 @Component({
     selector: 'app-question',
@@ -11,11 +14,12 @@ import { QuestionService } from 'src/app/services/question.service';
 export class QuestionComponent implements OnInit {
     @ViewChild('editor') editor!: CodeEditorComponent;
 
+    dataSource: MatTableDataSource<Query> = new MatTableDataSource();
+    displayedColumns: string[] = [];
     questionId!: number;
     question!: Question;
+    queryResponse!: Query;
     query = "";
-
-
 
 
     constructor(
@@ -27,6 +31,15 @@ export class QuestionComponent implements OnInit {
     ngAfterViewInit(): void {
         this.editor.focus();
 
+    }
+
+    evaluate() { 
+      this.questionService.evaluate(this.questionId, this.query).subscribe(res => {
+        this.question.hasAnswer = true;
+        this.queryResponse = res;
+        this.displayedColumns = res.columns;
+        this.dataSource.data = res.data;
+      });
     }
 
     isAtMinQuestion(): boolean {
@@ -53,6 +66,10 @@ export class QuestionComponent implements OnInit {
       this.router.navigate(['/question', questionId]);
     }
 
+    reset() {
+      this.query='';
+    }
+
     ngOnInit(): void {
       // Read the question ID from the route parameters
       this.route.params.subscribe(params => {
@@ -60,7 +77,7 @@ export class QuestionComponent implements OnInit {
         // Fetch the specific question based on the question ID
         this.questionService.getQuestion(this.questionId).subscribe(question => {
           this.question = question;
-          this.query = question?.answer ?? '';
+          this.query = question?.answer ?? ''; 
         });
       });
     }
