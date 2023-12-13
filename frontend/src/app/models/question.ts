@@ -16,7 +16,7 @@ export class Question{
     previousQuestionId?: number | null;
     nextQuestionId?: number | null;
     hasAnswer?:boolean;
-    answer?:string;
+    answer?:Answer;
     @Type(() => Query)
     query?: Query;
 
@@ -29,6 +29,7 @@ export class Answer{
     timestamp?:Date;
     isCorrect?:boolean;
     quizId?:number;
+
 }
 
 export class Solution{

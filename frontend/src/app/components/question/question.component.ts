@@ -16,9 +16,10 @@ export class QuestionComponent implements OnInit {
 
     dataSource: MatTableDataSource<Query> = new MatTableDataSource();
     displayedColumns: string[] = [];
+    solutionVisible = true;
     questionId!: number;
     question!: Question;
-    queryResponse!: Query;
+    answer!: Answer;
     query = "";
 
 
@@ -34,12 +35,15 @@ export class QuestionComponent implements OnInit {
     }
 
     evaluate() { 
-      this.questionService.evaluate(this.questionId, this.query).subscribe(res => {
-        this.question.hasAnswer = true;
-        this.queryResponse = res;
-        this.displayedColumns = res.columns;
-        this.dataSource.data = res.data;
-      });
+      if (this.query !== '') {
+        this.questionService.evaluate(this.questionId, this.query).subscribe(res => {
+          this.question.hasAnswer = true;
+          this.question.query = res;
+          this.displayedColumns = res.columns;
+          this.dataSource.data = res.data;
+
+        });
+      }
     }
 
     isAtMinQuestion(): boolean {
@@ -77,7 +81,10 @@ export class QuestionComponent implements OnInit {
         // Fetch the specific question based on the question ID
         this.questionService.getQuestion(this.questionId).subscribe(question => {
           this.question = question;
-          this.query = question?.answer ?? ''; 
+          this.answer = question?.answer!;
+          this.query = question?.answer?.sql ?? '';
+          this.evaluate();
+          console.log(this.question);
         });
       });
     }

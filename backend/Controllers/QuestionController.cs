@@ -46,7 +46,7 @@ public class QuestionController : ControllerBase{
             .FirstOrDefaultAsync();
         
         query.HasAnswer = query.UserHasAnswered(user);
-        query.Answer = query.GetAnswer(user);
+        query.Answer = query.Answers.FirstOrDefault(a => a.Attempt.StudentId == user.Id && a.QuestionId == query.Id);
 
         var question = _mapper.Map<QuestionWithSolutionAnswerDTO>(query);
 
