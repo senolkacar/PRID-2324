@@ -16,7 +16,7 @@ export class QuestionComponent implements OnInit {
 
     dataSource: MatTableDataSource<Query> = new MatTableDataSource();
     displayedColumns: string[] = [];
-    solutionVisible = true;
+    solutionVisible = false;
     questionId!: number;
     question!: Question;
     answer!: Answer;
@@ -67,7 +67,12 @@ export class QuestionComponent implements OnInit {
       }
     
     navigateToQuestion(questionId: number) {
+      this.solutionVisible = false;
       this.router.navigate(['/question', questionId]);
+    }
+
+    setSolutionVisible() {
+      this.solutionVisible = true;
     }
 
     reset() {

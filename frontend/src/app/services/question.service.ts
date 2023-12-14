@@ -17,7 +17,7 @@ export class QuestionService {
     }
 
     public evaluate(questionId: number, query: string): Observable<any> {
-        return this.http.post<any>(`${this.baseUrl}api/question/eval/${questionId}/${query}`, null);
+        return this.http.post<any>(`${this.baseUrl}api/question/eval/`, { questionId, query });
     }
 
 }

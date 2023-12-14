@@ -11,6 +11,7 @@ public class QuestionDTO{
 
     public bool HasAnswer { get; set; } = false;
     public AnswerDTO? Answer { get; set; } = null!;
+
 }
 
 public class QuestionWithSolutionAnswerDTO: QuestionDTO{
@@ -18,7 +19,9 @@ public class QuestionWithSolutionAnswerDTO: QuestionDTO{
     public ICollection<AnswerDTO> Answers { get; set; } = new HashSet<AnswerDTO>();
     public ICollection<SolutionDTO> Solutions { get; set; } = new HashSet<SolutionDTO>();
 
- 
-
 }
 
+public class EvalDTO {
+    public int QuestionId { get; set; }
+    public string? Query { get; set; }
+}

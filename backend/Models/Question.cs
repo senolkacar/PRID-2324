@@ -38,8 +38,52 @@ public class Question{
     }
 
     public Query eval(string sql){
+        Query query = new Query();
+        query.Sql = sql;
+        query.RowCount = 0;
+        query.Columns = new string[0];
+        query.Data = new string[0][];
+        query.Errors = new List<string>();
+        query = this.GetData(sql);
+        this.Validate(query);
+        return query;
+        
+    }
 
-    
+    public void Validate(Query query){
+        string SolutionSQL = this.Solutions.Where(q => q.QuestionId == this.Id).Select(q => q.Sql).FirstOrDefault();
+        Query SolutionResult = this.GetData(SolutionSQL);
+        if(SolutionResult.RowCount != query.RowCount){
+            query.Errors.Add("\nbad number of rows");
+        }
+        if(SolutionResult.Columns.Length != query.Columns.Length){
+            query.Errors.Add("\nbad number of columns");
+        }
+        if(query.Errors.Count == 0){
+            List<string> listOfSolutionElements = new List<string>();
+            List<string> listOfAttemptElements = new List<string>();
+            for(int i = 0; i < SolutionResult.RowCount; i++){
+                for(int j = 0; j < SolutionResult.Columns.Length; j++){
+                    listOfSolutionElements.Add(SolutionResult.Data[i][j].ToString());
+                }
+            }
+            for(int i = 0; i < query.RowCount; i++){
+                for(int j = 0; j < query.Columns.Length; j++){
+                    listOfAttemptElements.Add(query.Data[i][j].ToString());
+                }
+            }
+
+            //trier les listes dans l'ordre lexicographique
+            listOfAttemptElements.Sort();
+            listOfSolutionElements.Sort();
+            if(!listOfAttemptElements.SequenceEqual(listOfSolutionElements)){
+                query.Errors.Add("\nwrong data");
+            }
+        }
+
+    }
+
+    public Query GetData(string sql){
         Query query = new Query();
         query.Sql = sql;
         query.RowCount = 0;

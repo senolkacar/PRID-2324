@@ -39,7 +39,7 @@
     </div>
     <div>
     <ng-container *ngIf="!question.quiz?.isTest">
-        <button mat-raised-button>Voir Solutions</button>
+        <button mat-raised-button (click)="setSolutionVisible()">Voir Solutions</button>
     </ng-container>
     </div>
 </div>
@@ -47,9 +47,11 @@
 <div>
     <ng-container>
         <p class>{{question.answer?.timestamp | date:"dd/MM/yyyy hh:mm:ss"}}</p>
-        <p class="text-danger">{{question.query?.errors}}</p>
+        <ng-container *ngFor="let e of question.query?.errors">
+            <p class="text-danger">{{e}}</p>
+        </ng-container>
     </ng-container>
-    <ng-container *ngIf="question.query">
+    <ng-container *ngIf="question.query && question.query?.errors?.length === 0">
         <table mat-table [dataSource]="dataSource">
           <ng-container *ngFor="let column of question.query?.columns; index as i" [matColumnDef]="column">
             <th mat-header-cell *matHeaderCellDef>{{ column }}</th>
@@ -63,7 +65,7 @@
 </div>
 
 
-<div>
+<div *ngIf="solutionVisible || question.query?.errors?.length ===0">
     HERE COMES SOLUTIONS ONLY POSSIBLE TO VIEW FOR TRAININGS AFTER VIEW SOLUTIONS OR CORRECT RESPONSE
     If multiple solutions, display as solution1 , solution2
     <ng-container *ngFor="let s of question?.solutions; index as i">

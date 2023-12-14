@@ -69,10 +69,10 @@ public class QuestionController : ControllerBase{
     }
 
     [Authorize]
-    [HttpPost("eval/{questionId}/{query}")]
-    public async Task<ActionResult<Query>> Eval(int questionId, string query)
+    [HttpPost("eval")]
+    public async Task<ActionResult<Query>> Eval(EvalDTO evalDTO)
     {
-        if (string.IsNullOrEmpty(query))
+        if (string.IsNullOrEmpty(evalDTO.Query))
         {
             return BadRequest("The query field is required.");
         }
@@ -80,10 +80,11 @@ public class QuestionController : ControllerBase{
         var question = await _context.Questions
             .Include(q => q.Quiz)
             .ThenInclude(q => q.Database)
-            .Where(q => q.Id == questionId)
+            .Include(s => s.Solutions)
+            .Where(q => q.Id == evalDTO.QuestionId)
             .FirstOrDefaultAsync();
 
-        var queryResult = question.eval(query);
+        var queryResult = question.eval(evalDTO.Query);
         return queryResult;
     }
 
