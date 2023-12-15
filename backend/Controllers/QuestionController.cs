@@ -45,8 +45,8 @@ public class QuestionController : ControllerBase{
             .OrderBy(q => q.Order)
             .FirstOrDefaultAsync();
         
-        query.HasAnswer = query.UserHasAnswered(user);
-        query.Answer = query.Answers.FirstOrDefault(a => a.Attempt.StudentId == user.Id && a.QuestionId == query.Id);
+        query.HasAnswer = query.Answers.Any(a => a.Attempt.StudentId == user.Id && a.QuestionId == query.Id);
+        query.Answer = query.Answers.LastOrDefault(a => a.Attempt.StudentId == user.Id && a.QuestionId == query.Id);
 
         var question = _mapper.Map<QuestionWithSolutionAnswerDTO>(query);
 
@@ -76,6 +76,12 @@ public class QuestionController : ControllerBase{
         {
             return BadRequest("The query field is required.");
         }
+        var pseudo = User.Identity!.Name;
+        var user = await _context.Users.SingleOrDefaultAsync(u => u.Pseudo == pseudo);
+        if (user == null)
+        {
+            return BadRequest();
+        }
 
         var question = await _context.Questions
             .Include(q => q.Quiz)
@@ -85,6 +91,29 @@ public class QuestionController : ControllerBase{
             .FirstOrDefaultAsync();
 
         var queryResult = question.eval(evalDTO.Query);
+        bool isCorrect = queryResult.Errors.Count == 0;
+
+        var attempt = new Attempt { Start = DateTimeOffset.Now, StudentId = user.Id, QuizId = question.QuizId };
+        _context.Attempts.Add(attempt);
+        await _context.SaveChangesAsync();
+        var answer = new Answer { AttemptId = attempt.Id, QuestionId = question.Id, Sql = evalDTO.Query, Timestamp = DateTimeOffset.Now, IsCorrect = isCorrect };
+        _context.Answers.Add(answer);
+        await _context.SaveChangesAsync();
+        
+        return queryResult;
+    }
+
+    [Authorize]
+    [HttpGet("getQuery/{id}")]
+    public async Task<ActionResult<Query>> GetQuery(int id)
+    {
+        var question = await _context.Questions
+            .Include(q => q.Quiz)
+            .ThenInclude(q => q.Database)
+            .Include(s => s.Solutions)
+            .Where(q => q.Id == id)
+            .FirstOrDefaultAsync();
+        var queryResult = question.GetData(question.Solutions.FirstOrDefault().Sql);
         return queryResult;
     }
 

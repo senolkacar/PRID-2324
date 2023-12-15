@@ -27,16 +27,6 @@ public class Question{
     public Answer? Answer { get; set; } = null!;
 
 
-    public bool UserHasAnswered(User user)
-    {
-        if(this.Quiz.Attempts.Any(a => a.StudentId == user.Id))
-        {
-            var attempt = this.Quiz.Attempts.LastOrDefault(a => a.StudentId == user.Id);
-            return attempt?.Answers.Any(a => a.QuestionId == this.Id) ?? false;
-        }
-        return false;
-    }
-
     public Query eval(string sql){
         Query query = new Query();
         query.Sql = sql;

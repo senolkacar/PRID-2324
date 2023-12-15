@@ -20,4 +20,8 @@ export class QuestionService {
         return this.http.post<any>(`${this.baseUrl}api/question/eval/`, { questionId, query });
     }
 
+    getQuery(questionId: number): Observable<any> {
+        return this.http.get<any>(`${this.baseUrl}api/question/getquery/${questionId}`);
+    }
+
 }

@@ -31,7 +31,6 @@ export class QuestionComponent implements OnInit {
 
     ngAfterViewInit(): void {
         this.editor.focus();
-
     }
 
     evaluate() { 
@@ -41,7 +40,9 @@ export class QuestionComponent implements OnInit {
           this.question.query = res;
           this.displayedColumns = res.columns;
           this.dataSource.data = res.data;
-
+          if(res.errors.length ===0){
+            this.answer.isCorrect = true;
+          }
         });
       }
     }
@@ -88,7 +89,14 @@ export class QuestionComponent implements OnInit {
           this.question = question;
           this.answer = question?.answer!;
           this.query = question?.answer?.sql ?? '';
-          this.evaluate();
+          if(this.question.hasAnswer && this.answer.isCorrect){
+            let queryResponse = this.questionService.getQuery(this.questionId);
+            queryResponse.subscribe(res => {
+              this.question.query = res;
+              this.displayedColumns = res.columns;
+              this.dataSource.data = res.data;
+            });
+          }
           console.log(this.question);
         });
       });
