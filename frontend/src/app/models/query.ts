@@ -1,7 +1,7 @@
 export class Query{
     sql?:string;
     errors?:string[];
-    rowcount?:number;
+    rowCount?:number;
     columns?:string[];
     data?:string[][];
 }

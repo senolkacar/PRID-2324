@@ -30,7 +30,7 @@
 <div class="d-flex">
     <div class="pe-2">
     <ng-container>
-        <button mat-raised-button (click)="evaluate()">Envoyer</button>
+        <button mat-raised-button (click)="evaluate()" [disabled]="!canSendQuery()">Envoyer</button>
     </ng-container>
     </div>
     <div class="pe-2">
@@ -39,22 +39,32 @@
     </ng-container>
     </div>
     <div>
-    <ng-container *ngIf="!question.quiz?.isTest">
+    <ng-container *ngIf="!question?.quiz?.isTest">
         <button mat-raised-button (click)="setSolutionVisible()">Voir Solutions</button>
     </ng-container>
     </div>
 </div>
 
 <div>
-    <ng-container>
+    <ng-container *ngIf="question?.hasAnswer && showResultMessage">
         <p class>{{question.answer?.timestamp | date:"dd/MM/yyyy hh:mm:ss"}}</p>
+        <div *ngIf="question.query?.errors?.length === 0; else errorBlock">
+            <p class="text-success">Votre requête a retourné une réponse correcte!</p>
+            <p class="text-success">Néanmoins, comparez votre solution avec celle(s) ci-dessous pour voir si vous n'avez pas eu un peu de chance...</p>
+        </div>
+        <ng-template #errorBlock>
+            <p class="text-danger">Votre requête a retourné un mauvais résultat:</p>
+        </ng-template>
         <ng-container *ngFor="let e of question.query?.errors">
-            <p class="text-danger">{{e}}</p>
+            <li class="text-danger">{{e}}</li>
         </ng-container>
     </ng-container>
-    <ng-container *ngIf="question.query && question.query?.errors?.length === 0">
+    <div *ngIf="question?.query">
+        <p class="text">{{question.query?.rowCount}} lignes</p>
+    </div>
+    <ng-container *ngIf="question?.query">
         <table mat-table [dataSource]="dataSource">
-          <ng-container *ngFor="let column of question.query?.columns; index as i" [matColumnDef]="column">
+          <ng-container *ngFor="let column of question?.query?.columns; index as i" [matColumnDef]="column">
             <th mat-header-cell *matHeaderCellDef>{{ column }}</th>
             <td mat-cell *matCellDef="let element">{{element[i]}}</td>
           </ng-container>
@@ -66,7 +76,7 @@
 </div>
 
 
-<div *ngIf="solutionVisible || question.query?.errors?.length ===0">
+<div *ngIf="solutionVisible || question?.query?.errors?.length ===0">
     <ng-container *ngFor="let s of question?.solutions; index as i">
         <p class="fw-bold">Solution {{ i + 1 }}</p>
         <div class="text-success">

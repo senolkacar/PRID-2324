@@ -107,13 +107,34 @@ public class QuestionController : ControllerBase{
     [HttpGet("getQuery/{id}")]
     public async Task<ActionResult<Query>> GetQuery(int id)
     {
+        var pseudo = User.Identity!.Name;
+        var user = await _context.Users.SingleOrDefaultAsync(u => u.Pseudo == pseudo);
+        if (user == null)
+        {
+            return BadRequest();
+        }
         var question = await _context.Questions
             .Include(q => q.Quiz)
             .ThenInclude(q => q.Database)
             .Include(s => s.Solutions)
             .Where(q => q.Id == id)
             .FirstOrDefaultAsync();
-        var queryResult = question.GetData(question.Solutions.FirstOrDefault().Sql);
+
+
+        var lastAnswer = await _context.Answers
+            .Where(a => a.QuestionId == question.Id)
+            .OrderByDescending(a => a.Timestamp)
+            .Include(a => a.Attempt)
+            .Where(a => a.Attempt.StudentId == user.Id && a.QuestionId == question.Id)
+            .FirstOrDefaultAsync();
+
+        if (lastAnswer == null)
+        {
+            return BadRequest("No previous answer found.");
+        }
+
+        string sql = lastAnswer.Sql;
+        var queryResult = question.eval(sql);
         return queryResult;
     }
 

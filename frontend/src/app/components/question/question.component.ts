@@ -21,7 +21,8 @@ export class QuestionComponent implements OnInit {
     question!: Question;
     answer!: Answer;
     query = "";
-
+    showResultMessage = true;
+  
 
     constructor(
         private route: ActivatedRoute,
@@ -55,6 +56,10 @@ export class QuestionComponent implements OnInit {
       return this.question?.nextQuestionId == null;
     }
 
+    canSendQuery(): boolean {
+      return this.query.trim() !== ''
+    }
+
     navigateToPreviousQuestion() {
         if (this.question?.previousQuestionId !== null && this.question?.previousQuestionId !== undefined) {
           this.navigateToQuestion(this.question.previousQuestionId);
@@ -69,15 +74,24 @@ export class QuestionComponent implements OnInit {
     
     navigateToQuestion(questionId: number) {
       this.solutionVisible = false;
+      this.showResultMessage = true;
       this.router.navigate(['/question', questionId]);
     }
 
     setSolutionVisible() {
       this.solutionVisible = true;
+      this.editor.readOnly = true;
     }
 
     reset() {
       this.query='';
+      this.solutionVisible = false;
+      this.editor.readOnly = false;
+      this.question.query = undefined;
+      this.displayedColumns = []; 
+      this.dataSource.data = [];
+      this.answer.isCorrect = false
+      this.showResultMessage = false;
     }
 
     ngOnInit(): void {
@@ -89,15 +103,13 @@ export class QuestionComponent implements OnInit {
           this.question = question;
           this.answer = question?.answer!;
           this.query = question?.answer?.sql ?? '';
-          if(this.question.hasAnswer && this.answer.isCorrect){
-            let queryResponse = this.questionService.getQuery(this.questionId);
-            queryResponse.subscribe(res => {
+          if(this.question.hasAnswer){
+            this.questionService.getQuery(this.questionId).subscribe(res => {
               this.question.query = res;
               this.displayedColumns = res.columns;
               this.dataSource.data = res.data;
             });
           }
-          console.log(this.question);
         });
       });
     }
