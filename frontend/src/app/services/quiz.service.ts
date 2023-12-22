@@ -37,4 +37,8 @@ export class QuizService {
             map(res => plainToInstance(Quiz, res))
         );
     }
+
+    public closeQuiz(id : number): Observable<any>{
+        return this.http.post<any>(`${this.baseUrl}api/quizzes/closeQuiz`, {id});
+    }
 }

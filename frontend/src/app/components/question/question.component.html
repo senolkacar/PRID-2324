@@ -13,7 +13,7 @@
 <div *ngIf="question">
 <h2>{{ question.quiz?.name }} - Exercice {{ question.order }}</h2>
 </div>
-<ng-container><button mat-icon-button>
+<ng-container><button mat-icon-button (click)="closeQuiz()">
     <mat-icon>close</mat-icon>
     </button>
 </ng-container>

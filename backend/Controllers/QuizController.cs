@@ -116,5 +116,25 @@ public async Task<ActionResult<int>> GetFirstQuestionId(int id)
 
     return quiz;
  }
-
+[Authorize]
+[HttpPost("closeQuiz")]
+public async Task<IActionResult> CloseQuiz(BasicQuizDTO basicQuizDTO)
+{
+    var pseudo = User.Identity!.Name;
+    var user = await _context.Users.SingleOrDefaultAsync(u => u.Pseudo == pseudo);
+    if(user==null){
+        return BadRequest();
+    }
+    Console.WriteLine("this is the id : " + basicQuizDTO.Id);
+    var quiz = await _context.Quizzes
+        .Include(q => q.Attempts)
+        .Where(q => q.Id == basicQuizDTO.Id)
+        .FirstOrDefaultAsync();
+    
+    var attempt = quiz.Attempts.LastOrDefault(a => a.StudentId == user.Id);
+    attempt.Finish = DateTimeOffset.Now;
+    await _context.SaveChangesAsync();
+    
+    return NoContent();
+    }
 }

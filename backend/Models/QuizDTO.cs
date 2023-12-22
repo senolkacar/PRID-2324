@@ -18,7 +18,6 @@ public class QuizDTO{
 
 public class BasicQuizDTO {
     public int Id { get; set; }
-    public string Name { get; set; } = null!;
 }
 
 //Quiz with Questions

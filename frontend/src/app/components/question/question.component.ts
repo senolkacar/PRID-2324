@@ -4,8 +4,11 @@ import { ActivatedRoute,Router } from '@angular/router';
 import { Answer, Question } from 'src/app/models/question';
 import { Query } from 'src/app/models/query';
 import { QuestionService } from 'src/app/services/question.service';
+import { QuizService } from 'src/app/services/quiz.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatTableState } from 'src/app/helpers/mattable.state';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from '../dialog/dialog.component';
 
 @Component({
     selector: 'app-question',
@@ -27,7 +30,9 @@ export class QuestionComponent implements OnInit {
     constructor(
         private route: ActivatedRoute,
         private questionService: QuestionService,
-        private router: Router
+        private quizService: QuizService,
+        private router: Router,
+        public dialog: MatDialog
     ) {}
 
     ngAfterViewInit(): void {
@@ -83,6 +88,28 @@ export class QuestionComponent implements OnInit {
       this.editor.readOnly = true;
     }
 
+    closeQuiz(): void {
+      const dialogRef = this.dialog.open(DialogComponent);
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          // User clicked 'Oui', call the service to close the quiz
+          const quizId = this.question?.quiz?.id;
+          if (quizId !== undefined) {
+            console.log('Closing quiz ' + quizId);
+            this.quizService.closeQuiz(quizId).subscribe(response => {
+              // Handle success, e.g., redirect to /quizzes
+              this.router.navigate(['/quizzes']);
+            }, error => {
+              // Handle error
+            });
+          }
+        } else {
+          // User clicked 'Non', do nothing or handle as needed
+        }
+      });
+    }
+
     reset() {
       this.query='';
       this.solutionVisible = false;
@@ -90,7 +117,7 @@ export class QuestionComponent implements OnInit {
       this.question.query = undefined;
       this.displayedColumns = []; 
       this.dataSource.data = [];
-      this.answer.isCorrect = false
+      //this.answer.isCorrect = false
       this.showResultMessage = false;
     }
 
