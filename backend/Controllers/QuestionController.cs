@@ -90,7 +90,7 @@ public class QuestionController : ControllerBase{
             .Where(q => q.Id == evalDTO.QuestionId)
             .FirstOrDefaultAsync();
 
-        var queryResult = question.eval(evalDTO.Query);
+        var queryResult = question.eval(evalDTO.Query, question.Quiz.Database.Name);
         bool isCorrect = queryResult.Errors.Count == 0;
 
         var attempt = new Attempt { Start = DateTimeOffset.Now, StudentId = user.Id, QuizId = question.QuizId };
@@ -134,7 +134,7 @@ public class QuestionController : ControllerBase{
         }
 
         string sql = lastAnswer.Sql;
-        var queryResult = question.eval(sql);
+        var queryResult = question.eval(sql, question.Quiz.Database.Name);
         return queryResult;
     }
 

@@ -27,14 +27,14 @@ public class Question{
     public Answer? Answer { get; set; } = null!;
 
 
-    public Query eval(string sql){
+    public Query eval(string sql, string databaseName){
         Query query = new Query();
         query.Sql = sql;
         query.RowCount = 0;
         query.Columns = new string[0];
         query.Data = new string[0][];
         query.Errors = new List<string>();
-        query = this.GetData(sql);
+        query = this.GetData(sql,databaseName);
         this.Validate(query);
         return query;
         
@@ -42,7 +42,7 @@ public class Question{
 
     public void Validate(Query query){
         string SolutionSQL = this.Solutions.Where(q => q.QuestionId == this.Id).Select(q => q.Sql).FirstOrDefault();
-        Query SolutionResult = this.GetData(SolutionSQL);
+        Query SolutionResult = this.GetData(SolutionSQL,this.Quiz.Database.Name);
         if(SolutionResult.RowCount != query.RowCount){
             query.Errors.Add("\nbad number of rows");
         }
@@ -73,7 +73,7 @@ public class Question{
 
     }
 
-    public Query GetData(string sql){
+    public Query GetData(string sql,string databaseName){
         Query query = new Query();
         query.Sql = sql;
         query.RowCount = 0;
@@ -81,7 +81,7 @@ public class Question{
         query.Data = new string[0][];
 
 
-        using MySqlConnection connection = new($"server=localhost;database=fournisseurs;uid=root;password=root");
+        using MySqlConnection connection = new($"server=localhost;database={databaseName};uid=root;password=root");
         DataTable table = null;
         try
         {
