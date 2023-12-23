@@ -46,6 +46,7 @@ export class QuestionComponent implements OnInit {
           this.question.query = res;
           this.displayedColumns = res.columns;
           this.dataSource.data = res.data;
+          this.showResultMessage = true;
           if(res.errors.length ===0){
             this.answer.isCorrect = true;
           }
