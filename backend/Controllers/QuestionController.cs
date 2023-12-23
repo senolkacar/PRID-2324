@@ -93,9 +93,13 @@ public class QuestionController : ControllerBase{
         var queryResult = question.eval(evalDTO.Query, question.Quiz.Database.Name);
         bool isCorrect = queryResult.Errors.Count == 0;
 
-        var attempt = new Attempt { Start = DateTimeOffset.Now, StudentId = user.Id, QuizId = question.QuizId };
+        var attempt = await _context.Attempts
+            .Where(a => a.StudentId == user.Id && a.QuizId == question.QuizId)
+            .OrderByDescending(a => a.Start)
+            .FirstOrDefaultAsync();
+        /*var attempt = new Attempt { Start = DateTimeOffset.Now, StudentId = user.Id, QuizId = question.QuizId };
         _context.Attempts.Add(attempt);
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync();*/
         var answer = new Answer { AttemptId = attempt.Id, QuestionId = question.Id, Sql = evalDTO.Query, Timestamp = DateTimeOffset.Now, IsCorrect = isCorrect };
         _context.Answers.Add(answer);
         await _context.SaveChangesAsync();

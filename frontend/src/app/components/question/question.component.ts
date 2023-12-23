@@ -49,6 +49,7 @@ export class QuestionComponent implements OnInit {
           if(res.errors.length ===0){
             this.answer.isCorrect = true;
           }
+          this.refresh();
         });
       }
     }
@@ -96,7 +97,6 @@ export class QuestionComponent implements OnInit {
           // User clicked 'Oui', call the service to close the quiz
           const quizId = this.question?.quiz?.id;
           if (quizId !== undefined) {
-            console.log('Closing quiz ' + quizId);
             this.quizService.closeQuiz(quizId).subscribe(response => {
               // Handle success, e.g., redirect to /quizzes
               this.router.navigate(['/quizzes']);
@@ -121,24 +121,28 @@ export class QuestionComponent implements OnInit {
       this.showResultMessage = false;
     }
 
+    refresh() {
+      this.questionService.getQuestion(this.questionId).subscribe(question => {
+        this.question = question;
+        this.answer = question?.answer!;
+        this.query = question?.answer?.sql ?? '';
+        if(this.question.hasAnswer){
+          this.questionService.getQuery(this.questionId).subscribe(res => {
+            this.question.query = res;
+            this.displayedColumns = res.columns;
+            this.dataSource.data = res.data;
+          });
+        }
+      });
+    }
+
     ngOnInit(): void {
       // Read the question ID from the route parameters
       this.route.params.subscribe(params => {
         this.questionId = +params['questionId']; // convert to number
         // Fetch the specific question based on the question ID
-        this.questionService.getQuestion(this.questionId).subscribe(question => {
-          this.question = question;
-          this.answer = question?.answer!;
-          this.query = question?.answer?.sql ?? '';
-          if(this.question.hasAnswer){
-            this.questionService.getQuery(this.questionId).subscribe(res => {
-              this.question.query = res;
-              this.displayedColumns = res.columns;
-              this.dataSource.data = res.data;
-            });
-          }
-        });
-      });
-    }
+        this.refresh();
+    });
+  }
 
 }

@@ -43,12 +43,15 @@ public class Question{
     public void Validate(Query query){
         string SolutionSQL = this.Solutions.Where(q => q.QuestionId == this.Id).Select(q => q.Sql).FirstOrDefault();
         Query SolutionResult = this.GetData(SolutionSQL,this.Quiz.Database.Name);
-        if(SolutionResult.RowCount != query.RowCount){
-            query.Errors.Add("\nbad number of rows");
+        if(query.Errors.Count == 0){
+            if(SolutionResult.RowCount != query.RowCount){
+                query.Errors.Add("\nbad number of rows");
+            }
+            if(SolutionResult.Columns.Length != query.Columns.Length){
+                query.Errors.Add("\nbad number of columns");
+            }
         }
-        if(SolutionResult.Columns.Length != query.Columns.Length){
-            query.Errors.Add("\nbad number of columns");
-        }
+        
         if(query.Errors.Count == 0){
             List<string> listOfSolutionElements = new List<string>();
             List<string> listOfAttemptElements = new List<string>();

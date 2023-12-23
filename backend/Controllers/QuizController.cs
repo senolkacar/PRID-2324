@@ -125,7 +125,6 @@ public async Task<IActionResult> CloseQuiz(BasicQuizDTO basicQuizDTO)
     if(user==null){
         return BadRequest();
     }
-    Console.WriteLine("this is the id : " + basicQuizDTO.Id);
     var quiz = await _context.Quizzes
         .Include(q => q.Attempts)
         .Where(q => q.Id == basicQuizDTO.Id)

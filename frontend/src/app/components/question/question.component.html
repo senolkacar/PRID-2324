@@ -47,19 +47,24 @@
 
 <div>
     <ng-container *ngIf="question?.hasAnswer && showResultMessage">
-        <p class>{{question.answer?.timestamp | date:"dd/MM/yyyy hh:mm:ss"}}</p>
+        <p class *ngIf="question?.answer?.timestamp">{{answer.timestampAsString}}</p>
         <div *ngIf="question.query?.errors?.length === 0; else errorBlock">
             <p class="text-success">Votre requête a retourné une réponse correcte!</p>
             <p class="text-success">Néanmoins, comparez votre solution avec celle(s) ci-dessous pour voir si vous n'avez pas eu un peu de chance...</p>
         </div>
         <ng-template #errorBlock>
-            <p class="text-danger">Votre requête a retourné un mauvais résultat:</p>
+            <div *ngIf="question?.query?.rowCount === 0; else noDataError">
+                <p class="text-danger">Erreur de requête:</p>
+            </div>
+            <ng-template #noDataError>
+                <p class="text-danger">Votre requête a retourné un mauvais résultat:</p>
+            </ng-template>
         </ng-template>
         <ng-container *ngFor="let e of question.query?.errors">
             <li class="text-danger">{{e}}</li>
         </ng-container>
     </ng-container>
-    <div *ngIf="question?.query">
+    <div *ngIf="question?.query?.rowCount">
         <p class="text">{{question.query?.rowCount}} lignes</p>
     </div>
     <ng-container *ngIf="question?.query">

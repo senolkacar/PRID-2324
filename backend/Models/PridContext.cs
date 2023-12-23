@@ -270,7 +270,7 @@ WHERE l.ID_P = p.ID_P
             new Attempt { Id = 1, Start = new DateTimeOffset(new DateTime(2023, 09, 01)), QuizId = 1, StudentId = 4 }
         );
         modelBuilder.Entity<Answer>().HasData(
-            new Answer { Id = 1, QuestionId = 1, AttemptId = 1, Sql = "SELECT * FROM S", IsCorrect = true, Timestamp = DateTimeOffset.Now}
+            new Answer { Id = 1, QuestionId = 1, AttemptId = 1, Sql = "SELECT * FROM S", IsCorrect = true, Timestamp = DateTimeOffset.Now.ToLocalTime() }
         );
     }
 

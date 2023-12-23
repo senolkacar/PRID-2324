@@ -24,4 +24,8 @@ export class QuestionService {
         return this.http.get<any>(`${this.baseUrl}api/question/getquery/${questionId}`);
     }
 
+    getAnswer(questionId: number): Observable<any> {
+        return this.http.get<any>(`${this.baseUrl}api/question/getanswer/${questionId}`);
+    }
+
 }
