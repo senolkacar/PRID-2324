@@ -29,17 +29,17 @@
 
 <div class="d-flex">
     <div class="pe-2">
-    <ng-container>
+    <ng-container *ngIf="sendButtonVisibility">
         <button mat-raised-button (click)="evaluate()" [disabled]="!canSendQuery()">Envoyer</button>
     </ng-container>
     </div>
     <div class="pe-2">
-    <ng-container>
+    <ng-container *ngIf="resetButtonVisibility">
         <button mat-raised-button (click)="reset()">Effacer</button>
     </ng-container>
     </div>
     <div>
-    <ng-container *ngIf="!question?.quiz?.isTest">
+    <ng-container *ngIf="solutionButtonVisibility">
         <button mat-raised-button (click)="setSolutionVisible()">Voir Solutions</button>
     </ng-container>
     </div>
@@ -60,9 +60,14 @@
                 <p class="text-danger">Votre requête a retourné un mauvais résultat:</p>
             </ng-template>
         </ng-template>
-        <ng-container *ngFor="let e of question.query?.errors">
-            <li class="text-danger">{{e}}</li>
-        </ng-container>
+        <div *ngIf="question.query?.sql==='';else notEmptyErrors">
+            <p class="text-danger">Requête vide</p>
+        </div>
+        <ng-template #notEmptyErrors>
+            <ng-container *ngFor="let e of question.query?.errors">
+                <li class="text-danger">{{e}}</li>
+            </ng-container>
+        </ng-template>
     </ng-container>
     <div *ngIf="question?.query?.rowCount">
         <p class="text">{{question.query?.rowCount}} lignes</p>

@@ -132,6 +132,40 @@ public async Task<IActionResult> CloseQuiz(BasicQuizDTO basicQuizDTO)
     
     var attempt = quiz.Attempts.LastOrDefault(a => a.StudentId == user.Id);
     attempt.Finish = DateTimeOffset.Now;
+    var answers = await _context.Answers
+        .Where(a => a.AttemptId == attempt.Id)
+        .ToListAsync();
+    var questions = await _context.Questions
+        .Where(q => q.QuizId == quiz.Id)
+        .ToListAsync();
+    foreach(var q in questions){
+        var answer = answers.FirstOrDefault(a => a.QuestionId == q.Id);
+        if(answer == null){
+             answer = new Answer { AttemptId = attempt.Id, QuestionId = q.Id, Sql = "", IsCorrect = false };
+            _context.Answers.Add(answer);
+        }
+    }
+    await _context.SaveChangesAsync();
+    
+    return NoContent();
+    }
+
+[Authorize]
+[HttpPost("createAttempt")]
+public async Task<IActionResult> CreateAttempt(BasicQuizDTO basicQuizDTO)
+{
+    var pseudo = User.Identity!.Name;
+    var user = await _context.Users.SingleOrDefaultAsync(u => u.Pseudo == pseudo);
+    if(user==null){
+        return BadRequest();
+    }
+    var quiz = await _context.Quizzes
+        .Include(q => q.Attempts)
+        .Where(q => q.Id == basicQuizDTO.Id)
+        .FirstOrDefaultAsync();
+        
+    var attempt = new Attempt { Start = DateTimeOffset.Now, StudentId = user.Id, QuizId = quiz.Id };
+    _context.Attempts.Add(attempt);
     await _context.SaveChangesAsync();
     
     return NoContent();

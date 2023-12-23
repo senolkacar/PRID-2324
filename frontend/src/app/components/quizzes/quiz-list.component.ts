@@ -5,6 +5,7 @@ import * as _ from 'lodash-es';
 import { Quiz } from '../../models/quiz';
 import { QuizService } from '../../services/quiz.service';
 import { StateService } from '../../services/state.service';
+import { QuizStateService } from 'src/app/services/quiz-state.service';
 import { MatTableState } from '../../helpers/mattable.state';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -44,6 +45,7 @@ export class QuizListComponent {
   constructor(
     private quizService: QuizService,
     private stateService: StateService,
+    private quizStateService: QuizStateService,
     private authService: AuthenticationService,
     private router: Router,
     public dialog: MatDialog,
@@ -106,7 +108,8 @@ export class QuizListComponent {
     }
   }
 
-  startOrContinueQuiz(quizId: number): void {
+  continueQuiz(quizId: number): void {
+    this.quizStateService.setReadOnlyMode(false);
     // Navigate to the first question of the selected quiz
     this.quizService.getFirstQuestionId(quizId).subscribe(questionId => {
       this.router.navigate(['/question', questionId]);
@@ -122,12 +125,21 @@ export class QuizListComponent {
     // Implement delete logic
   }
 
-  read(quiz: Quiz) {
-    // Implement read logic
+  readQuiz(quizId: number):void {
+    this.quizStateService.setReadOnlyMode(true);
+    // Navigate to the first question of the selected quiz on only read mode
+    this.quizService.getFirstQuestionId(quizId).subscribe(questionId => {
+      this.router.navigate(['/question', questionId]);
+    });
   }
 
-  add(quiz: Quiz) {
-    // Implement add logic
+  startQuiz(quizId: number) {
+    this.quizService.createAttempt(quizId).subscribe(response => {
+      console.log(response+"thiscreateattempt triggered");
+      this.quizService.getFirstQuestionId(quizId).subscribe(questionId => {
+        this.router.navigate(['/question', questionId]);
+      });
+    });
   }
 
   create() {

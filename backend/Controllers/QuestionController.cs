@@ -44,9 +44,14 @@ public class QuestionController : ControllerBase{
             .Where(q => q.Id == id)
             .OrderBy(q => q.Order)
             .FirstOrDefaultAsync();
-        
-        query.HasAnswer = query.Answers.Any(a => a.Attempt.StudentId == user.Id && a.QuestionId == query.Id);
-        query.Answer = query.Answers.LastOrDefault(a => a.Attempt.StudentId == user.Id && a.QuestionId == query.Id);
+        var q = query.Quiz;
+        q.Statut = q.GetStatus(user);
+        var lastAttempt = await _context.Attempts
+            .Where(a => a.StudentId == user.Id && a.QuizId == q.Id)
+            .OrderByDescending(a => a.Start)
+            .FirstOrDefaultAsync();
+        query.HasAnswer = query.Answers.Any(a => lastAttempt.Id == a.AttemptId && a.QuestionId == query.Id);
+        query.Answer = query.Answers.LastOrDefault(a => a.AttemptId == lastAttempt.Id && a.Attempt.StudentId == user.Id && a.QuestionId == query.Id);
 
         var question = _mapper.Map<QuestionWithSolutionAnswerDTO>(query);
 

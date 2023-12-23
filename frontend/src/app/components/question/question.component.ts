@@ -3,6 +3,7 @@ import { CodeEditorComponent } from '../code-editor/code-editor.component';
 import { ActivatedRoute,Router } from '@angular/router';
 import { Answer, Question } from 'src/app/models/question';
 import { Query } from 'src/app/models/query';
+import { QuizStateService } from 'src/app/services/quiz-state.service';
 import { QuestionService } from 'src/app/services/question.service';
 import { QuizService } from 'src/app/services/quiz.service';
 import { MatTableDataSource } from '@angular/material/table';
@@ -23,8 +24,12 @@ export class QuestionComponent implements OnInit {
     questionId!: number;
     question!: Question;
     answer!: Answer;
+    readonlyMode = false;
     query = "";
     showResultMessage = true;
+    sendButtonVisibility = true;
+    resetButtonVisibility = true;
+    solutionButtonVisibility = true;
   
 
     constructor(
@@ -32,6 +37,7 @@ export class QuestionComponent implements OnInit {
         private questionService: QuestionService,
         private quizService: QuizService,
         private router: Router,
+        private quizStateService: QuizStateService,
         public dialog: MatDialog
     ) {}
 
@@ -40,18 +46,21 @@ export class QuestionComponent implements OnInit {
     }
 
     evaluate() { 
-      if (this.query !== '') {
+      if (this.query.trim() !== '') {
         this.questionService.evaluate(this.questionId, this.query).subscribe(res => {
           this.question.hasAnswer = true;
           this.question.query = res;
           this.displayedColumns = res.columns;
           this.dataSource.data = res.data;
-          this.showResultMessage = true;
           if(res.errors.length ===0){
             this.answer.isCorrect = true;
           }
           this.refresh();
         });
+      }else{
+        this.question.query = undefined;
+        this.displayedColumns = [];
+        this.dataSource.data = [];
       }
     }
 
@@ -124,9 +133,21 @@ export class QuestionComponent implements OnInit {
 
     refresh() {
       this.questionService.getQuestion(this.questionId).subscribe(question => {
+        //const readonlyMode = this.quizStateService.isReadOnlyMode();
         this.question = question;
         this.answer = question?.answer!;
         this.query = question?.answer?.sql ?? '';
+        if (this.question.quiz?.statut === 'FINI' || question.quiz?.statut === 'CLOTURE') {
+          this.editor.readOnly = true;
+          this.readonlyMode = true;
+          this.sendButtonVisibility = false;
+          this.resetButtonVisibility = false;
+          this.solutionButtonVisibility = false;
+          this.solutionVisible = true;
+        }
+        if(this.question.quiz?.isTest){
+          this.solutionButtonVisibility = false;
+        }
         if(this.question.hasAnswer){
           this.questionService.getQuery(this.questionId).subscribe(res => {
             this.question.query = res;

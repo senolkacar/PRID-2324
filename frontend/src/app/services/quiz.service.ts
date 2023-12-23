@@ -41,4 +41,8 @@ export class QuizService {
     public closeQuiz(id : number): Observable<any>{
         return this.http.post<any>(`${this.baseUrl}api/quizzes/closeQuiz`, {id});
     }
+
+    public createAttempt(id : number): Observable<any>{
+        return this.http.post<any>(`${this.baseUrl}api/quizzes/createAttempt`, {id});
+    }
 }
