@@ -14,8 +14,9 @@ public class Attempt{
     public int StudentId { get; set; }
     public Student Student { get; set; } = null!;
 
-    public int GetScore(){
+    public int GetScore(User user){
         int score = 0;
+        Answers = Answers.Where(a => a.Attempt.StudentId == user.Id).ToList();
         foreach (var answer in Answers){
             if (answer.IsCorrect){
                 score++;

@@ -61,6 +61,7 @@ export class QuestionComponent implements OnInit {
         this.question.query = undefined;
         this.displayedColumns = [];
         this.dataSource.data = [];
+        this.showResultMessage = false;
       }
     }
 
@@ -91,6 +92,9 @@ export class QuestionComponent implements OnInit {
     navigateToQuestion(questionId: number) {
       this.solutionVisible = false;
       this.showResultMessage = true;
+      if(!this.readonlyMode){
+        this.editor.readOnly = false;
+      }
       this.router.navigate(['/question', questionId]);
     }
 
@@ -127,7 +131,6 @@ export class QuestionComponent implements OnInit {
       this.question.query = undefined;
       this.displayedColumns = []; 
       this.dataSource.data = [];
-      //this.answer.isCorrect = false
       this.showResultMessage = false;
     }
 
@@ -145,8 +148,10 @@ export class QuestionComponent implements OnInit {
           this.solutionButtonVisibility = false;
           this.solutionVisible = true;
         }
-        if(this.question.quiz?.isTest){
+        if(this.question.quiz?.isTest && this.question.quiz?.statut === 'EN_COURS'){
           this.solutionButtonVisibility = false;
+          this.solutionVisible = false
+          this.showResultMessage = false;
         }
         if(this.question.hasAnswer){
           this.questionService.getQuery(this.questionId).subscribe(res => {
@@ -156,6 +161,7 @@ export class QuestionComponent implements OnInit {
           });
         }
       });
+      
     }
 
     ngOnInit(): void {

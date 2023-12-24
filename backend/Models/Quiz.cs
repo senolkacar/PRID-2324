@@ -52,7 +52,7 @@ public class Quiz {
             if (Attempts.Any(q => q.StudentId == user.Id))
             {
                 Attempt? attempt = Attempts.FirstOrDefault(q => q.StudentId == user.Id);
-                score = attempt?.GetScore() ?? 0;
+                score = attempt?.GetScore(user) ?? 0;
                 double percentage = (score / this.Questions.Count()) * 100;
                 res = (percentage / 10) + "/10";
             }

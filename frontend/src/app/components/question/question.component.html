@@ -46,8 +46,10 @@
 </div>
 
 <div>
-    <ng-container *ngIf="question?.hasAnswer && showResultMessage">
+    <ng-container *ngIf="question?.hasAnswer">
         <p class *ngIf="question?.answer?.timestamp">{{answer.timestampAsString}}</p>
+    </ng-container>
+<ng-container *ngIf="showResultMessage && question?.query">
         <div *ngIf="question.query?.errors?.length === 0; else errorBlock">
             <p class="text-success">Votre requête a retourné une réponse correcte!</p>
             <p class="text-success">Néanmoins, comparez votre solution avec celle(s) ci-dessous pour voir si vous n'avez pas eu un peu de chance...</p>
@@ -68,7 +70,6 @@
                 <li class="text-danger">{{e}}</li>
             </ng-container>
         </ng-template>
-    </ng-container>
     <div *ngIf="question?.query?.rowCount">
         <p class="text">{{question.query?.rowCount}} lignes</p>
     </div>
@@ -83,6 +84,7 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
       </ng-container>
+    </ng-container>
 </div>
 
 

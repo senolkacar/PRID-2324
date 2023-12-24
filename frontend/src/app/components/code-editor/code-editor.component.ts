@@ -121,7 +121,7 @@ export class CodeEditorComponent implements AfterViewInit, ControlValueAccessor 
      * **TODO: Ici, géré de manière statique, mais devrait être dynamique en fonction de la BD ciblée.**
      */
     private static getTableNames() {
-        return ["SPJ", "S", "P", "J"];
+        return ["SPJ", "S", "P", "J","Destinataires","EstAmi","Message","Personne"];
     }
 
     /**
@@ -130,7 +130,7 @@ export class CodeEditorComponent implements AfterViewInit, ControlValueAccessor 
      * **TODO: Ici, géré de manière statique, mais devrait être dynamique en fonction de la BD ciblée.**
      */
     private static getColumnNames() {
-        return ["ID_S", "ID_P", "ID_J", "PNAME", "COLOR", "CITY", "JNAME", "SNAME", "STATUS", "WEIGHT", "QTY", "DATE_DERNIERE_LIVRAISON"];
+        return ["ID_S", "ID_P", "ID_J", "PNAME", "COLOR", "CITY", "JNAME", "SNAME", "STATUS", "WEIGHT", "QTY", "DATE_DERNIERE_LIVRAISON","ID_Message","Destinataire","SSN1","SSN2","Contenu","Date_Expedition","Expediteur","SSN","Nom","Sexe","Age"];
     }
 
     /**
