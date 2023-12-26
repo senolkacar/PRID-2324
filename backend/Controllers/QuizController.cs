@@ -214,13 +214,8 @@ public async Task<IActionResult> PutQuiz(QuizWithAttemptsAndDBDTO quizDTO)
 [HttpPost("createNewQuiz")]
 public async Task<ActionResult<QuizDTO>> CreateNewQuiz(QuizWithAttemptsAndDBDTO qDTO)
 {
-    var quiz = new Quiz();
-    _mapper.Map<QuizWithAttemptsAndDBDTO, Quiz>(qDTO, quiz);
-
-    // Set foreign key properties
-    quiz.DatabaseId = qDTO.Database.Id;
-    quiz.Questions = qDTO.Questions.Select(q => new Question { Id = q.Id }).ToList();
-
+    var quiz = _mapper.Map<Quiz>(qDTO);
+    quiz.Database = await _context.Databases.FindAsync(qDTO.Database.Id);
     /*var result = await new QuizValidator(_context).ValidateAsync(quiz);
     if (!result.IsValid)
     {
@@ -229,9 +224,7 @@ public async Task<ActionResult<QuizDTO>> CreateNewQuiz(QuizWithAttemptsAndDBDTO 
 
     _context.Quizzes.Add(quiz);
     await _context.SaveChangesAsync();
-
-    var quizDTO = _mapper.Map<Quiz, QuizDTO>(quiz);
-    return quizDTO;
+    return CreatedAtAction(nameof(GetQuizById), new { id = quiz.Id }, _mapper.Map<QuizDTO>(quiz));
 }
 
 [Authorize]

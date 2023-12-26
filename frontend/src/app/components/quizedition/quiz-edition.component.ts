@@ -4,8 +4,10 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { Quiz } from "src/app/models/quiz";
 import { QuizService } from "src/app/services/quiz.service";
 import { plainToClass, plainToInstance } from "class-transformer";
+import * as _ from 'lodash-es';
 import { Database } from "src/app/models/database";
 import { DatabaseService } from "src/app/services/database.service";
+import { pl } from "date-fns/locale";
 
 @Component({
     selector: 'app-quiz-edition',
@@ -36,7 +38,7 @@ export class QuizEditionComponent{
             Validators.required,
             Validators.minLength(3)
         ], [this.quizNameUsed()]);
-        this.ctlDatabase = this.formBuilder.control('', [Validators.required]);
+        this.ctlDatabase = this.formBuilder.control('', []);
         this.ctlPublished = this.formBuilder.control(false);
         this.ctlQuizType = this.formBuilder.control(false);
         this.ctlDescription = this.formBuilder.control('', []);
@@ -61,17 +63,6 @@ export class QuizEditionComponent{
             // Fetch the specific question based on the question ID
             if(this.quizId === 0){
                 this.quiz = new Quiz();
-                this.quiz.id = 0;
-                this.quiz.name = '';
-                this.quiz.description = '';
-                this.quiz.startDate = new Date();
-                this.quiz.endDate = new Date();
-                this.quiz.isTest = false;
-                this.quiz.isPublished = false;
-                this.quiz.database = new Database();
-                this.quiz.database.id = 0;
-                this.quiz.database.name = '';
-                this.quiz.questions = [];
             }else{
                 this.quizService.getQuizById(this.quizId).subscribe(quiz => {
                     this.quiz = quiz;
@@ -100,16 +91,6 @@ export class QuizEditionComponent{
         }
     }
 
-    refresh(): void {
-        this.quiz.name = this.ctlQuizName.value;
-        this.quiz.description = this.ctlDescription.value;
-        this.quiz.startDate = this.ctlStartDate.value;
-        this.quiz.endDate = this.ctlEndDate.value;
-        this.quiz.isTest = this.ctlQuizType.value;
-        this.quiz.isPublished = this.ctlPublished.value;
-        this.quiz.database = this.databases.find(d => d.id === this.ctlDatabase.value);
-    }
-
 
     update(){
         this.submitted = true;
@@ -117,16 +98,13 @@ export class QuizEditionComponent{
             return;
         }
         if(this.quiz.id === 0 || this.quiz.id === undefined){
-            this.quizService.createQuiz(this.quiz).subscribe(res => {
+            let res = plainToClass(Quiz, this.quizForm.value);
+            res.database = this.databases.find(d => d.id === this.ctlDatabase.value);
+            this.quizService.createQuiz(res).subscribe(res => {
                 this.router.navigate(['/teacher']);
             });
         }else{
-            this.quiz.name = this.ctlQuizName.value;
-            this.quiz.description = this.ctlDescription.value;
-            this.quiz.startDate = this.ctlStartDate.value;
-            this.quiz.endDate = this.ctlEndDate.value;
-            this.quiz.isTest = this.ctlQuizType.value;
-            this.quiz.isPublished = this.ctlPublished.value;
+            _.assign(this.quiz, this.quizForm.value);
             this.quiz.database = this.databases.find(d => d.id === this.ctlDatabase.value);
             this.quizService.updateQuiz(this.quiz).subscribe(res => {
                 this.router.navigate(['/teacher']);
@@ -149,10 +127,10 @@ export class QuizEditionComponent{
             return new Promise(resolve => {
                 timeout = setTimeout(() => {
                     this.quizService.getQuizNameExists(quizName).subscribe(res => {
-                        if (res) {
-                            resolve({ quizNameUsed: true });
-                        } else {
+                        if (ctl.pristine) {
                             resolve(null);
+                        } else {
+                            resolve(res ? { quizNameUsed: true } : null);
                         }
                     });
                 }, 300);
