@@ -20,20 +20,8 @@ public class BasicQuizDTO {
     public int Id { get; set; }
 }
 
-//Quiz with Questions
-public class QuizWithQuestionsDTO : QuizDTO {
-    public ICollection<QuestionDTO> Questions { get; set; } = null!;
-}
-
-//Quiz with questions and solutions
-public class QuizWithQuestionsAndSolutionsDTO : QuizWithQuestionsDTO {
-    public ICollection<SolutionDTO> Solutions { get; set; } = null!;
-}
-
-//Quiz with questions and answers
-
-public class QuizWithQuestionsAndAnswersDTO : QuizWithQuestionsDTO {
-    public ICollection<AnswerDTO> Answers { get; set; } = null!;
+public class QuizWithDBDTO : QuizDTO {
+    public DatabaseDTO Database { get; set; } = null!;
 }
 
 //Quiz with attempts
@@ -45,9 +33,4 @@ public class QuizWithAttemptsAndDBDTO : QuizDTO {
     public DatabaseDTO Database { get; set; } = null!;
     public ICollection<AttemptDTO> Attempts { get; set; } = new HashSet<AttemptDTO>();
     public ICollection<QuestionDTO> Questions { get; set; } = new HashSet<QuestionDTO>();
-}
-
-//Quiz with attempts and answers
-public class QuizWithAttemptsAndAnswersDTO : QuizWithAttemptsDTO {
-    public ICollection<AnswerDTO> Answers { get; set; } = null!;
 }

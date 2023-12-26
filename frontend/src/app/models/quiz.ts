@@ -1,4 +1,6 @@
 import { Type } from 'class-transformer';
+import { Database } from './database';
+import { Question } from './question';
 import 'reflect-metadata';
 
 export class Quiz{
@@ -16,6 +18,8 @@ export class Quiz{
     attempts?: Attempt[];
     @Type(()=> Database)
     database?: Database;
+    @Type(()=>Question)
+    questions?: Question[];
     statut?: string;
     evaluation?: string;
 
@@ -46,8 +50,3 @@ export class Attempt{
     @Type(() => Date)
     finish?: Date;
    }
-
-export class Database{
-    id? : number;
-    name? : string;
-}

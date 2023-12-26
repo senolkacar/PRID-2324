@@ -1,28 +1,39 @@
+<form [formGroup]="quizForm" novalidate>
 <div class="d-flex justify-content-between">
-<div>
-<p>Nom</p>
+<div class="d-flex align-items-center">
+<p class>Nom</p>
 <mat-form-field>
-    <input matInput type="text" value="{{quiz.name}}" required>
+    <input matInput [formControl]="ctlQuizName" required>
 </mat-form-field>
-<p>Description</p>
-<mat-form-field>
-    <input matInput type="text" value="{{quiz.description}}" required>
-</mat-form-field>
-    <mat-slide-toggle>Publié</mat-slide-toggle>
 </div>
+    <mat-form-field>
+      <mat-label>Base de données</mat-label>
+      <mat-select [formControl]="ctlDatabase" required>
+        <mat-option *ngFor="let database of databases" [value]="database.id">
+            {{database.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-slide-toggle [formControl]="ctlPublished" [checked]="ctlPublished.value">Publié</mat-slide-toggle>
+</div>
+<div class="d-flex align-items-center" >
+    <p>Description</p>
+    <mat-form-field>
+        <input matInput [formControl]="ctlDescription">
+    </mat-form-field>
 </div>
 <div class="d-flex justify-content-between">
-<ng-container>
+   <div class="d-flex align-items-center">
     <p>Type de quiz</p>
-    <mat-radio-group>
-        <mat-radio-button value="1">Training</mat-radio-button>
-      <mat-radio-button value="2">Test</mat-radio-button>
+    <mat-radio-group [formControl]="ctlQuizType">
+        <mat-radio-button [value]="false" [checked]="ctlQuizType.value === false">Training</mat-radio-button>
+        <mat-radio-button  [value]="true" [checked]="ctlQuizType.value === true">Test</mat-radio-button>
     </mat-radio-group>
-</ng-container>
-
+    </div>
+<ng-container *ngIf="ctlQuizType.value === true">
 <mat-form-field>
     <mat-label>Date début</mat-label>
-    <input matInput [matDatepicker]="dateDebut">
+    <input matInput [matDatepicker]="dateDebut" [formControl]="ctlStartDate">
     <mat-hint>DD/MM/YYYY</mat-hint>
     <mat-datepicker-toggle matIconSuffix [for]="dateDebut"></mat-datepicker-toggle>
     <mat-datepicker #dateDebut></mat-datepicker>
@@ -30,35 +41,26 @@
 
 <mat-form-field>
     <mat-label>Date fin</mat-label>
-    <input matInput [matDatepicker]="dateFin">
+    <input matInput [matDatepicker]="dateFin" [formControl]="ctlEndDate">
     <mat-hint>DD/MM/YYYY</mat-hint>
     <mat-datepicker-toggle matIconSuffix [for]="dateFin"></mat-datepicker-toggle>
     <mat-datepicker #dateFin></mat-datepicker>
 </mat-form-field>
-
+</ng-container>
+<div>
 <ng-container>
-    <button mat-button>
+    <button type="submit" mat-button form="quizForm" (click)="update()">
         <mat-icon>save</mat-icon>
     </button>
 </ng-container>
 <ng-container>
-    <button mat-button>
+    <button type="delete" mat-button (click)="delete(quiz)">
         <mat-icon>delete</mat-icon>
     </button>
 </ng-container>
 </div>
-
-
-<div>
-<mat-form-field>
-  <mat-label>Base de données</mat-label>
-  <mat-select required>
-    
-    <mat-option value="1">Fournisseur</mat-option>
-    <mat-option value="2">Facebook</mat-option>
-  </mat-select>
-</mat-form-field>
 </div>
+
 <div>
     <p>Questions</p>
     <div>
@@ -72,3 +74,4 @@
         </div>
     </div>
 </div>
+</form>

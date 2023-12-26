@@ -109,6 +109,7 @@ public async Task<ActionResult<int>> GetFirstQuestionId(int id)
     var query = await _context.Quizzes
         .Include(q => q.Database)
         .Include(q => q.Attempts)
+        .Include(q => q.Questions)
         .Where(q => q.Id == id)
         .FirstOrDefaultAsync();
 
@@ -170,4 +171,80 @@ public async Task<IActionResult> CreateAttempt(BasicQuizDTO basicQuizDTO)
     
     return NoContent();
     }
+
+
+[Authorize]
+[HttpGet("quizNameExists/{name}")]
+public async Task<ActionResult<bool>> QuizNameExists(string name)
+{
+    var query = await _context.Quizzes
+        .Where(q => q.Name == name)
+        .FirstOrDefaultAsync();
+    if (query == null)
+    {
+        return false;
+    }
+    return true;
+}
+
+[Authorize]
+[HttpPut]
+public async Task<IActionResult> PutQuiz(QuizWithAttemptsAndDBDTO quizDTO)
+{
+   var quiz = await _context.Quizzes
+        .Include(q => q.Database)
+        .Include(q => q.Attempts)
+        .Include(q => q.Questions)
+        .Where(q => q.Id == quizDTO.Id)
+        .FirstOrDefaultAsync();
+    if (quiz == null)
+    {
+        return NotFound();
+    }
+    _mapper.Map<QuizWithAttemptsAndDBDTO, Quiz>(quizDTO, quiz);
+    var result = await new QuizValidator(_context).ValidateAsync(quiz);
+    if (!result.IsValid)
+    {
+        return BadRequest(result);
+    }
+    await _context.SaveChangesAsync();
+    return NoContent();
+}
+
+[HttpPost("createNewQuiz")]
+public async Task<ActionResult<QuizDTO>> CreateNewQuiz(QuizWithAttemptsAndDBDTO qDTO)
+{
+    var quiz = new Quiz();
+    _mapper.Map<QuizWithAttemptsAndDBDTO, Quiz>(qDTO, quiz);
+
+    // Set foreign key properties
+    quiz.DatabaseId = qDTO.Database.Id;
+    quiz.Questions = qDTO.Questions.Select(q => new Question { Id = q.Id }).ToList();
+
+    /*var result = await new QuizValidator(_context).ValidateAsync(quiz);
+    if (!result.IsValid)
+    {
+        return BadRequest(result);
+    }*/
+
+    _context.Quizzes.Add(quiz);
+    await _context.SaveChangesAsync();
+
+    var quizDTO = _mapper.Map<Quiz, QuizDTO>(quiz);
+    return quizDTO;
+}
+
+[Authorize]
+[HttpDelete("{id}")]
+public async Task<IActionResult> DeleteQuiz(int id)
+{
+    var quiz = await _context.Quizzes.FindAsync(id);
+    if (quiz == null)
+    {
+        return NotFound();
+    }
+    _context.Quizzes.Remove(quiz);
+    await _context.SaveChangesAsync();
+    return NoContent();
+}
 }
