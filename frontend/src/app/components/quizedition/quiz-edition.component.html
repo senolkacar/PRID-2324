@@ -64,7 +64,41 @@
 <div>
     <p>Questions</p>
     <div>
-    HERE COMES THE QUESTIONS
+        <mat-accordion>
+            <mat-expansion-panel *ngFor="let q of questions" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  {{q.order}}. {{q.body}}
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <button mat-button>&#9650;</button>
+              <button mat-button>&#9660;</button>
+              <button type="delete" mat-button (click)="delete(quiz)">
+                <mat-icon>delete</mat-icon>
+              </button>
+              <p>Intitulé</p>
+            <mat-form-field style="width: 100%">
+                <mat-label></mat-label>
+                <textarea matInput class="text-primary">{{q.body}}</textarea>
+            </mat-form-field>
+            <div *ngFor="let solution of q.solutions">
+                <div class="row">
+                <div class="col-md-1 d-flex flex-column align-items-center justify-content-center">
+                <button mat-button>&#9650;</button>
+                <button mat-button>&#9660;</button>
+                </div>
+                <div class="col-md-10">
+                <code-editor [formControl]="ctlQuery"></code-editor>
+                </div>
+                <div class="col-md-1 d-flex align-items-center justify-content-end">
+                <button type="delete" mat-button (click)="delete(quiz)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </div>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
         <div class="col-sm-12 d-flex justify-content-end">
         <ng-container>
         <button mat-button>

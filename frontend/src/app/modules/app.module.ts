@@ -23,6 +23,7 @@ import { CodeEditorComponent } from '../components/code-editor/code-editor.compo
 import { QuizListComponent } from '../components/quizzes/quiz-list.component';
 import { QuizEditionComponent } from '../components/quizedition/quiz-edition.component';
 import { FilterComponent } from '../components/quizzes/filter.component';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
     declarations: [
@@ -48,6 +49,7 @@ import { FilterComponent } from '../components/quizzes/filter.component';
         ReactiveFormsModule,
         MatRadioModule,
         AppRoutes,
+        MatExpansionModule,
         BrowserAnimationsModule,
         SharedModule
     ],

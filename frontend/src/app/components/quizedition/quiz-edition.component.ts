@@ -1,5 +1,6 @@
-import { Component } from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup,Validators,FormControl } from "@angular/forms";
+import { CodeEditorComponent } from '../code-editor/code-editor.component';
 import { ActivatedRoute, Router } from "@angular/router";
 import { Quiz } from "src/app/models/quiz";
 import { QuizService } from "src/app/services/quiz.service";
@@ -8,12 +9,15 @@ import * as _ from 'lodash-es';
 import { Database } from "src/app/models/database";
 import { DatabaseService } from "src/app/services/database.service";
 import { pl } from "date-fns/locale";
+import { Question, Solution } from "src/app/models/question";
+import { QuestionService } from "src/app/services/question.service";
 
 @Component({
     selector: 'app-quiz-edition',
     templateUrl: './quiz-edition.component.html'
 })
 export class QuizEditionComponent{
+    @ViewChild('editor') editor!: CodeEditorComponent;
     quizId!: number;
     quiz!: Quiz;
     quizForm!: FormGroup;
@@ -24,15 +28,21 @@ export class QuizEditionComponent{
     ctlDatabase!: FormControl;
     ctlQuizType!: FormControl;
     ctlPublished!: FormControl;
+    ctlQuery!: FormControl;
     submitted=false;
+    solutions!: Solution[];
     databases!: Database[];
+    questions!: Question[];
+    panelOpenState = false;
+    query = "";
 
     constructor(
         private route: ActivatedRoute,
         private quizService: QuizService,
         private databaseService: DatabaseService,
+        private questionService: QuestionService,
         private formBuilder: FormBuilder,
-        private router: Router
+        private router: Router,
     ) {
         this.ctlQuizName = this.formBuilder.control('', [
             Validators.required,
@@ -44,6 +54,7 @@ export class QuizEditionComponent{
         this.ctlDescription = this.formBuilder.control('', []);
         this.ctlStartDate = this.formBuilder.control('', []);
         this.ctlEndDate = this.formBuilder.control('', []);
+        this.ctlQuery = this.formBuilder.control('', []);
 
 
         this.quizForm = this.formBuilder.group({
@@ -53,8 +64,11 @@ export class QuizEditionComponent{
             endDate: this.ctlEndDate,
             database: this.ctlDatabase,
             isTest: this.ctlQuizType,
-            isPublished: this.ctlPublished
+            isPublished: this.ctlPublished,
+            questions: this.formBuilder.array([]),
         });
+
+        
         
     }
     ngOnInit(): void {
@@ -73,6 +87,18 @@ export class QuizEditionComponent{
                     this.ctlQuizType.setValue(this.quiz.isTest);
                     this.ctlPublished.setValue(this.quiz.isPublished);
                     this.setSelectedDatabase();
+                    this.questionService.getQuestionByQuizId(this.quizId).subscribe(questions => {
+                        this.questions = questions;
+                        for(let question of this.questions){
+                            if(question.solutions) {
+                                for(let solution of question.solutions){
+                                    if(question.solutions && question.solutions.length > 0){
+                                    this.solutions = plainToInstance(Solution, question.solutions);
+                                    }
+                                }
+                            }
+                        }
+                    });
                 });
             }
          
@@ -83,6 +109,13 @@ export class QuizEditionComponent{
         
 
     }
+    createSolutionGroup(): FormGroup {
+        return this.formBuilder.group({
+          id: [''], // Add the appropriate properties for a solution
+          sql: [''],
+          order: [''],
+        });
+      }
 
     setSelectedDatabase(): void {
         const selectedDatabaseId = this.quiz.database?.id;
@@ -90,7 +123,6 @@ export class QuizEditionComponent{
             this.ctlDatabase.setValue(selectedDatabaseId);
         }
     }
-
 
     update(){
         this.submitted = true;
