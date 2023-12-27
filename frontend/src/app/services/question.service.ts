@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { Question } from '../models/question';
+import { Question, Solution } from '../models/question';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { plainToInstance } from 'class-transformer';
@@ -34,4 +34,15 @@ export class QuestionService {
         );
     }
 
+    public deleteQuestion(question: Question): Observable<boolean> {
+        return this.http.delete<boolean>(`${this.baseUrl}api/question/${question.id}`).pipe(
+            map(() => true)
+        );
+    }
+
+    public deleteSolution(solution: Solution): Observable<boolean> {
+        return this.http.delete<boolean>(`${this.baseUrl}api/question/solution/${solution.id}`).pipe(
+            map(() => true)
+        );
+    }
 }

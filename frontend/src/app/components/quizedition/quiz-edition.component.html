@@ -71,9 +71,9 @@
                   {{q.order}}. {{q.body}}
                 </mat-panel-title>
               </mat-expansion-panel-header>
-              <button mat-button>&#9650;</button>
-              <button mat-button>&#9660;</button>
-              <button type="delete" mat-button (click)="delete(quiz)">
+              <button mat-button (click)="moveQuestionUp(q)" [disabled]="hasQuestionBefore(q)">&#9650;</button>
+              <button mat-button (click)="moveQuestionDown(q)" [disabled]="hasQuestionAfter(q)">&#9660;</button>
+              <button type="delete" mat-button (click)="deleteQuestion(q)">
                 <mat-icon>delete</mat-icon>
               </button>
               <p>Intitulé</p>
@@ -91,7 +91,7 @@
                   <code-editor name="solutionSql" [(ngModel)]="solution.sql"></code-editor>
                 </div>
                 <div class="col-md-1 d-flex align-items-center justify-content-end">
-                <button type="delete" mat-button (click)="delete(quiz)">
+                <button type="delete" mat-button (click)="deleteSolution(solution)">
                     <mat-icon>delete</mat-icon>
                   </button>
                 </div>

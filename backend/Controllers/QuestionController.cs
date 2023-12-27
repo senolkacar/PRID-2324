@@ -169,4 +169,37 @@ public class QuestionController : ControllerBase{
         var questions = _mapper.Map<IEnumerable<QuestionWithSolutionAnswerDTO>>(query);
         return questions.ToList();
     }
+
+    [Authorize]
+    [HttpDelete("{id}")]
+    public async Task<ActionResult<Question>> DeleteQuestion(int id)
+    {
+        var question = await _context.Questions.FindAsync(id);
+        if (question == null)
+        {
+            return NotFound();
+        }
+
+        _context.Questions.Remove(question);
+        await _context.SaveChangesAsync();
+
+        return question;
+    }
+
+    [Authorize]
+    [HttpDelete("solution/{id}")]
+    public async Task<ActionResult<Solution>> DeleteSolution(int id)
+    {
+        var solution = await _context.Solutions.FindAsync(id);
+        if (solution == null)
+        {
+            return NotFound();
+        }
+
+        _context.Solutions.Remove(solution);
+        await _context.SaveChangesAsync();
+
+        return solution;
+    }
+
 }

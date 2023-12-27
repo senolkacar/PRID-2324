@@ -71,6 +71,31 @@ export class QuizEditionComponent{
         
         
     }
+
+    refresh(){
+        this.quizService.getQuizById(this.quizId).subscribe(quiz => {
+            this.quiz = quiz;
+            this.ctlQuizName.setValue(this.quiz.name);
+            this.ctlDescription.setValue(this.quiz.description);
+            this.ctlStartDate.setValue(this.quiz.startDate);
+            this.ctlEndDate.setValue(this.quiz.endDate);
+            this.ctlQuizType.setValue(this.quiz.isTest);
+            this.ctlPublished.setValue(this.quiz.isPublished);
+            this.questionService.getQuestionByQuizId(this.quizId).subscribe(questions => {
+                this.questions = questions;
+                for(let question of this.questions){
+                    if(question.solutions) {
+                        for(let solution of question.solutions){
+                            if(question.solutions && question.solutions.length > 0){
+                            this.solutions = plainToInstance(Solution, question.solutions);
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    }
+
     ngOnInit(): void {
         this.route.params.subscribe(params => {
             this.quizId = +params['quizId']; // convert to number
@@ -78,28 +103,7 @@ export class QuizEditionComponent{
             if(this.quizId === 0){
                 this.quiz = new Quiz();
             }else{
-                this.quizService.getQuizById(this.quizId).subscribe(quiz => {
-                    this.quiz = quiz;
-                    this.ctlQuizName.setValue(this.quiz.name);
-                    this.ctlDescription.setValue(this.quiz.description);
-                    this.ctlStartDate.setValue(this.quiz.startDate);
-                    this.ctlEndDate.setValue(this.quiz.endDate);
-                    this.ctlQuizType.setValue(this.quiz.isTest);
-                    this.ctlPublished.setValue(this.quiz.isPublished);
-                    this.setSelectedDatabase();
-                    this.questionService.getQuestionByQuizId(this.quizId).subscribe(questions => {
-                        this.questions = questions;
-                        for(let question of this.questions){
-                            if(question.solutions) {
-                                for(let solution of question.solutions){
-                                    if(question.solutions && question.solutions.length > 0){
-                                    this.solutions = plainToInstance(Solution, question.solutions);
-                                    }
-                                }
-                            }
-                        }
-                    });
-                });
+                this.refresh();
             }
          
         });
@@ -109,13 +113,6 @@ export class QuizEditionComponent{
         
 
     }
-    createSolutionGroup(): FormGroup {
-        return this.formBuilder.group({
-          id: [''], // Add the appropriate properties for a solution
-          sql: [''],
-          order: [''],
-        });
-      }
 
     setSelectedDatabase(): void {
         const selectedDatabaseId = this.quiz.database?.id;
@@ -145,10 +142,48 @@ export class QuizEditionComponent{
 
     }
 
+    hasQuestionAfter(question: Question): boolean{
+        return question.order !== undefined && question.order > 1;
+    }
+
+    hasQuestionBefore(question: Question): boolean{
+        return question.order !== undefined && question.order < this.questions.length;
+    }
+
+    deleteSolution(solution: Solution){
+        this.questionService.deleteSolution(solution).subscribe(res => {
+            this.refresh();
+        });
+    }
+
     delete(Quiz: Quiz){
         this.quizService.deleteQuiz(Quiz).subscribe(res => {
             this.router.navigate(['/teacher']);
         });
+    }
+
+    deleteQuestion(Question: Question){
+        this.questionService.deleteQuestion(Question).subscribe(res => {
+            this.refresh();
+        });
+    }
+
+    moveQuestionUp(question: Question){
+        let index = this.questions.indexOf(question);
+        if(index > 0){
+            let temp = this.questions[index-1];
+            this.questions[index-1] = question;
+            this.questions[index] = temp;
+        }
+    }
+
+    moveQuestionDown(question: Question){
+        let index = this.questions.indexOf(question);
+        if(index < this.questions.length-1){
+            let temp = this.questions[index+1];
+            this.questions[index+1] = question;
+            this.questions[index] = temp;
+        }
     }
 
     quizNameUsed():any{
