@@ -2,6 +2,7 @@ import { Component, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup,Validators,FormControl } from "@angular/forms";
 import { CodeEditorComponent } from '../code-editor/code-editor.component';
 import { ActivatedRoute, Router } from "@angular/router";
+import { NgModule } from '@angular/core';
 import { Quiz } from "src/app/models/quiz";
 import { QuizService } from "src/app/services/quiz.service";
 import { plainToClass, plainToInstance } from "class-transformer";
@@ -34,7 +35,6 @@ export class QuizEditionComponent{
     databases!: Database[];
     questions!: Question[];
     panelOpenState = false;
-    query = "";
 
     constructor(
         private route: ActivatedRoute,

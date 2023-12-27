@@ -134,15 +134,9 @@ export class QuizListComponent {
   }
 
   startQuiz(quizId: number) {
-    this.quizService.createAttempt(quizId).subscribe(response => {
-      this.quizService.getFirstQuestionId(quizId).subscribe(questionId => {
-        this.router.navigate(['/question', questionId]);
-      });
+    this.quizService.getFirstQuestionId(quizId).subscribe(questionId => {
+      this.router.navigate(['/question', questionId]);
     });
-  }
-
-  create() {
-    // Implement create logic
   }
 
   ngOnDestroy(): void {

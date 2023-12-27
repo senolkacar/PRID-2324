@@ -47,6 +47,9 @@ export class QuestionComponent implements OnInit {
 
     evaluate() { 
       if (this.query.trim() !== '') {
+        if(this.question.quiz?.attempts?.length ?? 0 > 0){
+          this.createAttempt();
+        }
         this.questionService.evaluate(this.questionId, this.query).subscribe(res => {
           this.question.hasAnswer = true;
           this.question.query = res;
@@ -71,6 +74,10 @@ export class QuestionComponent implements OnInit {
   
     isAtMaxQuestion(): boolean {
       return this.question?.nextQuestionId == null;
+    }
+
+    hasAttempt(): boolean{
+      return (this.question?.quiz?.attempts?.length ?? 0) > 0;
     }
 
     canSendQuery(): boolean {
@@ -138,6 +145,7 @@ export class QuestionComponent implements OnInit {
       this.questionService.getQuestion(this.questionId).subscribe(question => {
         //const readonlyMode = this.quizStateService.isReadOnlyMode();
         this.question = question;
+        console.log(this.question.quiz)
         this.answer = question?.answer!;
         this.query = question?.answer?.sql ?? '';
         if (this.question.quiz?.statut === 'FINI' || question.quiz?.statut === 'CLOTURE') {
@@ -172,5 +180,10 @@ export class QuestionComponent implements OnInit {
         this.refresh();
     });
   }
+
+    createAttempt():void{
+      this.quizService.createAttempt(this.question?.quiz?.id ?? 0).subscribe(response => {
+      });
+    }
 
 }

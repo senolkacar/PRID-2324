@@ -60,7 +60,7 @@
 </ng-container>
 </div>
 </div>
-
+</form>
 <div>
     <p>Questions</p>
     <div>
@@ -88,7 +88,7 @@
                 <button mat-button>&#9660;</button>
                 </div>
                 <div class="col-md-10">
-                <code-editor [formControl]="ctlQuery"></code-editor>
+                  <code-editor name="solutionSql" [(ngModel)]="solution.sql"></code-editor>
                 </div>
                 <div class="col-md-1 d-flex align-items-center justify-content-end">
                 <button type="delete" mat-button (click)="delete(quiz)">
@@ -108,4 +108,3 @@
         </div>
     </div>
 </div>
-</form>

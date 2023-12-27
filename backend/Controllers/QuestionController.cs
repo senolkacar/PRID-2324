@@ -102,9 +102,12 @@ public class QuestionController : ControllerBase{
             .Where(a => a.StudentId == user.Id && a.QuizId == question.QuizId)
             .OrderByDescending(a => a.Start)
             .FirstOrDefaultAsync();
-        /*var attempt = new Attempt { Start = DateTimeOffset.Now, StudentId = user.Id, QuizId = question.QuizId };
+        if(attempt == null)
+        {
+            attempt = new Attempt { Start = DateTimeOffset.Now, StudentId = user.Id, QuizId = question.QuizId };
+        }
         _context.Attempts.Add(attempt);
-        await _context.SaveChangesAsync();*/
+        await _context.SaveChangesAsync();
         var answer = new Answer { AttemptId = attempt.Id, QuestionId = question.Id, Sql = evalDTO.Query, Timestamp = DateTimeOffset.Now, IsCorrect = isCorrect };
         _context.Answers.Add(answer);
         await _context.SaveChangesAsync();
