@@ -165,7 +165,7 @@ public async Task<IActionResult> CreateAttempt(BasicQuizDTO basicQuizDTO)
         .Where(q => q.Id == basicQuizDTO.Id)
         .FirstOrDefaultAsync();
         
-    var attempt = new Attempt { Start = DateTimeOffset.Now, StudentId = user.Id, QuizId = quiz.Id };
+    var attempt = new Attempt { StudentId = user.Id, QuizId = quiz.Id };
     _context.Attempts.Add(attempt);
     await _context.SaveChangesAsync();
     
@@ -195,6 +195,7 @@ public async Task<IActionResult> PutQuiz(QuizWithAttemptsAndDBDTO quizDTO)
         .Include(q => q.Database)
         .Include(q => q.Attempts)
         .Include(q => q.Questions)
+        .ThenInclude(q => q.Solutions)
         .Where(q => q.Id == quizDTO.Id)
         .FirstOrDefaultAsync();
     if (quiz == null)

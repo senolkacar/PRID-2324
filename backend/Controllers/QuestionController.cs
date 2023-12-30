@@ -48,8 +48,9 @@ public class QuestionController : ControllerBase{
         q.Statut = q.GetStatus(user);
         var lastAttempt = await _context.Attempts
             .Where(a => a.StudentId == user.Id && a.QuizId == q.Id)
-            .OrderByDescending(a => a.Start)
+            .OrderByDescending(a => a.Id)
             .FirstOrDefaultAsync();
+        
         query.HasAnswer = query.Answers.Any(a => lastAttempt.Id == a.AttemptId && a.QuestionId == query.Id);
         query.Answer = query.Answers.LastOrDefault(a => a.AttemptId == lastAttempt.Id && a.Attempt.StudentId == user.Id && a.QuestionId == query.Id);
 
@@ -100,13 +101,11 @@ public class QuestionController : ControllerBase{
 
         var attempt = await _context.Attempts
             .Where(a => a.StudentId == user.Id && a.QuizId == question.QuizId)
-            .OrderByDescending(a => a.Start)
+            .OrderByDescending(a => a.Id)
             .FirstOrDefaultAsync();
-        if(attempt == null)
-        {
-            attempt = new Attempt { Start = DateTimeOffset.Now, StudentId = user.Id, QuizId = question.QuizId };
+        if(attempt.Start == null){
+            attempt.Start = DateTimeOffset.Now;
         }
-        _context.Attempts.Add(attempt);
         await _context.SaveChangesAsync();
         var answer = new Answer { AttemptId = attempt.Id, QuestionId = question.Id, Sql = evalDTO.Query, Timestamp = DateTimeOffset.Now, IsCorrect = isCorrect };
         _context.Answers.Add(answer);
@@ -171,7 +170,7 @@ public class QuestionController : ControllerBase{
     }
 
     [Authorize]
-    [HttpDelete("{id}")]
+    [HttpDelete("delete/{id}")]
     public async Task<ActionResult<Question>> DeleteQuestion(int id)
     {
         var question = await _context.Questions.FindAsync(id);

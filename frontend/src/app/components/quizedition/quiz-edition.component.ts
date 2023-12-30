@@ -34,6 +34,7 @@ export class QuizEditionComponent{
     solutions!: Solution[];
     databases!: Database[];
     questions!: Question[];
+    markedSolutionsForDeletion: Solution[] = [];
     panelOpenState = false;
 
     constructor(
@@ -82,7 +83,9 @@ export class QuizEditionComponent{
             this.ctlQuizType.setValue(this.quiz.isTest);
             this.ctlPublished.setValue(this.quiz.isPublished);
             this.questionService.getQuestionByQuizId(this.quizId).subscribe(questions => {
+                this.setSelectedDatabase()
                 this.questions = questions;
+                console.log(this.questions)
                 for(let question of this.questions){
                     if(question.solutions) {
                         for(let solution of question.solutions){
@@ -126,6 +129,8 @@ export class QuizEditionComponent{
         if(this.quizForm.invalid){
             return;
         }
+        console.log(this.questions)
+
         if(this.quiz.id === 0 || this.quiz.id === undefined){
             let res = plainToClass(Quiz, this.quizForm.value);
             res.database = this.databases.find(d => d.id === this.ctlDatabase.value);
@@ -134,7 +139,9 @@ export class QuizEditionComponent{
             });
         }else{
             _.assign(this.quiz, this.quizForm.value);
+            this.quiz.questions = this.questions;
             this.quiz.database = this.databases.find(d => d.id === this.ctlDatabase.value);
+            console.log(this.quiz)
             this.quizService.updateQuiz(this.quiz).subscribe(res => {
                 this.router.navigate(['/teacher']);
             });
@@ -150,10 +157,11 @@ export class QuizEditionComponent{
         return question.order !== undefined && question.order < this.questions.length;
     }
 
-    deleteSolution(solution: Solution){
-        this.questionService.deleteSolution(solution).subscribe(res => {
-            this.refresh();
-        });
+    deleteSolution(solution: Solution, question: Question){
+        if(solution.id !== undefined){
+            question.solutions = question.solutions?.filter(s => s.id !== solution.id);
+        }
+       
     }
 
     delete(Quiz: Quiz){
@@ -162,27 +170,33 @@ export class QuizEditionComponent{
         });
     }
 
-    deleteQuestion(Question: Question){
-        this.questionService.deleteQuestion(Question).subscribe(res => {
-            this.refresh();
-        });
+    deleteQuestion(question: Question){
+         this.questions = this.questions.filter(q => q.id !== question.id);
     }
 
     moveQuestionUp(question: Question){
-        let index = this.questions.indexOf(question);
-        if(index > 0){
-            let temp = this.questions[index-1];
-            this.questions[index-1] = question;
-            this.questions[index] = temp;
+        if (question.order !== undefined && question.order > 1) {
+            let tempOrder = question.order;
+            const previousQuestion = this.questions.find(q => q.order === (tempOrder - 1));
+            if (previousQuestion) {
+                const tempOrder = previousQuestion.order;
+                previousQuestion.order = question.order;
+                question.order = tempOrder;
+                //this.refresh();
+            }
         }
     }
 
     moveQuestionDown(question: Question){
-        let index = this.questions.indexOf(question);
-        if(index < this.questions.length-1){
-            let temp = this.questions[index+1];
-            this.questions[index+1] = question;
-            this.questions[index] = temp;
+        if (question.order !== undefined && question.order < this.questions.length) {
+            let tempOrder = question.order;
+            const nextQuestion = this.questions.find(q => q.order === (tempOrder + 1));
+            if (nextQuestion) {
+                const tempOrder = nextQuestion.order;
+                nextQuestion.order = question.order;
+                question.order = tempOrder;
+                //this.refresh();
+            }
         }
     }
 

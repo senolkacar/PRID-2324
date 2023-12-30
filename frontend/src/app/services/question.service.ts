@@ -34,8 +34,8 @@ export class QuestionService {
         );
     }
 
-    public deleteQuestion(question: Question): Observable<boolean> {
-        return this.http.delete<boolean>(`${this.baseUrl}api/question/${question.id}`).pipe(
+    public deleteQuestion(questionId: number): Observable<boolean> {
+        return this.http.delete<boolean>(`${this.baseUrl}api/question/delete/${questionId}`).pipe(
             map(() => true)
         );
     }

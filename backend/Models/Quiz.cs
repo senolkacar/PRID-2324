@@ -36,7 +36,9 @@ public class Quiz {
             if (Attempts.Any(q => q.StudentId == user.Id))
             {
                 Attempt? attempt = Attempts.LastOrDefault(q => q.StudentId == user.Id);
-                return attempt?.Finish == null ? "EN_COURS" : "FINI";
+                if(attempt.Start !=null){
+                    return attempt?.Finish == null ? "EN_COURS" : "FINI";
+                } 
             }
             res = "PAS_COMMENCE";
         }

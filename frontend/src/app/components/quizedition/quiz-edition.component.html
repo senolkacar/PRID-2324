@@ -65,10 +65,10 @@
     <p>Questions</p>
     <div>
         <mat-accordion>
-            <mat-expansion-panel *ngFor="let q of questions" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+            <mat-expansion-panel *ngFor="let q of questions; index as i" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
               <mat-expansion-panel-header>
                 <mat-panel-title>
-                  {{q.order}}. {{q.body}}
+                  {{i+1}}. {{q.body}}
                 </mat-panel-title>
               </mat-expansion-panel-header>
               <button mat-button (click)="moveQuestionUp(q)" [disabled]="hasQuestionBefore(q)">&#9650;</button>
@@ -91,7 +91,7 @@
                   <code-editor name="solutionSql" [(ngModel)]="solution.sql"></code-editor>
                 </div>
                 <div class="col-md-1 d-flex align-items-center justify-content-end">
-                <button type="delete" mat-button (click)="deleteSolution(solution)">
+                <button type="delete" mat-button (click)="deleteSolution(solution,q)">
                     <mat-icon>delete</mat-icon>
                   </button>
                 </div>
