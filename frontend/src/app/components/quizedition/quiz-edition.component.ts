@@ -224,6 +224,18 @@ export class QuizEditionComponent{
         }
     }
 
+    addQuestion(){
+        let question = new Question();
+        question.order = this.questions.length+1;
+        question.solutions = [];
+        this.questions.push(question);
+    }
+
+    addSolution(question: Question){
+        let solution = new Solution();
+        solution.order = question.solutions?.length ?? 0;
+        question.solutions?.push(solution);
+    }
     quizNameUsed():any{
         let timeout: NodeJS.Timeout;
         return (ctl: FormControl) => {
