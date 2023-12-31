@@ -1,4 +1,4 @@
-import { Component, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup,Validators,FormControl } from "@angular/forms";
 import { CodeEditorComponent } from '../code-editor/code-editor.component';
 import { ActivatedRoute, Router } from "@angular/router";
@@ -17,7 +17,7 @@ import { QuestionService } from "src/app/services/question.service";
     selector: 'app-quiz-edition',
     templateUrl: './quiz-edition.component.html'
 })
-export class QuizEditionComponent{
+export class QuizEditionComponent implements OnInit, AfterViewInit{
     @ViewChild('editor') editor!: CodeEditorComponent;
     quizId!: number;
     quiz!: Quiz;
@@ -35,6 +35,7 @@ export class QuizEditionComponent{
     databases!: Database[];
     questions!: Question[];
     panelOpenState = false;
+    canEdit = true;
 
     constructor(
         private route: ActivatedRoute,
@@ -54,7 +55,6 @@ export class QuizEditionComponent{
         this.ctlDescription = this.formBuilder.control('', []);
         this.ctlStartDate = this.formBuilder.control('', []);
         this.ctlEndDate = this.formBuilder.control('', []);
-        this.ctlQuery = this.formBuilder.control('', []);
 
 
         this.quizForm = this.formBuilder.group({
@@ -71,10 +71,16 @@ export class QuizEditionComponent{
         
         
     }
-
+    ngAfterViewInit(): void {
+        console.log(this.editor);
+    }
     refresh(){
         this.quizService.getQuizById(this.quizId).subscribe(quiz => {
             this.quiz = quiz;
+            if(this.quiz.isTest && this.quiz.attempts && this.quiz.attempts.length > 0){
+                this.canEdit = false;
+                this.quizForm.disable();
+            }
             this.ctlQuizName.setValue(this.quiz.name);
             this.ctlDescription.setValue(this.quiz.description);
             this.ctlStartDate.setValue(this.quiz.startDate);
@@ -236,6 +242,7 @@ export class QuizEditionComponent{
         solution.order = question.solutions?.length ?? 0;
         question.solutions?.push(solution);
     }
+
     quizNameUsed():any{
         let timeout: NodeJS.Timeout;
         return (ctl: FormControl) => {

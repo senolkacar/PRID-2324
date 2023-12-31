@@ -49,7 +49,7 @@
 </ng-container>
 <div>
 <ng-container>
-    <button type="submit" mat-button form="quizForm" (click)="update()">
+    <button type="submit" mat-button form="quizForm" (click)="update()" >
         <mat-icon>save</mat-icon>
     </button>
 </ng-container>
@@ -71,44 +71,44 @@
                   {{i+1}}. {{q.body}}
                 </mat-panel-title>
               </mat-expansion-panel-header>
-              <button mat-button (click)="moveQuestionUp(q)" [disabled]="hasQuestionBefore(q)">&#9650;</button>
-              <button mat-button (click)="moveQuestionDown(q)" [disabled]="hasQuestionAfter(q)">&#9660;</button>
-              <button type="delete" mat-button (click)="deleteQuestion(q)">
+              <ng-container *ngIf="canEdit"><button mat-button (click)="moveQuestionUp(q)" [disabled]="hasQuestionBefore(q)">&#9650;</button></ng-container>
+              <ng-container *ngIf="canEdit"><button mat-button (click)="moveQuestionDown(q)" [disabled]="hasQuestionAfter(q)">&#9660;</button></ng-container>
+              <ng-container *ngIf="canEdit"><button type="delete" mat-button (click)="deleteQuestion(q)">
                 <mat-icon>delete</mat-icon>
-              </button>
+              </button></ng-container>
               <p>Intitulé</p>
             <mat-form-field style="width: 100%">
                 <mat-label></mat-label>
-                <textarea matInput class="text-primary" [(ngModel)]="q.body">{{q.body}}</textarea>
+                <textarea matInput class="text-primary" [(ngModel)]="q.body"  [disabled]="!canEdit">{{q.body}}</textarea>
             </mat-form-field>
             <div *ngFor="let solution of q.solutions">
                 <div class="row">
                 <div class="col-md-1 d-flex flex-column align-items-center justify-content-center">
-                <button mat-button (click)="moveSolutionUp(solution,q)" [disabled]="hasSolutionBefore(solution,q)">&#9650;</button>
-                <button mat-button (click)="moveSolutionDown(solution,q)" [disabled]="hasSolutionAfter(solution,q)">&#9660;</button>
+                <ng-container *ngIf="canEdit"><button mat-button (click)="moveSolutionUp(solution,q)" [disabled]="hasSolutionBefore(solution,q)">&#9650;</button></ng-container>
+                <ng-container *ngIf="canEdit"><button mat-button (click)="moveSolutionDown(solution,q)" [disabled]="hasSolutionAfter(solution,q)">&#9660;</button></ng-container>
                 </div>
                 <div class="col-md-10">
-                  <code-editor name="solutionSql" [(ngModel)]="solution.sql"></code-editor>
+                  <code-editor #editor [(ngModel)]="solution.sql" [readOnly]="!canEdit"></code-editor>
                 </div>
                 <div class="col-md-1 d-flex align-items-center justify-content-end">
-                <button type="delete" mat-button (click)="deleteSolution(solution,q)">
+                  <ng-container *ngIf="canEdit"><button type="delete" mat-button (click)="deleteSolution(solution,q)">
                     <mat-icon>delete</mat-icon>
-                  </button>
+                  </button></ng-container>
                 </div>
                 </div>
               </div>
               <div class="d-flex justify-content-end">
-                <button mat-button (click)="addSolution(q)">
+                <ng-container *ngIf="canEdit"><button mat-button (click)="addSolution(q)">
                     <mat-icon>add</mat-icon>
-                </button>
+                </button></ng-container>
               </div>
             </mat-expansion-panel>
           </mat-accordion>
         <div class="col-sm-12 d-flex justify-content-end">
         <ng-container>
-        <button mat-button (click)="addQuestion()">
+          <ng-container *ngIf="canEdit"><button mat-button (click)="addQuestion()">
             <mat-icon>add</mat-icon>
-        </button>
+        </button></ng-container>
         </ng-container>
         </div>
     </div>

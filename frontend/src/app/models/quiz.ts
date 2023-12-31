@@ -22,6 +22,7 @@ export class Quiz{
     questions?: Question[];
     statut?: string;
     evaluation?: string;
+    hasAnswer?: boolean;
 
     get statutForTeacher(): string{
         if(this.isClosed){

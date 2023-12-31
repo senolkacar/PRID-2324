@@ -112,9 +112,7 @@ public async Task<ActionResult<int>> GetFirstQuestionId(int id)
         .Include(q => q.Questions)
         .Where(q => q.Id == id)
         .FirstOrDefaultAsync();
-
     var quiz = _mapper.Map<QuizWithAttemptsAndDBDTO>(query);
-
     return quiz;
  }
 [Authorize]
