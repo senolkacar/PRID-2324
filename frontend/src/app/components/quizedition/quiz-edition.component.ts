@@ -34,7 +34,6 @@ export class QuizEditionComponent{
     solutions!: Solution[];
     databases!: Database[];
     questions!: Question[];
-    markedSolutionsForDeletion: Solution[] = [];
     panelOpenState = false;
 
     constructor(
@@ -83,17 +82,10 @@ export class QuizEditionComponent{
             this.ctlQuizType.setValue(this.quiz.isTest);
             this.ctlPublished.setValue(this.quiz.isPublished);
             this.questionService.getQuestionByQuizId(this.quizId).subscribe(questions => {
-                this.setSelectedDatabase()
+                this.setSelectedDatabase();
                 this.questions = questions;
-                console.log(this.questions)
-                for(let question of this.questions){
-                    if(question.solutions) {
-                        for(let solution of question.solutions){
-                            if(question.solutions && question.solutions.length > 0){
-                            this.solutions = plainToInstance(Solution, question.solutions);
-                            }
-                        }
-                    }
+                for (let question of this.questions) {
+                    question.solutions = question.solutions?.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
                 }
             });
         });
@@ -114,7 +106,6 @@ export class QuizEditionComponent{
             this.databases = databases;
         });
         
-
     }
 
     setSelectedDatabase(): void {
@@ -129,7 +120,6 @@ export class QuizEditionComponent{
         if(this.quizForm.invalid){
             return;
         }
-        console.log(this.questions)
 
         if(this.quiz.id === 0 || this.quiz.id === undefined){
             let res = plainToClass(Quiz, this.quizForm.value);
@@ -141,7 +131,6 @@ export class QuizEditionComponent{
             _.assign(this.quiz, this.quizForm.value);
             this.quiz.questions = this.questions;
             this.quiz.database = this.databases.find(d => d.id === this.ctlDatabase.value);
-            console.log(this.quiz)
             this.quizService.updateQuiz(this.quiz).subscribe(res => {
                 this.router.navigate(['/teacher']);
             });
@@ -150,11 +139,49 @@ export class QuizEditionComponent{
     }
 
     hasQuestionAfter(question: Question): boolean{
-        return question.order !== undefined && question.order > 1;
+        const index = this.questions.indexOf(question);
+        return !(index < this.questions.length-1);  
     }
 
     hasQuestionBefore(question: Question): boolean{
-        return question.order !== undefined && question.order < this.questions.length;
+        const index = this.questions.indexOf(question);
+        return !(index > 0);
+    }
+
+    hasSolutionAfter(solution: Solution, question: Question): boolean {
+        const index = question.solutions?.indexOf(solution);
+        return !(index !== undefined && index < (question?.solutions?.length ?? 0) - 1);
+    }
+
+    hasSolutionBefore(solution: Solution, question: Question): boolean {
+        const index = question.solutions?.indexOf(solution);
+        return !(index !== undefined && index > 0);
+    }
+
+    moveSolutionUp(solution: Solution, question: Question){
+        const index = question.solutions?.indexOf(solution);
+        if(index!==undefined && index>0){
+            if(question.solutions && question.solutions.length > 0){
+            let temp = question.solutions[index-1];
+            question.solutions[index-1] = solution;
+            question.solutions[index] = temp;
+            question.solutions[index-1].order = index;
+            question.solutions[index].order = index+1;
+            }
+        }
+    }
+
+    moveSolutionDown(solution: Solution, question: Question){
+        const index = question.solutions?.indexOf(solution);
+        if(index!==undefined && index<(question?.solutions?.length ?? 0)-1){
+            if(question.solutions && question.solutions.length > 0){
+                let temp = question.solutions[index+1];
+                question.solutions[index+1] = solution;
+                question.solutions[index] = temp;
+                question.solutions[index+1].order = index+2;
+                question.solutions[index].order = index+1;
+            }     
+        }
     }
 
     deleteSolution(solution: Solution, question: Question){
@@ -175,28 +202,25 @@ export class QuizEditionComponent{
     }
 
     moveQuestionUp(question: Question){
-        if (question.order !== undefined && question.order > 1) {
-            let tempOrder = question.order;
-            const previousQuestion = this.questions.find(q => q.order === (tempOrder - 1));
-            if (previousQuestion) {
-                const tempOrder = previousQuestion.order;
-                previousQuestion.order = question.order;
-                question.order = tempOrder;
-                //this.refresh();
-            }
-        }
+        const index = this.questions.indexOf(question);
+       if(index>0){
+            let temp = this.questions[index-1];
+            this.questions[index-1] = question;
+            this.questions[index] = temp;
+            this.questions[index-1].order = index;
+            this.questions[index].order = index+1;
+       }
+
     }
 
     moveQuestionDown(question: Question){
-        if (question.order !== undefined && question.order < this.questions.length) {
-            let tempOrder = question.order;
-            const nextQuestion = this.questions.find(q => q.order === (tempOrder + 1));
-            if (nextQuestion) {
-                const tempOrder = nextQuestion.order;
-                nextQuestion.order = question.order;
-                question.order = tempOrder;
-                //this.refresh();
-            }
+        const index = this.questions.indexOf(question);
+        if(index<this.questions.length-1){
+            let temp = this.questions[index+1];
+            this.questions[index+1] = question;
+            this.questions[index] = temp;
+            this.questions[index+1].order = index+2;
+            this.questions[index].order = index+1;
         }
     }
 

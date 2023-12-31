@@ -12,12 +12,13 @@ public class QuestionDTO{
     public bool HasAnswer { get; set; } = false;
     public AnswerDTO? Answer { get; set; } = null!;
 
+    public ICollection<SolutionDTO> Solutions { get; set; } = new HashSet<SolutionDTO>();
+
 }
 
 public class QuestionWithSolutionAnswerDTO: QuestionDTO{
     public QuizWithAttemptsAndDBDTO Quiz { get; set; } = null!;
     public ICollection<AnswerDTO> Answers { get; set; } = new HashSet<AnswerDTO>();
-    public ICollection<SolutionDTO> Solutions { get; set; } = new HashSet<SolutionDTO>();
 
 }
 
