@@ -85,20 +85,11 @@ export class QuizEditionComponent implements OnInit{
             this.ctlQuizType.setValue(this.quiz.isTest);
             this.ctlPublished.setValue(this.quiz.isPublished);
             this.setSelectedDatabase();
-            console.log(this.quiz.questions);
             this.questions = this.quiz.questions ?? [];
             this.questions = this.questions.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
             for(let question of this.questions){
                 question.solutions = question.solutions?.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
             }
-            
-            /*this.questionService.getQuestionByQuizId(this.quizId).subscribe(questions => {
-                this.setSelectedDatabase();
-                this.questions = questions;
-                for (let question of this.questions) {
-                    question.solutions = question.solutions?.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-                }
-            });*/
         });
     }
 
@@ -142,7 +133,6 @@ export class QuizEditionComponent implements OnInit{
             });
         }else{
             _.assign(this.quiz, this.quizForm.value);
-            console.log(this.questions);
             this.quiz.questions = this.questions;
             this.quiz.database = this.databases.find(d => d.id === this.ctlDatabase.value);
             this.quizService.updateQuiz(this.quiz).subscribe(res => {
@@ -239,7 +229,6 @@ export class QuizEditionComponent implements OnInit{
         question.order = this.questions.length+1;
         question.solutions = [];
         this.questions.push(question);
-        console.log(this.questions);
     }
 
     addSolution(question: Question){
