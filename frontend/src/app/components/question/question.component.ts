@@ -74,14 +74,7 @@ export class QuestionComponent implements OnInit {
     }
 
     hasAttempt(): boolean{
-      if(this.question.quiz?.attempts){
-      for(let attempt of this.question.quiz?.attempts){
-        if(attempt.start !== null){
-          return true;
-        }
-      }
-    }
-      return false;
+     return this.question?.answers?.length !== 0;
     }
 
     canSendQuery(): boolean {
@@ -149,7 +142,6 @@ export class QuestionComponent implements OnInit {
       this.questionService.getQuestion(this.questionId).subscribe(question => {
         //const readonlyMode = this.quizStateService.isReadOnlyMode();
         this.question = question;
-        //console.log(this.question)
         this.answer = question?.answer!;
         this.query = question?.answer?.sql ?? '';
         if (this.question.quiz?.statut === 'FINI' || question.quiz?.statut === 'CLOTURE') {

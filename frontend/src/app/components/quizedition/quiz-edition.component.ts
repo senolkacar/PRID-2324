@@ -9,7 +9,6 @@ import { plainToClass, plainToInstance } from "class-transformer";
 import * as _ from 'lodash-es';
 import { Database } from "src/app/models/database";
 import { DatabaseService } from "src/app/services/database.service";
-import { pl } from "date-fns/locale";
 import { Question, Solution } from "src/app/models/question";
 import { QuestionService } from "src/app/services/question.service";
 
@@ -17,7 +16,7 @@ import { QuestionService } from "src/app/services/question.service";
     selector: 'app-quiz-edition',
     templateUrl: './quiz-edition.component.html'
 })
-export class QuizEditionComponent implements OnInit, AfterViewInit{
+export class QuizEditionComponent implements OnInit{
     @ViewChild('editor') editor!: CodeEditorComponent;
     quizId!: number;
     quiz!: Quiz;
@@ -71,9 +70,7 @@ export class QuizEditionComponent implements OnInit, AfterViewInit{
         
         
     }
-    ngAfterViewInit(): void {
-        console.log(this.editor);
-    }
+
     refresh(){
         this.quizService.getQuizById(this.quizId).subscribe(quiz => {
             this.quiz = quiz;
@@ -87,13 +84,21 @@ export class QuizEditionComponent implements OnInit, AfterViewInit{
             this.ctlEndDate.setValue(this.quiz.endDate);
             this.ctlQuizType.setValue(this.quiz.isTest);
             this.ctlPublished.setValue(this.quiz.isPublished);
-            this.questionService.getQuestionByQuizId(this.quizId).subscribe(questions => {
+            this.setSelectedDatabase();
+            console.log(this.quiz.questions);
+            this.questions = this.quiz.questions ?? [];
+            this.questions = this.questions.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+            for(let question of this.questions){
+                question.solutions = question.solutions?.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+            }
+            
+            /*this.questionService.getQuestionByQuizId(this.quizId).subscribe(questions => {
                 this.setSelectedDatabase();
                 this.questions = questions;
                 for (let question of this.questions) {
                     question.solutions = question.solutions?.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
                 }
-            });
+            });*/
         });
     }
 
@@ -103,6 +108,7 @@ export class QuizEditionComponent implements OnInit, AfterViewInit{
             // Fetch the specific question based on the question ID
             if(this.quizId === 0){
                 this.quiz = new Quiz();
+                this.questions = [];
             }else{
                 this.refresh();
             }
@@ -130,11 +136,13 @@ export class QuizEditionComponent implements OnInit, AfterViewInit{
         if(this.quiz.id === 0 || this.quiz.id === undefined){
             let res = plainToClass(Quiz, this.quizForm.value);
             res.database = this.databases.find(d => d.id === this.ctlDatabase.value);
+            res.questions = this.questions;
             this.quizService.createQuiz(res).subscribe(res => {
                 this.router.navigate(['/teacher']);
             });
         }else{
             _.assign(this.quiz, this.quizForm.value);
+            console.log(this.questions);
             this.quiz.questions = this.questions;
             this.quiz.database = this.databases.find(d => d.id === this.ctlDatabase.value);
             this.quizService.updateQuiz(this.quiz).subscribe(res => {
@@ -146,12 +154,12 @@ export class QuizEditionComponent implements OnInit, AfterViewInit{
 
     hasQuestionAfter(question: Question): boolean{
         const index = this.questions.indexOf(question);
-        return !(index < this.questions.length-1);  
+            return !(index !== undefined && index < this.questions.length-1);
     }
 
     hasQuestionBefore(question: Question): boolean{
         const index = this.questions.indexOf(question);
-        return !(index > 0);
+        return !(index !== undefined && index > 0);
     }
 
     hasSolutionAfter(solution: Solution, question: Question): boolean {
@@ -191,10 +199,7 @@ export class QuizEditionComponent implements OnInit, AfterViewInit{
     }
 
     deleteSolution(solution: Solution, question: Question){
-        if(solution.id !== undefined){
-            question.solutions = question.solutions?.filter(s => s.id !== solution.id);
-        }
-       
+        question.solutions = question.solutions?.filter(s => s !== solution);       
     }
 
     delete(Quiz: Quiz){
@@ -204,19 +209,18 @@ export class QuizEditionComponent implements OnInit, AfterViewInit{
     }
 
     deleteQuestion(question: Question){
-         this.questions = this.questions.filter(q => q.id !== question.id);
+         this.questions = this.questions?.filter(q => q.id !== question.id);
     }
 
     moveQuestionUp(question: Question){
         const index = this.questions.indexOf(question);
-       if(index>0){
+        if(index>0){
             let temp = this.questions[index-1];
             this.questions[index-1] = question;
             this.questions[index] = temp;
             this.questions[index-1].order = index;
             this.questions[index].order = index+1;
-       }
-
+        }
     }
 
     moveQuestionDown(question: Question){
@@ -227,7 +231,7 @@ export class QuizEditionComponent implements OnInit, AfterViewInit{
             this.questions[index] = temp;
             this.questions[index+1].order = index+2;
             this.questions[index].order = index+1;
-        }
+            }
     }
 
     addQuestion(){
@@ -235,6 +239,7 @@ export class QuizEditionComponent implements OnInit, AfterViewInit{
         question.order = this.questions.length+1;
         question.solutions = [];
         this.questions.push(question);
+        console.log(this.questions);
     }
 
     addSolution(question: Question){
@@ -242,6 +247,14 @@ export class QuizEditionComponent implements OnInit, AfterViewInit{
         solution.order = question.solutions?.length ?? 0;
         question.solutions?.push(solution);
     }
+
+    /*onSubmit(){
+        this.submitted = true;
+        if(this.quizForm.invalid){
+            return;
+        }
+        this.update();
+    }*/
 
     quizNameUsed():any{
         let timeout: NodeJS.Timeout;

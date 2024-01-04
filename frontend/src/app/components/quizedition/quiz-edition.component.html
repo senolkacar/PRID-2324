@@ -4,6 +4,8 @@
 <p class>Nom</p>
 <mat-form-field>
     <input matInput [formControl]="ctlQuizName" required>
+    <mat-error class="field-error" *ngIf="ctlQuizName.hasError('required')">Required</mat-error>
+    <mat-error class="field-error" *ngIf="ctlQuizName.hasError('custom')">{{ctlQuizName.errors?.custom}}</mat-error>
 </mat-form-field>
 </div>
     <mat-form-field>

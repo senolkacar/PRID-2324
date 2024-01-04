@@ -18,9 +18,6 @@ public class Quiz {
     public Database Database { get; set; } = null!;
     public ICollection<Question> Questions { get; set; } = new HashSet<Question>();
     public ICollection<Attempt> Attempts { get; set; } = new HashSet<Attempt>();
-
-    [NotMapped]
-    public bool HasAnswer { get; set; } = false;
     
     [NotMapped]
     public string Statut { get; set; } = "";
@@ -39,9 +36,7 @@ public class Quiz {
             if (Attempts.Any(q => q.StudentId == user.Id))
             {
                 Attempt? attempt = Attempts.LastOrDefault(q => q.StudentId == user.Id);
-                if(attempt.Start !=null){
-                    return attempt?.Finish == null ? "EN_COURS" : "FINI";
-                } 
+                return attempt?.Finish == null ? "EN_COURS" : "FINI";
             }
             res = "PAS_COMMENCE";
         }
