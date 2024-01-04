@@ -74,7 +74,14 @@ export class QuestionComponent implements OnInit {
     }
 
     hasAttempt(): boolean{
-      return (this.question?.quiz?.attempts?.length ?? 0) > 0;
+      if(this.question.quiz?.attempts){
+      for(let attempt of this.question.quiz?.attempts){
+        if(attempt.start !== null){
+          return true;
+        }
+      }
+    }
+      return false;
     }
 
     canSendQuery(): boolean {
