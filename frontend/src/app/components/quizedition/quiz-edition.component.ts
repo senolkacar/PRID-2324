@@ -52,8 +52,8 @@ export class QuizEditionComponent implements OnInit{
         this.ctlPublished = this.formBuilder.control(false);
         this.ctlQuizType = this.formBuilder.control(false);
         this.ctlDescription = this.formBuilder.control('', []);
-        this.ctlStartDate = this.formBuilder.control('', []);
-        this.ctlEndDate = this.formBuilder.control('', []);
+        this.ctlStartDate = this.formBuilder.control(null, []);
+        this.ctlEndDate = this.formBuilder.control(null, [this.validateEndDate()]);
 
 
         this.quizForm = this.formBuilder.group({
@@ -97,6 +97,27 @@ export class QuizEditionComponent implements OnInit{
         this.route.params.subscribe(params => {
             this.quizId = +params['quizId']; // convert to number
             // Fetch the specific question based on the question ID
+            this.quizForm.markAllAsTouched();
+            this.ctlQuizType.valueChanges.subscribe(value => {
+                if (value === true) {
+                  // If quizType is Test, make startDate and endDate required
+                  this.ctlStartDate.setValidators([Validators.required]);
+                  this.ctlEndDate.setValidators([Validators.required]);
+                } else {
+                  // If quizType is Training, remove validators for startDate and endDate
+                  this.ctlStartDate.setValidators([]);
+                  this.ctlEndDate.setValidators([]);
+                }
+          
+                // Update the validity of the controls after changing validators
+                this.ctlStartDate.updateValueAndValidity();
+                this.ctlEndDate.updateValueAndValidity();
+              });
+
+              this.ctlStartDate.valueChanges.subscribe(value => {
+                this.ctlEndDate.setValidators([Validators.required, this.validateEndDate()]);
+                this.ctlEndDate.updateValueAndValidity();
+              });
             if(this.quizId === 0){
                 this.quiz = new Quiz();
                 this.questions = [];
@@ -118,9 +139,34 @@ export class QuizEditionComponent implements OnInit{
         }
     }
 
+    getQuestionsErrors(): string[] {
+        const errors: string[] = [];
+        if (this.questions?.length === 0 || this.questions === undefined || this.questions === null) {
+            errors.push('Aucune Question');
+        }else{
+            for(let question of this.questions){
+                if(question.body === undefined || question.body === null || question.body.trim() === ''|| question.body.trim().length < 2 ){
+                    errors.push('Intitulé de la question doit contenir minimum 2 caractères ');
+                }else{
+                    if(question.solutions?.length === 0){
+                        errors.push('Aucune Solution');
+                    }else{
+                        for(let solution of question.solutions ?? []){
+                            if(solution.sql === undefined || solution.sql === null || solution.sql.trim() === '' ){
+                                errors.push('Aucune solutions ne peut être vide');
+                            }
+                        }
+                    }
+                }
+               
+            }
+        }
+        return errors;
+    }
+
     update(){
         this.submitted = true;
-        if(this.quizForm.invalid){
+        if(this.quizForm.invalid || this.getQuestionsErrors().length > 0){
             return;
         }
 
@@ -237,13 +283,18 @@ export class QuizEditionComponent implements OnInit{
         question.solutions?.push(solution);
     }
 
-    /*onSubmit(){
-        this.submitted = true;
-        if(this.quizForm.invalid){
-            return;
+    validateEndDate():any{
+        return (ctl:FormControl) => {
+            const startDate: Date = this.ctlStartDate.value;
+            const endDate: Date = ctl.value;
+            if (startDate && endDate) {
+                if (endDate < startDate) {
+                    return { endDateBeforeStartDate: true };
+                }
+            }
+            return null;
         }
-        this.update();
-    }*/
+    }
 
     quizNameUsed():any{
         let timeout: NodeJS.Timeout;
