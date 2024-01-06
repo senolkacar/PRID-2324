@@ -20,11 +20,11 @@ public class QuizValidator : AbstractValidator<Quiz>{
 
         RuleFor(q => q.StartDate)
             .LessThan(q => q.EndDate)
-            .When(q => q.StartDate != null && q.EndDate != null);
+            .When(q => q.StartDate != null && q.EndDate != null && q.IsTest);
 
         RuleFor(q => q.EndDate)
             .GreaterThan(q => q.StartDate)
-            .When(q => q.StartDate != null && q.EndDate != null);
+            .When(q => q.StartDate != null && q.EndDate != null && q.IsTest);
         
         RuleSet("create",()=>{
             RuleFor(q => q.Name)

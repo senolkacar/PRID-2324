@@ -216,11 +216,11 @@ public async Task<ActionResult<QuizDTO>> CreateNewQuiz(QuizWithAttemptsAndDBDTO 
 {
     var quiz = _mapper.Map<Quiz>(qDTO);
     quiz.Database = await _context.Databases.FindAsync(qDTO.Database.Id);
-    /*var result = await new QuizValidator(_context).ValidateAsync(quiz);
+    var result = await new QuizValidator(_context).ValidateAsync(quiz);
     if (!result.IsValid)
     {
         return BadRequest(result);
-    }*/
+    }
 
     _context.Quizzes.Add(quiz);
     await _context.SaveChangesAsync();
