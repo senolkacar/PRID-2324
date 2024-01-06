@@ -67,10 +67,10 @@
     <p>Questions</p>
     <div>
         <mat-accordion>
-            <mat-expansion-panel *ngFor="let q of questions; index as i" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+            <mat-expansion-panel *ngFor="let q of questions; index as i"  (opened)="panelStates[i] = true" (closed)="panelStates[i] = false">
               <mat-expansion-panel-header>
                 <mat-panel-title>
-                  {{i+1}}. {{q.body}}
+                  {{ panelStates[i] ? 'Question ' + (i + 1) : (i + 1) + '. ' + q.body }}
                 </mat-panel-title>
               </mat-expansion-panel-header>
               <ng-container *ngIf="canEdit"><button mat-button (click)="moveQuestionUp(q)" [disabled]="hasQuestionBefore(q)">&#9650;</button></ng-container>

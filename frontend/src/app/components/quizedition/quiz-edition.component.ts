@@ -33,7 +33,7 @@ export class QuizEditionComponent implements OnInit{
     solutions!: Solution[];
     databases!: Database[];
     questions!: Question[];
-    panelOpenState = false;
+    panelStates: boolean[] = [];
     canEdit = true;
 
     constructor(
