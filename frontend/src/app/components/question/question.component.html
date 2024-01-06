@@ -46,7 +46,8 @@
 </div>
 
 <div>
-    <ng-container *ngIf="question?.hasAnswer">
+
+    <ng-container *ngIf="question?.hasAnswer && dateVisibility">
         <p class *ngIf="question?.answer?.timestamp">{{answer.timestampAsString}}</p>
     </ng-container>
 <ng-container *ngIf="showResultMessage && question?.query">

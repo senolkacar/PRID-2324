@@ -169,7 +169,7 @@ public class QuestionController : ControllerBase{
         return questions.ToList();
     }
 
-    [Authorize]
+     [Authorized(Role.Teacher)]
     [HttpDelete("delete/{id}")]
     public async Task<ActionResult<Question>> DeleteQuestion(int id)
     {
@@ -185,7 +185,7 @@ public class QuestionController : ControllerBase{
         return question;
     }
 
-    [Authorize]
+     [Authorized(Role.Teacher)]
     [HttpDelete("solution/{id}")]
     public async Task<ActionResult<Solution>> DeleteSolution(int id)
     {

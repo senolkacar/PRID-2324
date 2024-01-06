@@ -30,6 +30,7 @@ export class QuestionComponent implements OnInit {
     sendButtonVisibility = true;
     resetButtonVisibility = true;
     solutionButtonVisibility = true;
+    dateVisibility = true;
   
 
     constructor(
@@ -73,9 +74,19 @@ export class QuestionComponent implements OnInit {
       return this.question?.nextQuestionId == null;
     }
 
-    hasAttempt(): boolean{
-     return this.question?.answers?.length !== 0;
+  hasAttempt(): boolean {
+    if (this.question?.quiz?.attempts?.length !== 0) {
+      let Attempts = this.question?.quiz?.attempts;
+      if (Attempts !== undefined) {
+        for (let attempt of Attempts) {
+          if (attempt.start !== null) {
+            return true;
+          }
+        }
+      }
     }
+    return false
+  }
 
     canSendQuery(): boolean {
       return this.query.trim() !== ''
@@ -96,6 +107,7 @@ export class QuestionComponent implements OnInit {
     navigateToQuestion(questionId: number) {
       this.solutionVisible = false;
       this.showResultMessage = true;
+      this.dateVisibility = true;
       if(!this.readonlyMode){
         this.editor.readOnly = false;
       }
@@ -136,6 +148,7 @@ export class QuestionComponent implements OnInit {
       this.displayedColumns = []; 
       this.dataSource.data = [];
       this.showResultMessage = false;
+      this.dateVisibility = false;
     }
 
     refresh() {

@@ -1,11 +1,11 @@
-<form [formGroup]="quizForm">
+<form [formGroup]="quizForm" novalidate>
 <div class="d-flex justify-content-between">
 <div class="d-flex align-items-center">
 <p class>Nom</p>
 <mat-form-field>
     <input matInput [formControl]="ctlQuizName" required>
     <mat-error class="field-error" *ngIf="ctlQuizName.hasError('required')">Required</mat-error>
-    <mat-error class="field-error" *ngIf="ctlQuizName.hasError('quizNameUsed')">Quiz Name Already Used</mat-error>
+    <mat-error class="field-error" *ngIf="ctlQuizName.hasError('minlength')">Quiz name should contains more than 3 characters</mat-error>
 </mat-form-field>
 </div>
     <mat-form-field>

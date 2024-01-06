@@ -47,7 +47,7 @@ export class QuizEditionComponent implements OnInit{
         this.ctlQuizName = this.formBuilder.control('', [
             Validators.required,
             Validators.minLength(3)
-        ], [this.quizNameUsed()]);
+        ],[]);
         this.ctlDatabase = this.formBuilder.control('', []);
         this.ctlPublished = this.formBuilder.control(false);
         this.ctlQuizType = this.formBuilder.control(false);
@@ -85,6 +85,12 @@ export class QuizEditionComponent implements OnInit{
             this.ctlQuizType.setValue(this.quiz.isTest);
             this.ctlPublished.setValue(this.quiz.isPublished);
             this.setSelectedDatabase();
+            this.quizForm.updateValueAndValidity();
+            if (this.quiz.isTest) {
+                this.ctlStartDate.setValidators([Validators.required]);
+                this.ctlEndDate.setValidators([Validators.required, this.validateEndDate()]);
+            }
+            console.log(this.quizForm.valid)
             this.questions = this.quiz.questions ?? [];
             this.questions = this.questions.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
             for(let question of this.questions){
@@ -99,25 +105,18 @@ export class QuizEditionComponent implements OnInit{
             // Fetch the specific question based on the question ID
             this.quizForm.markAllAsTouched();
             this.ctlQuizType.valueChanges.subscribe(value => {
-                if (value === true) {
-                  // If quizType is Test, make startDate and endDate required
-                  this.ctlStartDate.setValidators([Validators.required]);
-                  this.ctlEndDate.setValidators([Validators.required]);
-                } else {
-                  // If quizType is Training, remove validators for startDate and endDate
-                  this.ctlStartDate.setValidators([]);
-                  this.ctlEndDate.setValidators([]);
+                if(value===true){
+                    this.ctlStartDate.setValidators([Validators.required]);
+                    this.ctlEndDate.setValidators([Validators.required]);
                 }
-          
-                // Update the validity of the controls after changing validators
+                else{
+                    this.ctlStartDate.clearValidators();
+                    this.ctlEndDate.clearValidators();
+                }
                 this.ctlStartDate.updateValueAndValidity();
                 this.ctlEndDate.updateValueAndValidity();
-              });
+            });
 
-              this.ctlStartDate.valueChanges.subscribe(value => {
-                this.ctlEndDate.setValidators([Validators.required, this.validateEndDate()]);
-                this.ctlEndDate.updateValueAndValidity();
-              });
             if(this.quizId === 0){
                 this.quiz = new Quiz();
                 this.questions = [];
@@ -296,8 +295,9 @@ export class QuizEditionComponent implements OnInit{
         }
     }
 
-    quizNameUsed():any{
+    quizNameUsed(initialValue : string):any{
         let timeout: NodeJS.Timeout;
+        let previousValue = initialValue;
         return (ctl: FormControl) => {
             clearTimeout(timeout);
             const quizName = ctl.value;

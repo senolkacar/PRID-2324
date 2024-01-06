@@ -172,7 +172,7 @@ public async Task<IActionResult> CreateAttempt(BasicQuizDTO basicQuizDTO)
     }
 
 
-[Authorize]
+ [Authorized(Role.Teacher)]
 [HttpGet("quizNameExists/{name}")]
 public async Task<ActionResult<bool>> QuizNameExists(string name)
 {
@@ -186,7 +186,7 @@ public async Task<ActionResult<bool>> QuizNameExists(string name)
     return true;
 }
 
-[Authorize]
+ [Authorized(Role.Teacher)]
 [HttpPut]
 public async Task<IActionResult> PutQuiz(QuizWithAttemptsAndDBDTO quizDTO)
 {
@@ -211,6 +211,7 @@ public async Task<IActionResult> PutQuiz(QuizWithAttemptsAndDBDTO quizDTO)
     return NoContent();
 }
 
+ [Authorized(Role.Teacher)]
 [HttpPost("createNewQuiz")]
 public async Task<ActionResult<QuizDTO>> CreateNewQuiz(QuizWithAttemptsAndDBDTO qDTO)
 {
@@ -227,7 +228,7 @@ public async Task<ActionResult<QuizDTO>> CreateNewQuiz(QuizWithAttemptsAndDBDTO 
     return CreatedAtAction(nameof(GetQuizById), new { id = quiz.Id }, _mapper.Map<QuizDTO>(quiz));
 }
 
-[Authorize]
+ [Authorized(Role.Teacher)]
 [HttpDelete("{id}")]
 public async Task<IActionResult> DeleteQuiz(int id)
 {

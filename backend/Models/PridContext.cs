@@ -78,7 +78,7 @@ public class PridContext : DbContext
         );
     }
 
-    public void CreateDatabases()
+     public void CreateDatabases()
     {
         modelBuilder.Entity<Database>().HasData(
             new Database { Id = 1, Name = "fournisseurs", Description = "Base de données fournisseurs" },
@@ -106,7 +106,6 @@ public class PridContext : DbContext
                 Name = "TEST1",
                 IsPublished = true,
                 DatabaseId = 1,
-                IsClosed = true,
                 IsTest = true,
                 StartDate = DateTimeOffset.Now.AddDays(-2),
                 EndDate = DateTimeOffset.Now.AddDays(-1)
@@ -270,7 +269,7 @@ WHERE l.ID_P = p.ID_P
             new Attempt { Id = 1, Start = new DateTimeOffset(new DateTime(2023, 09, 01)), QuizId = 1, StudentId = 4 }
         );
         modelBuilder.Entity<Answer>().HasData(
-            new Answer { Id = 1, QuestionId = 1, AttemptId = 1, Sql = "SELECT * FROM S", IsCorrect = true, Timestamp = DateTimeOffset.Now.ToLocalTime() }
+            new Answer { Id = 1, QuestionId = 1, AttemptId = 1, Sql = "SELECT * FROM S", IsCorrect = true }
         );
     }
 
