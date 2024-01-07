@@ -5,7 +5,7 @@
 <mat-form-field>
     <input matInput [formControl]="ctlQuizName" required>
     <mat-error class="field-error" *ngIf="ctlQuizName.hasError('required')">Required</mat-error>
-    <mat-error class="field-error" *ngIf="ctlQuizName.hasError('minlength')">Quiz name should contains more than 3 characters</mat-error>
+    <mat-error class="field-error" *ngIf="ctlQuizName.hasError('minlength')">Should contains more than 3 characters</mat-error>
 </mat-form-field>
 </div>
     <mat-form-field>

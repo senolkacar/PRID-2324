@@ -46,7 +46,7 @@ export class QuizEditionComponent implements OnInit{
     ) {
         this.ctlQuizName = this.formBuilder.control('', [
             Validators.required,
-            Validators.minLength(3)
+            Validators.minLength(3),
         ],[]);
         this.ctlDatabase = this.formBuilder.control('', []);
         this.ctlPublished = this.formBuilder.control(false);
@@ -90,7 +90,6 @@ export class QuizEditionComponent implements OnInit{
                 this.ctlStartDate.setValidators([Validators.required]);
                 this.ctlEndDate.setValidators([Validators.required, this.validateEndDate()]);
             }
-            console.log(this.quizForm.valid)
             this.questions = this.quiz.questions ?? [];
             this.questions = this.questions.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
             for(let question of this.questions){
@@ -123,7 +122,15 @@ export class QuizEditionComponent implements OnInit{
             }else{
                 this.refresh();
             }
-         
+        
+            this.ctlQuizName.valueChanges.subscribe(value => {
+                const trimmedValue = value.trim();
+                if (trimmedValue.length === 0 || trimmedValue.length < 3) {
+                    this.ctlQuizName.setErrors({ minlength: true });
+                } else {
+                    this.ctlQuizName.setErrors(null);
+                }
+            });
         });
         this.databaseService.getAll().subscribe(databases => {
             this.databases = databases;

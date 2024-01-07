@@ -7,21 +7,16 @@ namespace prid_2324.Helpers
 {
     public class AuthorizedAttribute : AuthorizeAttribute
     {
-        public AuthorizedAttribute(params Role[] roles) : base()
-        {
-            if (roles != null && roles.Length > 0)
+        public AuthorizedAttribute(params Role[] roles) : base() {
+        var rolesNames = new List<string>();
+            foreach (var role in roles)
             {
-                var rolesNames = new List<string>();
-                var names = Enum.GetNames(typeof(Role));
-                foreach (var role in roles)
+                if (Enum.IsDefined(typeof(Role), role))
                 {
-                    if ((int)role >= 0 && (int)role < names.Length)
-                    {
-                        rolesNames.Add(names[(int)role]);
-                    }
+                    rolesNames.Add(role.ToString());
                 }
-                Roles = String.Join(",", rolesNames);
             }
+            Roles = String.Join(",", rolesNames);
         }
     }
 }

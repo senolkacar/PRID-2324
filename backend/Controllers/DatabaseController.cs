@@ -25,7 +25,7 @@ public class DatabaseController : ControllerBase{
         _mapper = mapper;
     }
 
-    [Authorized(Role.Teacher)]
+   [Authorize]
     [HttpGet]
 public async Task<ActionResult<IEnumerable<DatabaseDTO>>> GetAll()
 {

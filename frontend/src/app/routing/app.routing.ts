@@ -26,7 +26,10 @@ const appRoutes: Routes = [
     canActivate:[AuthGuard],
     data: {roles: [Role.Teacher]}
     },
-  {path:'quizedition/:quizId',component: QuizEditionComponent},
+  {path: 'quizedition/:quizId',
+  component: QuizEditionComponent,
+  canActivate: [AuthGuard],
+  data: { roles: [Role.Teacher] }},
   {path:'question/:questionId',component: QuestionComponent},
   {path: 'restricted', component: RestrictedComponent},
   { path: '**', component: UnknownComponent }
