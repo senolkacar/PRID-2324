@@ -121,10 +121,6 @@ export class QuizListComponent {
   }
 
 
-  delete(quiz: Quiz) {
-    // Implement delete logic
-  }
-
   readQuiz(quizId: number):void {
     this.quizStateService.setReadOnlyMode(true);
     // Navigate to the first question of the selected quiz on only read mode

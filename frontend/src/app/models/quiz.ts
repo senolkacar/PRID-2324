@@ -42,6 +42,10 @@ export class Quiz{
     get testEnd(): string{
         return this.endDate !== null && this.endDate? this.endDate?.toLocaleDateString('fr-BE') : 'N/A';
     }
+
+    get databaseName(): string{
+        return this.database?.name ?? '';
+    }
 }
 export class Attempt{
     id? : number;
