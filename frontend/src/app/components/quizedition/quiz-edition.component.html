@@ -100,7 +100,7 @@
                 <ng-container *ngIf="canEdit"><button mat-button (click)="moveSolutionDown(solution,q)" [disabled]="hasSolutionAfter(solution,q)">&#9660;</button></ng-container>
                 </div>
                 <div class="col-md-10">
-                  <code-editor #editor [(ngModel)]="solution.sql" [readOnly]="!canEdit"></code-editor>
+                  <code-editor #editor [(ngModel)]="solution.sql" [readOnly]="!canEdit" [dbName]="q.quiz?.databaseName!"></code-editor>
                 </div>
                 <div class="col-md-1 d-flex align-items-center justify-content-end">
                   <ng-container *ngIf="canEdit"><button type="delete" mat-button (click)="deleteSolution(solution,q)">

@@ -185,7 +185,7 @@ public class QuestionController : ControllerBase{
         return question;
     }
 
-     [Authorized(Role.Teacher)]
+    [Authorized(Role.Teacher)]
     [HttpDelete("solution/{id}")]
     public async Task<ActionResult<Solution>> DeleteSolution(int id)
     {

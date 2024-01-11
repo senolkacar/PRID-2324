@@ -11,6 +11,8 @@ import { Database } from "src/app/models/database";
 import { DatabaseService } from "src/app/services/database.service";
 import { Question, Solution } from "src/app/models/question";
 import { QuestionService } from "src/app/services/question.service";
+import { MatDialog } from "@angular/material/dialog";
+import { DialogComponent } from "../dialog/dialog.component";
 
 @Component({
     selector: 'app-quiz-edition',
@@ -35,12 +37,14 @@ export class QuizEditionComponent implements OnInit{
     questions!: Question[];
     panelStates: boolean[] = [];
     canEdit = true;
+    
 
     constructor(
         private route: ActivatedRoute,
         private quizService: QuizService,
         private databaseService: DatabaseService,
         private questionService: QuestionService,
+        public dialog: MatDialog,
         private formBuilder: FormBuilder,
         private router: Router,
     ) {
@@ -245,9 +249,16 @@ export class QuizEditionComponent implements OnInit{
     }
 
     delete(Quiz: Quiz){
-        this.quizService.deleteQuiz(Quiz).subscribe(res => {
-            this.router.navigate(['/teacher']);
+        const dialogRef = this.dialog.open(DialogComponent,{data: {title: 'Supprimer ce quiz', message: 'Attention, totutes les questions et tous les essais associés seront supprimé. Etes-vous sûr ?'}});
+        dialogRef.afterClosed().subscribe(result => {
+            if(result){
+                console.log("this triggered ")
+                this.quizService.deleteQuiz(Quiz).subscribe(res => {
+                    this.router.navigate(['/teacher']);
+                });
+            } 
         });
+        
     }
 
     deleteQuestion(question: Question){

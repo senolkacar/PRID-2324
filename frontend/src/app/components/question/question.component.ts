@@ -31,6 +31,7 @@ export class QuestionComponent implements OnInit {
     resetButtonVisibility = true;
     solutionButtonVisibility = true;
     dateVisibility = true;
+    dbName: string = "";
   
 
     constructor(
@@ -120,7 +121,7 @@ export class QuestionComponent implements OnInit {
     }
 
     closeQuiz(): void {
-      const dialogRef = this.dialog.open(DialogComponent);
+      const dialogRef = this.dialog.open(DialogComponent, {data: {title: 'Cloture du quiz', message: 'Attention, vous ne pourrez plus le modifier par après. Etes-vous sûr ?'}});
 
       dialogRef.afterClosed().subscribe(result => {
         if (result) {
@@ -157,6 +158,7 @@ export class QuestionComponent implements OnInit {
         this.question = question;
         this.answer = question?.answer!;
         this.query = question?.answer?.sql ?? '';
+        this.dbName = question?.quiz?.databaseName ?? '';
         if (this.question.quiz?.statut === 'FINI' || question.quiz?.statut === 'CLOTURE') {
           this.editor.readOnly = true;
           this.readonlyMode = true;

@@ -4,8 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace prid_2324.Models;
 
 public enum Role {
-    Student = 1,
-    Teacher = 2
+    Student = 0,
+    Teacher = 1
 }
 
 public abstract class User

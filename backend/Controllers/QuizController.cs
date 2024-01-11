@@ -228,7 +228,7 @@ public async Task<ActionResult<QuizDTO>> CreateNewQuiz(QuizWithAttemptsAndDBDTO 
     return CreatedAtAction(nameof(GetQuizById), new { id = quiz.Id }, _mapper.Map<QuizDTO>(quiz));
 }
 
- [Authorized(Role.Teacher)]
+[Authorized(Role.Teacher)]
 [HttpDelete("{id}")]
 public async Task<IActionResult> DeleteQuiz(int id)
 {

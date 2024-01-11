@@ -51,6 +51,8 @@ export class CodeEditorComponent implements AfterViewInit, ControlValueAccessor 
     private _readOnly: boolean = false;
     // contient la fonction de callback qui sera appelée quand la valeur de l'éditeur change
     private _onChange: any;
+    
+    @Input() dbName : string = "";
 
     ngAfterViewInit(): void {
         ace.config.set("fontSize", "1.5rem");
@@ -75,7 +77,7 @@ export class CodeEditorComponent implements AfterViewInit, ControlValueAccessor 
         this._aceEditor.setValue(this._code, -1);
         this._aceEditor.resize();
         // Configuration de la complétion automatique
-        ace.config.loadModule("ace/ext/language_tools", function () {
+        ace.config.loadModule("ace/ext/language_tools",  () => {
             const langTools = ace.require("ace/ext/language_tools");
             langTools.addCompleter({
                 getCompletions: (editor:any, session: any, pos: any, prefix: any, callback: any) => {
@@ -86,8 +88,8 @@ export class CodeEditorComponent implements AfterViewInit, ControlValueAccessor 
                     }
 
                     // Récupère les noms des tables, des colonnes et des mots-clés.
-                    const tables = CodeEditorComponent.getTableNames();
-                    const columns = CodeEditorComponent.getColumnNames();
+                    const tables = CodeEditorComponent.getTableNames(this.dbName ?? "");
+                    const columns = CodeEditorComponent.getColumnNames(this.dbName ?? "");
                     const keywords = CodeEditorComponent.getKeywords();
 
                     // Crée un tableau pour stocker les différents types de complétions.
@@ -120,8 +122,14 @@ export class CodeEditorComponent implements AfterViewInit, ControlValueAccessor 
      * 
      * **TODO: Ici, géré de manière statique, mais devrait être dynamique en fonction de la BD ciblée.**
      */
-    private static getTableNames() {
-        return ["SPJ", "S", "P", "J","Destinataires","EstAmi","Message","Personne"];
+    private static getTableNames(dbName : string) {
+        switch(dbName){
+            case "fournisseurs":
+                return ["SPJ", "S", "P", "J"];
+            case "facebook":
+                return ["Destinataires","EstAmi","Message","Personne"];
+        }
+        return [];
     }
 
     /**
@@ -129,8 +137,14 @@ export class CodeEditorComponent implements AfterViewInit, ControlValueAccessor 
      * 
      * **TODO: Ici, géré de manière statique, mais devrait être dynamique en fonction de la BD ciblée.**
      */
-    private static getColumnNames() {
-        return ["ID_S", "ID_P", "ID_J", "PNAME", "COLOR", "CITY", "JNAME", "SNAME", "STATUS", "WEIGHT", "QTY", "DATE_DERNIERE_LIVRAISON","ID_Message","Destinataire","SSN1","SSN2","Contenu","Date_Expedition","Expediteur","SSN","Nom","Sexe","Age"];
+    private static getColumnNames(dbName : string) {
+        switch(dbName){
+            case "fournisseurs":
+                return ["ID_S", "ID_P", "ID_J", "PNAME", "COLOR", "CITY", "JNAME", "SNAME", "STATUS", "WEIGHT", "QTY", "DATE_DERNIERE_LIVRAISON"];
+            case "facebook":
+                return ["ID_Message","Destinataire","SSN1","SSN2","Contenu","Date_Expedition","Expediteur","SSN","Nom","Sexe","Age"];
+        }
+        return [];
     }
 
     /**
