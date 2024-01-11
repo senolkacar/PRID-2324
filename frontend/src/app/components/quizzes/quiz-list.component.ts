@@ -56,11 +56,11 @@ export class QuizListComponent {
 
   ngOnInit():void{
     if(this.quizType === 'teacher'){
-      this.displayedColumns = ['name', 'databaseName','type', 'statutForTeacher', 'start', 'end', 'actions'];
+      this.displayedColumns = ['name', 'databaseName','type', 'statutForTeacher', 'testStart', 'testEnd', 'actions'];
     }else if(this.quizType === 'training'){
       this.displayedColumns = ['name', 'databaseName', 'statut', 'actions'];
     }else{
-      this.displayedColumns = ['name', 'databaseName', 'start', 'end', 'statut', 'evaluation', 'actions'];
+      this.displayedColumns = ['name', 'databaseName', 'testStart', 'testEnd', 'statut', 'evaluation', 'actions'];
     }
   }
 
