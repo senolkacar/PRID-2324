@@ -190,10 +190,26 @@ export class QuestionComponent implements OnInit {
           this.router.navigate(['/quizzes']);
         } 
         this.questionId = +params['questionId'];
-        // convert to number
-        // Fetch the specific question based on the question ID
-        this.refresh();
-    });
+        if(this.questionId === 0){
+          this.router.navigate(['/quizzes']);
+        }
+        if (this.questionId > 0) {
+          this.questionService.getQuestion(this.questionId).subscribe(
+            res => {
+              if (res === null) {
+                this.router.navigate(['/quizzes']);
+              } else {
+                // Fetch the specific question based on the question ID
+                this.refresh();
+              }
+            },
+            error => {
+              console.error('Error fetching question:', error);
+              this.router.navigate(['/quizzes']);
+            }
+          );
+        }
+      });
   }
 
     /*createAttempt():void{

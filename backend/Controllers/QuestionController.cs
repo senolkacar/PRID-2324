@@ -44,6 +44,9 @@ public class QuestionController : ControllerBase{
             .Where(q => q.Id == id)
             .OrderBy(q => q.Order)
             .FirstOrDefaultAsync();
+        if(query == null){
+            return NotFound();
+        }
         var q = query.Quiz;
         q.Statut = q.GetStatus(user);
         var lastAttempt = await _context.Attempts

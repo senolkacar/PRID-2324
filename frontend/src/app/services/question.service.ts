@@ -28,12 +28,6 @@ export class QuestionService {
         return this.http.get<any>(`${this.baseUrl}api/question/getanswer/${questionId}`);
     }
 
-    getQuestionByQuizId(quizId: number): Observable<Question[]> {
-        return this.http.get<Question[]>(`${this.baseUrl}api/question/getQuestionsByQuizId/${quizId}`).pipe(
-            map(res => plainToInstance(Question, res))
-        );
-    }
-
     public deleteQuestion(questionId: number): Observable<boolean> {
         return this.http.delete<boolean>(`${this.baseUrl}api/question/delete/${questionId}`).pipe(
             map(() => true)

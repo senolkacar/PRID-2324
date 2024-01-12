@@ -110,7 +110,23 @@ export class QuizEditionComponent implements OnInit{
                 this.router.navigate(['/teacher']);
             }
             this.quizId = +params['quizId']; // convert to number
+            if (this.quizId > 0) {
+                this.quizService.getQuizById(this.quizId).subscribe(
+                  res => {
+                    if (res === null) {
+                      this.router.navigate(['/teacher']);
+                    }
+                  },
+                  error => {
+                    console.error('Error fetching question:', error);
+                    this.router.navigate(['/teacher']);
+                  }
+                );
+              }
             // Fetch the specific question based on the question ID
+            this.databaseService.getAll().subscribe(databases => {
+                this.databases = databases;
+            });
             this.quizForm.markAllAsTouched();
             this.ctlQuizType.valueChanges.subscribe(value => {
                 if(value===true){
@@ -159,9 +175,7 @@ export class QuizEditionComponent implements OnInit{
                 }
             });
         });
-        this.databaseService.getAll().subscribe(databases => {
-            this.databases = databases;
-        });
+       
         
     }
 
