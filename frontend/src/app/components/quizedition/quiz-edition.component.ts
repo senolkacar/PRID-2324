@@ -37,6 +37,7 @@ export class QuizEditionComponent implements OnInit{
     questions!: Question[];
     panelStates: boolean[] = [];
     canEdit = true;
+    db: string = "";
     
 
     constructor(
@@ -136,6 +137,9 @@ export class QuizEditionComponent implements OnInit{
                     this.isValidationInProgress = false;
                 }
             });
+
+            this.subscribeToDatabaseChanges();
+
             if(this.quizId === 0){
                 this.quiz = new Quiz();
                 this.questions = [];
@@ -156,6 +160,12 @@ export class QuizEditionComponent implements OnInit{
             this.databases = databases;
         });
         
+    }
+
+    subscribeToDatabaseChanges(): void {
+        this.ctlDatabase.valueChanges.subscribe(value => {
+            this.db = this.databases.find(d => d.id === value)?.name ?? '';
+        });
     }
 
     setSelectedDatabase(): void {
@@ -210,6 +220,15 @@ export class QuizEditionComponent implements OnInit{
             this.quizService.updateQuiz(this.quiz).subscribe(res => {
                 this.router.navigate(['/teacher']);
             });
+        }
+
+    }
+
+    getDBName(): string{
+        if(this.quiz !== undefined){
+            return this.quiz.database?.name ?? '';
+        }else{
+            return this.db;
         }
 
     }
@@ -307,6 +326,7 @@ export class QuizEditionComponent implements OnInit{
         question.order = this.questions.length+1;
         question.solutions = [];
         this.questions.push(question);
+        this.subscribeToDatabaseChanges();
     }
 
     addSolution(question: Question){

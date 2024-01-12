@@ -5,6 +5,7 @@ import { DatabaseService } from "src/app/services/database.service";
 import * as ace from "ace-builds";
 import "ace-builds/src-noconflict/mode-mysql";
 import "ace-builds/src-noconflict/ext-language_tools";
+import { Observable } from "rxjs";
 
 @Component({
     selector: "code-editor",
@@ -63,12 +64,30 @@ export class CodeEditorComponent implements AfterViewInit, ControlValueAccessor 
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes.dbName && !changes.dbName.firstChange) {
-            // dbName has changed, recall the method
+            // Reset completions array
             this._completions = [];
-            this._dataFetched = false;
+
+            // Clear completions from Ace Editor's session
+            if (this._aceEditor) {
+                const session: any = this._aceEditor.getSession();
+                const langTools = ace.require("ace/ext/language_tools");
+
+                // Clear completions
+                session.$completers = [];
+                langTools.setCompleters([]);
+
+                // Force refresh of Ace Editor
+                session.setMode("ace/mode/mysql");
+            }
+
+            this.fetchData();
         }
     }
+    
 
+    ngOnInit(): void {
+        //console.log("this is db name:"+this.dbName);
+    }
     ngAfterViewInit(): void {
         ace.config.set("fontSize", "1.5rem");
         this._aceEditor = ace.edit(this._editor.nativeElement);
@@ -92,50 +111,63 @@ export class CodeEditorComponent implements AfterViewInit, ControlValueAccessor 
         this._aceEditor.setValue(this._code, -1);
         this._aceEditor.resize();
         // Configuration de la complétion automatique
-        ace.config.loadModule("ace/ext/language_tools",  () => {
+        if (this._aceEditor) {
+            const session: any = this._aceEditor.getSession();
+            const langTools = ace.require("ace/ext/language_tools");
+
+            // Clear completions
+            session.$completers = [];
+            langTools.setCompleters([]);
+
+            // Force refresh of Ace Editor
+            session.setMode("ace/mode/mysql");
+        }
+        this.fetchData();
+        
+    }
+
+    fetchData(): void {
+        // Check if dbName is available
+        if (this.dbName) {
+            // Fetch table and column names
+            this.getTableNames(this.dbName).subscribe((tables) => {
+                this._tables = tables;
+                this.updateCompletions();
+            });
+
+            this.getColumnNames(this.dbName).subscribe((columns) => {
+                this._columns = columns;
+                this.updateCompletions();
+            });
+        }
+    }
+
+    updateCompletions(): void {
+        // Populate completions array
+        this._completions = [];
+
+        this._tables.forEach((table: any) => {
+            this._completions.push({ caption: table, value: table, meta: "Table", score: 100 });
+        });
+
+        this._columns.forEach((column: any) => {
+            this._completions.push({ caption: column, value: column, meta: "Column", score: 100 });
+        });
+
+        const keywords = CodeEditorComponent.getKeywords();
+        keywords.forEach((keyword: any) => {
+            this._completions.push({ caption: keyword, value: keyword, meta: "Keyword", score: 75 });
+        });
+
+        // Update completions in Ace Editor
+        if (this._aceEditor) {
             const langTools = ace.require("ace/ext/language_tools");
             langTools.addCompleter({
-                getCompletions: (editor:any, session: any, pos: any, prefix: any, callback: any) => {
-                    // Si le préfixe (texte précédant la position du curseur) est vide, il n'y a aucune suggestion.
-                    if (prefix.length === 0) {
-                        callback(null, []);
-                        return
-                    }
-
-                    // Récupère les noms des tables, des colonnes et des mots-clés.
-                    if(!this._dataFetched){
-                    this.getTableNames(this.dbName);
-                    this.getColumnNames(this.dbName);
-                    this._dataFetched = true;
-                    }
-                    const tables = this._tables;
-                    const columns = this._columns;
-                    const keywords = CodeEditorComponent.getKeywords();
-                    this._completions = [];
-                    // Crée un tableau pour stocker les différents types de complétions.
-                    //const completions: any[] = [];
-
-                    // Pour chaque nom de table, ajoute une complétion.
-                    tables.forEach((table: any) => {
-                        this._completions.push({caption: table, value: table, meta: "Table", score: 100});
-                    });
-
-                    // Pour chaque colonne, ajoute une complétion.
-                    columns.forEach((column: any) => {
-                        this._completions.push({caption: column, value: column, meta: "Column", score: 100});
-                    });
-
-                    // Pour chaque mot-clé, ajoute une complétion.
-                    keywords.forEach((keyword: any) => {
-                        this._completions.push({caption: keyword, value: keyword, meta: "Keyword", score: 75});
-                    });
-                    console.log("db"+ this.dbName);
-                    console.log(this._completions);
-                    // Appelle la fonction de callback avec les suggestions d'achèvement.
+                getCompletions: (editor: any, session: any, pos: any, prefix: any, callback: any) => {
                     callback(null, this._completions);
-                    }
+                }
             });
-        });
+        }
     }
 
     /**
@@ -143,10 +175,9 @@ export class CodeEditorComponent implements AfterViewInit, ControlValueAccessor 
      * 
      * **TODO: Ici, géré de manière statique, mais devrait être dynamique en fonction de la BD ciblée.**
      */
-    private getTableNames(dbName : string) {
-        this.databaseService.getTables(dbName).subscribe((data) => {
-            this._tables = data;
-        });
+    private getTableNames(dbName: string): Observable<string[]> {
+        return this.databaseService.getTables(dbName);
+      
         /*switch(dbName){
             case "fournisseurs":
                 return ["SPJ", "S", "P", "J"];
@@ -162,10 +193,8 @@ export class CodeEditorComponent implements AfterViewInit, ControlValueAccessor 
      * 
      * **TODO: Ici, géré de manière statique, mais devrait être dynamique en fonction de la BD ciblée.**
      */
-    private getColumnNames(dbName : string) {
-        this.databaseService.getColumns(dbName).subscribe((data) => {
-            this._columns = data;
-        });
+    private getColumnNames(dbName: string): Observable<string[]> {
+        return this.databaseService.getColumns(dbName);
         /*switch(dbName){
             case "fournisseurs":
                 return ["ID_S", "ID_P", "ID_J", "PNAME", "COLOR", "CITY", "JNAME", "SNAME", "STATUS", "WEIGHT", "QTY", "DATE_DERNIERE_LIVRAISON"];
