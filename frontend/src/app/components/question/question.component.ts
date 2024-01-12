@@ -186,7 +186,11 @@ export class QuestionComponent implements OnInit {
     ngOnInit(): void {
       // Read the question ID from the route parameters
       this.route.params.subscribe(params => {
-        this.questionId = +params['questionId']; // convert to number
+        if(params['questionId'] === undefined || params['questionId'] === null || params['questionId'] === '' || isNaN(+params['questionId']) ){
+          this.router.navigate(['/quizzes']);
+        } 
+        this.questionId = +params['questionId'];
+        // convert to number
         // Fetch the specific question based on the question ID
         this.refresh();
     });

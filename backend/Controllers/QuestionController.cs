@@ -149,26 +149,6 @@ public class QuestionController : ControllerBase{
         return queryResult;
     }
 
-    [Authorize]
-    [HttpGet("getQuestionsByQuizId/{id}")]
-    public async Task<ActionResult<IEnumerable<QuestionWithSolutionAnswerDTO>>> GetQuestionsByQuizId(int id)
-    {
-        var pseudo = User.Identity!.Name;
-        var user = await _context.Users.SingleOrDefaultAsync(u => u.Pseudo == pseudo);
-        if (user == null)
-        {
-            return BadRequest();
-        }
-        var query = await _context.Questions
-          .Include(s => s.Solutions)
-          .Where(q => q.QuizId == id)
-            .OrderBy(q => q.Order)
-            .ToListAsync();
-
-        var questions = _mapper.Map<IEnumerable<QuestionWithSolutionAnswerDTO>>(query);
-        return questions.ToList();
-    }
-
      [Authorized(Role.Teacher)]
     [HttpDelete("delete/{id}")]
     public async Task<ActionResult<Question>> DeleteQuestion(int id)

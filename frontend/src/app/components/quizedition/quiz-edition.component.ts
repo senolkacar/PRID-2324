@@ -106,6 +106,9 @@ export class QuizEditionComponent implements OnInit{
 
     ngOnInit(): void {
         this.route.params.subscribe(params => {
+            if(params['quizId'] === undefined || params['quizId'] === null || params['quizId'] === '' || isNaN(+params['quizId']) ){
+                this.router.navigate(['/teacher']);
+            }
             this.quizId = +params['quizId']; // convert to number
             // Fetch the specific question based on the question ID
             this.quizForm.markAllAsTouched();

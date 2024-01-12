@@ -21,7 +21,7 @@ public class QuestionValidator : AbstractValidator<Question>{
             .WithMessage("The body must have a minimum length of 2 characters (excluding whitespace).");
         
         /*RuleFor(q => q.Order)
-            .MustAsync(BeUniqueOrder)
+            .MustAsync(BeUniqueOrder())
             .WithMessage("'{PropertyName}' must be unique.");*/
 
         RuleFor(q => q.Solutions)

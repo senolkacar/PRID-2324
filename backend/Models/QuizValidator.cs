@@ -35,6 +35,11 @@ public class QuizValidator : AbstractValidator<Quiz>{
             .MustAsync(BeUniqueName)
             .WithMessage("'{PropertyName}' must be unique.");
         });
+        
+        RuleFor(q => q.Questions)
+            .NotEmpty()
+            .WithMessage("'{PropertyName}' must not be empty.");
+        
     }
 
     public async Task<bool> HasQuestions(int id, CancellationToken token) {
