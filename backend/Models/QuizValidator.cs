@@ -16,15 +16,19 @@ public class QuizValidator : AbstractValidator<Quiz>{
 
         RuleFor(q => q.Name)
             .NotEmpty()
-            .MinimumLength(3);
+            .MinimumLength(3)
+            .Must(name => name.Trim().Length >= 3)
+            .WithMessage("The name must have a minimum length of 3 characters (excluding whitespace).");
 
         RuleFor(q => q.StartDate)
             .LessThan(q => q.EndDate)
-            .When(q => q.StartDate != null && q.EndDate != null && q.IsTest);
+            .When(q => q.StartDate != null && q.EndDate != null && q.IsTest)
+            .WithMessage("The start date must be before the end date.");
 
         RuleFor(q => q.EndDate)
             .GreaterThan(q => q.StartDate)
-            .When(q => q.StartDate != null && q.EndDate != null && q.IsTest);
+            .When(q => q.StartDate != null && q.EndDate != null && q.IsTest)
+            .WithMessage("The end date must be after the start date.");
         
         RuleSet("create",()=>{
             RuleFor(q => q.Name)
@@ -33,6 +37,9 @@ public class QuizValidator : AbstractValidator<Quiz>{
         });
     }
 
+    public async Task<bool> HasQuestions(int id, CancellationToken token) {
+        return await _context.Quizzes.AnyAsync(q => q.Id == id && q.Questions.Count > 0, token);
+    }
     private async Task<bool> isNameUnique(int id, string name, CancellationToken token) {
         return await _context.Quizzes.AllAsync(q => q.Id == id || q.Name != name, token);
     }

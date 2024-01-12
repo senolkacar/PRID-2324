@@ -12,7 +12,7 @@ using System.Security.Claims;
 using prid_2324.Helpers;
 
 namespace prid_2324.Controllers;
-//[Authorize]
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 
@@ -38,7 +38,7 @@ public class DatabaseController : ControllerBase
 
         return databases;
     }
-    //[Authorize]
+    [Authorize]
     [HttpPost("gettables")]
     public async Task<ActionResult<List<string>>> GetTables(DatabaseDTO databaseDTO)
     {
@@ -46,7 +46,7 @@ public class DatabaseController : ControllerBase
         var tables = db.GetTables(databaseDTO.Name);
         return tables.ToList();
     }
-    //[Authorize]
+    [Authorize]
     [HttpPost("getcolumns")]
     public async Task<ActionResult<List<string>>> GetColumns(DatabaseDTO databaseDTO)
     {

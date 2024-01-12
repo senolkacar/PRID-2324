@@ -25,7 +25,7 @@ public class QuizzesController : ControllerBase{
         _mapper = mapper;
     }
 
-    [Authorize]
+    [Authorized(Role.Teacher)]
     [HttpGet("all")]
 public async Task<ActionResult<IEnumerable<QuizWithAttemptsAndDBDTO>>> GetAll()
 {
@@ -186,11 +186,11 @@ public async Task<ActionResult<bool>> QuizNameExists(string name)
     return true;
 }
 
- [Authorized(Role.Teacher)]
+[Authorized(Role.Teacher)]
 [HttpPut]
 public async Task<IActionResult> PutQuiz(QuizWithAttemptsAndDBDTO quizDTO)
 {
-   var quiz = await _context.Quizzes
+    var quiz = await _context.Quizzes
         .Include(q => q.Database)
         .Include(q => q.Attempts)
         .Include(q => q.Questions)
@@ -201,17 +201,41 @@ public async Task<IActionResult> PutQuiz(QuizWithAttemptsAndDBDTO quizDTO)
     {
         return NotFound();
     }
+
     _mapper.Map<QuizWithAttemptsAndDBDTO, Quiz>(quizDTO, quiz);
-    var result = await new QuizValidator(_context).ValidateAsync(quiz);
+
+    var quizValidator = new QuizValidator(_context);
+    var result = await quizValidator.ValidateAsync(quiz);
     if (!result.IsValid)
     {
         return BadRequest(result);
     }
+
+    var questionValidator = new QuestionValidator(_context);
+    var solutionValidator = new SolutionValidator(_context);
+
+    foreach (var question in quiz.Questions)
+    {
+        var questionValidationResult = await questionValidator.ValidateAsync(question);
+        if (!questionValidationResult.IsValid)
+        {
+            return BadRequest(questionValidationResult);
+        }
+
+        foreach (var solution in question.Solutions)
+        {
+            var solutionValidationResult = await solutionValidator.ValidateAsync(solution);
+            if (!solutionValidationResult.IsValid)
+            {
+                return BadRequest(solutionValidationResult);
+            }
+        }
+    }
+
     await _context.SaveChangesAsync();
     return NoContent();
 }
-
- [Authorized(Role.Teacher)]
+[Authorized(Role.Teacher)]
 [HttpPost("createNewQuiz")]
 public async Task<ActionResult<QuizDTO>> CreateNewQuiz(QuizWithAttemptsAndDBDTO qDTO)
 {
@@ -223,11 +247,35 @@ public async Task<ActionResult<QuizDTO>> CreateNewQuiz(QuizWithAttemptsAndDBDTO 
         return BadRequest(result);
     }
 
+    // Validate quiz.Questions
+    var questionValidator = new QuestionValidator(_context);
+    foreach (var question in quiz.Questions)
+    {
+        var questionValidationResult = await questionValidator.ValidateAsync(question);
+        if (!questionValidationResult.IsValid)
+        {
+            return BadRequest(questionValidationResult);
+        }
+    }
+
+    // Validate quiz.Solutions
+    var solutionValidator = new SolutionValidator(_context);
+    foreach (var question in quiz.Questions)
+    {
+        foreach (var solution in question.Solutions)
+        {
+            var solutionValidationResult = await solutionValidator.ValidateAsync(solution);
+            if (!solutionValidationResult.IsValid)
+            {
+                return BadRequest(solutionValidationResult);
+            }
+        }
+    }
+
     _context.Quizzes.Add(quiz);
     await _context.SaveChangesAsync();
     return CreatedAtAction(nameof(GetQuizById), new { id = quiz.Id }, _mapper.Map<QuizDTO>(quiz));
 }
-
 [Authorized(Role.Teacher)]
 [HttpDelete("{id}")]
 public async Task<IActionResult> DeleteQuiz(int id)
