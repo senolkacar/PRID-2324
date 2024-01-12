@@ -3,8 +3,8 @@ import 'reflect-metadata';
 import { differenceInYears } from 'date-fns';
 
 export enum Role {
-    Student = 0,
-    Teacher = 1,
+    Student = 1,
+    Teacher = 0,
 }
 
 export class User {
@@ -16,11 +16,11 @@ export class User {
     firstName?: string;
     @Type(() => Date)
     birthDate?: Date;
-    role?: Role;
+    role: Role = Role.Student;
     token?: string;
 
     get roleAsString(): string {
-        return this.role === 0 ? 'Student' : 'Teacher';
+        return Role[this.role];
     }
 
     get display(): string {

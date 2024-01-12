@@ -16,4 +16,12 @@ export class DatabaseService {
         );
     }
 
+    getTables(name : string): Observable<any> {
+        return this.http.post<string>(`${this.baseUrl}api/database/gettables`, { name });
+    }
+
+    getColumns(name : string): Observable<any> {
+        return this.http.post<string>(`${this.baseUrl}api/database/getcolumns`, { name });
+    }
+
 }

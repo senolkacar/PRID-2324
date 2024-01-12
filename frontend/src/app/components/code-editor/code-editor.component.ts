@@ -1,5 +1,6 @@
-import { AfterViewInit, Component, ElementRef, Input, ViewChild, forwardRef } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild, forwardRef } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { DatabaseService } from "src/app/services/database.service";
 
 import * as ace from "ace-builds";
 import "ace-builds/src-noconflict/mode-mysql";
@@ -39,7 +40,9 @@ export class CodeEditorComponent implements AfterViewInit, ControlValueAccessor 
     permet à un composant d'agir comme un contrôle Angular.
     */
 
-    constructor() { }
+    constructor(
+        private databaseService : DatabaseService
+    ) { }
 
     // permet d'accéder à l'objet DOM qui correspond au DIV qui contient l'éditeur
     @ViewChild("editor") private _editor!: ElementRef<HTMLElement>;
@@ -52,7 +55,19 @@ export class CodeEditorComponent implements AfterViewInit, ControlValueAccessor 
     // contient la fonction de callback qui sera appelée quand la valeur de l'éditeur change
     private _onChange: any;
     
+    private _dataFetched: boolean = false;
+    private _columns: string[] = [];
+    private _tables: string[] = [];
+    private _completions: any[] = [];
     @Input() dbName : string = "";
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes.dbName && !changes.dbName.firstChange) {
+            // dbName has changed, recall the method
+            this._completions = [];
+            this._dataFetched = false;
+        }
+    }
 
     ngAfterViewInit(): void {
         ace.config.set("fontSize", "1.5rem");
@@ -88,31 +103,37 @@ export class CodeEditorComponent implements AfterViewInit, ControlValueAccessor 
                     }
 
                     // Récupère les noms des tables, des colonnes et des mots-clés.
-                    const tables = CodeEditorComponent.getTableNames(this.dbName ?? "");
-                    const columns = CodeEditorComponent.getColumnNames(this.dbName ?? "");
+                    if(!this._dataFetched){
+                    this.getTableNames(this.dbName);
+                    this.getColumnNames(this.dbName);
+                    this._dataFetched = true;
+                    }
+                    const tables = this._tables;
+                    const columns = this._columns;
                     const keywords = CodeEditorComponent.getKeywords();
-
+                    this._completions = [];
                     // Crée un tableau pour stocker les différents types de complétions.
-                    const completions: any[] = [];
+                    //const completions: any[] = [];
 
                     // Pour chaque nom de table, ajoute une complétion.
                     tables.forEach((table: any) => {
-                        completions.push({caption: table, value: table, meta: "Table", score: 100});
+                        this._completions.push({caption: table, value: table, meta: "Table", score: 100});
                     });
 
                     // Pour chaque colonne, ajoute une complétion.
                     columns.forEach((column: any) => {
-                        completions.push({caption: column, value: column, meta: "Column", score: 100});
+                        this._completions.push({caption: column, value: column, meta: "Column", score: 100});
                     });
 
                     // Pour chaque mot-clé, ajoute une complétion.
                     keywords.forEach((keyword: any) => {
-                        completions.push({caption: keyword, value: keyword, meta: "Keyword", score: 75});
+                        this._completions.push({caption: keyword, value: keyword, meta: "Keyword", score: 75});
                     });
-
+                    console.log("db"+ this.dbName);
+                    console.log(this._completions);
                     // Appelle la fonction de callback avec les suggestions d'achèvement.
-                    callback(null, completions);
-                }
+                    callback(null, this._completions);
+                    }
             });
         });
     }
@@ -122,14 +143,18 @@ export class CodeEditorComponent implements AfterViewInit, ControlValueAccessor 
      * 
      * **TODO: Ici, géré de manière statique, mais devrait être dynamique en fonction de la BD ciblée.**
      */
-    private static getTableNames(dbName : string) {
-        switch(dbName){
+    private getTableNames(dbName : string) {
+        this.databaseService.getTables(dbName).subscribe((data) => {
+            this._tables = data;
+        });
+        /*switch(dbName){
             case "fournisseurs":
                 return ["SPJ", "S", "P", "J"];
             case "facebook":
                 return ["Destinataires","EstAmi","Message","Personne"];
         }
-        return [];
+        return [];*/
+
     }
 
     /**
@@ -137,14 +162,17 @@ export class CodeEditorComponent implements AfterViewInit, ControlValueAccessor 
      * 
      * **TODO: Ici, géré de manière statique, mais devrait être dynamique en fonction de la BD ciblée.**
      */
-    private static getColumnNames(dbName : string) {
-        switch(dbName){
+    private getColumnNames(dbName : string) {
+        this.databaseService.getColumns(dbName).subscribe((data) => {
+            this._columns = data;
+        });
+        /*switch(dbName){
             case "fournisseurs":
                 return ["ID_S", "ID_P", "ID_J", "PNAME", "COLOR", "CITY", "JNAME", "SNAME", "STATUS", "WEIGHT", "QTY", "DATE_DERNIERE_LIVRAISON"];
             case "facebook":
                 return ["ID_Message","Destinataire","SSN1","SSN2","Contenu","Date_Expedition","Expediteur","SSN","Nom","Sexe","Age"];
         }
-        return [];
+        return [];*/
     }
 
     /**

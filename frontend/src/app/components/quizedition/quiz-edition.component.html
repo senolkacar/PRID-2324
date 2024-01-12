@@ -39,6 +39,7 @@
     <input matInput [matDatepicker]="dateDebut" [formControl]="ctlStartDate">
     <mat-hint>DD/MM/YYYY</mat-hint>
     <mat-error class="field-error" *ngIf="ctlStartDate.hasError('required')">Required</mat-error>
+    <mat-error class="field-error" *ngIf="ctlStartDate.hasError('startDateAfterEndDate')">Start Date cannot be after and date</mat-error>
     <mat-datepicker-toggle matIconSuffix [for]="dateDebut"></mat-datepicker-toggle>
     <mat-datepicker #dateDebut></mat-datepicker>
 </mat-form-field>

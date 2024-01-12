@@ -57,7 +57,7 @@ export class QuizEditionComponent implements OnInit{
         this.ctlQuizType = this.formBuilder.control(false);
         this.ctlDescription = this.formBuilder.control('', []);
         this.ctlStartDate = this.formBuilder.control(null, []);
-        this.ctlEndDate = this.formBuilder.control(null, [this.validateEndDate()]);
+        this.ctlEndDate = this.formBuilder.control(null, []);
 
 
         this.quizForm = this.formBuilder.group({
@@ -74,6 +74,7 @@ export class QuizEditionComponent implements OnInit{
         
         
     }
+    private isValidationInProgress = false;
 
     refresh(){
         this.quizService.getQuizById(this.quizId).subscribe(quiz => {
@@ -91,7 +92,7 @@ export class QuizEditionComponent implements OnInit{
             this.setSelectedDatabase();
             this.quizForm.updateValueAndValidity();
             if (this.quiz.isTest) {
-                this.ctlStartDate.setValidators([Validators.required]);
+                this.ctlStartDate.setValidators([Validators.required, this.validateStartDate()]);
                 this.ctlEndDate.setValidators([Validators.required, this.validateEndDate()]);
             }
             this.questions = this.quiz.questions ?? [];
@@ -109,8 +110,8 @@ export class QuizEditionComponent implements OnInit{
             this.quizForm.markAllAsTouched();
             this.ctlQuizType.valueChanges.subscribe(value => {
                 if(value===true){
-                    this.ctlStartDate.setValidators([Validators.required]);
-                    this.ctlEndDate.setValidators([Validators.required]);
+                    this.ctlStartDate.setValidators([Validators.required,this.validateStartDate()]);
+                    this.ctlEndDate.setValidators([Validators.required, this.validateEndDate()]);
                 }
                 else{
                     this.ctlStartDate.clearValidators();
@@ -120,6 +121,21 @@ export class QuizEditionComponent implements OnInit{
                 this.ctlEndDate.updateValueAndValidity();
             });
 
+            this.ctlStartDate.valueChanges.subscribe(value => {
+                if (!this.isValidationInProgress) {
+                    this.isValidationInProgress = true;
+                    this.validateDateRange();
+                    this.isValidationInProgress = false;
+                }
+            });
+            
+            this.ctlEndDate.valueChanges.subscribe(value => {
+                if (!this.isValidationInProgress) {
+                    this.isValidationInProgress = true;
+                    this.validateDateRange();
+                    this.isValidationInProgress = false;
+                }
+            });
             if(this.quizId === 0){
                 this.quiz = new Quiz();
                 this.questions = [];
@@ -252,7 +268,6 @@ export class QuizEditionComponent implements OnInit{
         const dialogRef = this.dialog.open(DialogComponent,{data: {title: 'Supprimer ce quiz', message: 'Attention, totutes les questions et tous les essais associés seront supprimé. Etes-vous sûr ?'}});
         dialogRef.afterClosed().subscribe(result => {
             if(result){
-                console.log("this triggered ")
                 this.quizService.deleteQuiz(Quiz).subscribe(res => {
                     this.router.navigate(['/teacher']);
                 });
@@ -300,6 +315,21 @@ export class QuizEditionComponent implements OnInit{
         question.solutions?.push(solution);
     }
 
+    validateDateRange(): void {
+        const startDate: Date | null = this.ctlStartDate.value;
+        const endDate: Date | null = this.ctlEndDate.value;
+    
+        if (startDate && endDate && startDate > endDate) {
+            this.ctlStartDate.setErrors({ startDateAfterEndDate: true });
+            this.ctlEndDate.setErrors({ endDateBeforeStartDate: true });
+        } else {
+            this.ctlStartDate.setErrors(null);
+            this.ctlEndDate.setErrors(null);
+        }
+    
+        this.ctlStartDate.updateValueAndValidity();
+        this.ctlEndDate.updateValueAndValidity();
+    }
     validateEndDate():any{
         return (ctl:FormControl) => {
             const startDate: Date = this.ctlStartDate.value;
@@ -307,6 +337,19 @@ export class QuizEditionComponent implements OnInit{
             if (startDate && endDate) {
                 if (endDate < startDate) {
                     return { endDateBeforeStartDate: true };
+                }
+            }
+            return null;
+        }
+    }
+
+    validateStartDate():any{
+        return (ctl:FormControl) => {
+            const startDate: Date = ctl.value;
+            const endDate: Date = this.ctlEndDate.value;
+            if (startDate && endDate) {
+                if (endDate < startDate) {
+                    return { startDateAfterEndDate: true };
                 }
             }
             return null;

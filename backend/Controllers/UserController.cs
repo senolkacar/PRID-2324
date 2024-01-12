@@ -154,7 +154,8 @@ public async Task<ActionResult<UserDTO>> GetByEmail(string email) {
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[] {
-                    new Claim(ClaimTypes.Name, user.Pseudo)
+                    new Claim(ClaimTypes.Name, user.Pseudo),
+                    new Claim(ClaimTypes.Role, user.Role.ToString())
                 }),
                 IssuedAt = DateTime.UtcNow,
                 Expires = DateTime.UtcNow.AddMinutes(10),
