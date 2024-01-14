@@ -37,6 +37,7 @@ export class QuizEditionComponent implements OnInit{
     questions!: Question[];
     panelStates: boolean[] = [];
     canEdit = true;
+    canDelete = true;
     db: string = "";
     
 
@@ -159,6 +160,7 @@ export class QuizEditionComponent implements OnInit{
 
             this.subscribeToDatabaseChanges();
 
+            this.canDelete = this.quizId == 0 ? false : true;
             if(this.quizId === 0){
                 this.quiz = new Quiz();
                 this.questions = [];

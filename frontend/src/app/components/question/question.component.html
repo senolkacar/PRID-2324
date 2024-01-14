@@ -13,7 +13,7 @@
 <div *ngIf="question">
 <h2>{{ question.quiz?.name }} - Exercice {{ question.order }}</h2>
 </div>
-<ng-container><button mat-icon-button (click)="closeQuiz()" [disabled]="!hasAttempt()">
+<ng-container><button mat-icon-button (click)="closeQuiz()" [disabled]="closeDisabled">
     <mat-icon>close</mat-icon>
     </button>
 </ng-container>
@@ -89,7 +89,7 @@
 </div>
 
 
-<div *ngIf="solutionVisible || question?.query?.errors?.length ===0">
+<div *ngIf="solutionVisible || (question?.query?.errors?.length ===0 && !question.quiz?.isTest)">
     <ng-container *ngFor="let s of question?.solutions; index as i">
         <p class="fw-bold">Solution {{ i + 1 }}</p>
         <div class="text-success">

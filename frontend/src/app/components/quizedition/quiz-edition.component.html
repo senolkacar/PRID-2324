@@ -61,7 +61,7 @@
     </button>
 </ng-container>
 <ng-container>
-    <button type="delete" mat-button (click)="delete(quiz)">
+    <button type="delete" mat-button (click)="delete(quiz)" [disabled]="!canDelete">
         <mat-icon>delete</mat-icon>
     </button>
 </ng-container>

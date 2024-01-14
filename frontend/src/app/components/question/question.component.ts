@@ -32,6 +32,7 @@ export class QuestionComponent implements OnInit {
     solutionButtonVisibility = true;
     dateVisibility = true;
     dbName: string = "";
+    closeDisabled = true;
   
 
     constructor(
@@ -54,9 +55,9 @@ export class QuestionComponent implements OnInit {
           this.question.query = res;
           this.displayedColumns = res.columns;
           this.dataSource.data = res.data;
-          if(res.errors.length ===0){
+          /*if(res.errors.length ===0){
             this.answer.isCorrect = true;
-          }
+          }*/
           this.refresh();
         });
       }else{
@@ -74,20 +75,6 @@ export class QuestionComponent implements OnInit {
     isAtMaxQuestion(): boolean {
       return this.question?.nextQuestionId == null;
     }
-
-  hasAttempt(): boolean {
-    if (this.question?.quiz?.attempts?.length !== 0) {
-      let Attempts = this.question?.quiz?.attempts;
-      if (Attempts !== undefined) {
-        for (let attempt of Attempts) {
-          if (attempt.start !== null) {
-            return true;
-          }
-        }
-      }
-    }
-    return false
-  }
 
     canSendQuery(): boolean {
       return this.query.trim() !== ''
@@ -167,6 +154,7 @@ export class QuestionComponent implements OnInit {
           this.solutionButtonVisibility = false;
           this.solutionVisible = true;
         }
+        this.question.quiz?.statut === 'EN_COURS' ? this.closeDisabled = false : this.closeDisabled = true;
         if(this.question.quiz?.isTest && this.question.quiz?.statut === 'EN_COURS'){
           this.solutionButtonVisibility = false;
           this.solutionVisible = false
