@@ -1,3 +1,5 @@
+ANGULAR WEB APPLICATION FOR STUDENT TO EXERCICE ON SQL QUERY
+
 USERS:
 Student:
 pseudo: bob password: bob
